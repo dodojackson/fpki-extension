@@ -1,6 +1,25 @@
 import {download} from "./helper.js"
 
-export var config = new Map();
+/*
+    Original Live Config Object is maintained by the background script.
+    Pages can request the current state of the config via 'requestConfig' msg
+*/
+// TODO: Why a Map object and not a JSON object?
+export let config = null;
+
+export async function getConfig() {
+    console.log("getConfig: config is " + config);
+    if (config === null) {
+        await initializeConfig();
+        return config;
+    } else {
+        return config;
+    }
+}
+
+export function setConfig(new_config) {
+    config = new_config;
+}
 
 function defaultConfig() {
     let c = new Map();
@@ -8,7 +27,7 @@ function defaultConfig() {
     // use 127.0.0.11 instead of localhost to distinguish the second test server from the first one (although it is the same instance)
     // also, using 127.0.0.11 ensures that the mapserver IPs do not clash with the local test webpage at 127.0.0.1
     c.set("mapservers", [
-        // {"identity": "local-mapserver", "domain": "http://localhost:8080", "querytype": "lfpki-http-get"},
+        {"identity": "local-mapserver", "domain": "http://localhost:8080", "querytype": "lfpki-http-get"},
         {"identity": "ETH-mapserver-top-100k", "domain": "http://129.132.55.210:8080", "querytype": "lfpki-http-get"}
     ]);
     // cache timeout in ms
@@ -74,32 +93,42 @@ function defaultConfig() {
         rootCas.set("DigiCert TLS Hybrid ECC SHA384 2020 CA1", "description: ...");
         return rootCas;
     })());
+
+    console.log("Type: " + typeof c);
     return c;
 }
 
-// either reads the config from storage or uses the default config
-export function initializeConfig() {
-    let c = loadConfig();
+function initializeConfig() {
+    /*
+        Loads config from local storage (across browser sessions) OR 
+        initializes live config object with default config settings
+    */
+    let c = localStorage.getItem("config");
     if (c === null) {
         console.log("initializing using default config");
-        c = defaultConfig();
+        config = defaultConfig();
     } else {
         console.log("initialize using stored config");
+        importConfigFromJSON(c);
     }
-    config = c;
-}
-
-function loadConfig() {
-    return localStorage.getItem("config");
+    saveConfig();
 }
 
 export function saveConfig() {
-    console.log("saving config...");
+    /*
+        Makes live config object persistent across browser sessions using the 
+        local storage of the browser
+    */
+    console.log("saving config:\n" + config);
     localStorage.setItem("config", exportConfigToJSON(config));
 }
 
 export function exportConfigToJSON(configMap, indent=false) {
+    /* 
+        Returns a JSON string of the passed config Map object
+    */
     let jsonConfig = new Map();
+    // console.log("ACHTUNG\n" + configMap);
     configMap.forEach((value, key) => {
         if (["ca-sets", "legacy-trust-preference", "policy-trust-preference", "root-pcas", "root-cas"].includes(key)) {
             jsonConfig.set(key, Object.fromEntries(value));
@@ -117,6 +146,9 @@ export function exportConfigToJSON(configMap, indent=false) {
 
 var oldConfig;
 export function importConfigFromJSON(jsonConfig) {
+    /*
+        Converts the JSON string to a Map object and replaces the live config object
+    */
     const c = new Map();
     const parsedMap = new Map(Object.entries(JSON.parse(jsonConfig)));
     // convert necessary fields to Map type
@@ -135,6 +167,9 @@ export function downloadConfig() {
 }
 
 export function resetConfig() {
+    console.log("CALLED: resetConfig()\n")
     config = defaultConfig();
+    // importConfigFromJSON('{ "name": true }')
+    // console.log(exportConfigToJSON(config, true));
     saveConfig();
 }

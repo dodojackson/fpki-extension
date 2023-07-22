@@ -3,7 +3,7 @@
 import { getDomainNameFromURL } from "../js_lib/domain.js"
 import { FpkiRequest } from "../js_lib/fpki-request.js"
 import { printMap, cLog, mapGetList, mapGetMap, mapGetSet } from "../js_lib/helper.js"
-import { config, downloadConfig, importConfigFromJSON, initializeConfig, saveConfig, resetConfig } from "../js_lib/config.js"
+import { config, downloadConfig, importConfigFromJSON, getConfig, saveConfig, resetConfig, exportConfigToJSON, setConfig } from "../js_lib/config.js"
 import { LogEntry, getLogEntryForRequest, downloadLog, printLogEntriesToConsole, getSerializedLogEntries } from "../js_lib/log.js"
 import { FpkiError, errorTypes } from "../js_lib/errors.js"
 import { policyValidateConnection, legacyValidateConnection } from "../js_lib/validation.js"
@@ -12,10 +12,14 @@ import "../js_lib/wasm_exec.js"
 import { addCertificateChainToCacheIfNecessary, getCertificateEntryByHash } from "../js_lib/cache.js"
 
 try {
-    initializeConfig();
-    window.GOCACHE = config.get("wasm-certificate-parsing");
+    // await initializeConfig();
+    // TODO: this is (or may be) called before the function finishes
+    let test = await getConfig();
+    console.log("Config-Type: " + typeof test);
+    console.log("Config-Value:" + test);
+    window.GOCACHE = test.get("wasm-certificate-parsing");
 } catch (e) {
-    console.log("initialize: "+e);
+    console.log("initialize: " + e);
 }
 
 // flag whether to use Go cache
@@ -41,18 +45,27 @@ browser.runtime.onConnect.addListener(function(port) {
             importConfigFromJSON(msg.value);
             saveConfig();
             break;
+        case 'postConfig':
+            setConfig(msg.value);
+            saveConfig();
+            console.log("Updated config saved");
+            break;
         default:
             switch (msg) {
             case 'initFinished':
+                console.log("MSG RECV: initFinished");
                 port.postMessage({msgType: "config", value: config});
                 break;
             case 'printConfig':
+                console.log("MSG RECV: printConfig");
                 port.postMessage({msgType: "config", value: config});
                 break;
             case 'downloadConfig':
+                console.log("MSG RECV: downloadConfig");
                 downloadConfig()
                 break;
             case 'resetConfig':
+                console.log("MSG RECV: resetConfig");
                 resetConfig()
                 break;
             case 'openConfigWindow':
@@ -70,10 +83,29 @@ browser.runtime.onConnect.addListener(function(port) {
             case 'getLogEntries':
                 port.postMessage({msgType: "logEntries", value: getSerializedLogEntries()});
                 break;
+            case 'requestConfig':
+                port.postMessage("Hi there");
+                break;
             }
         }
     });
 })
+
+browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
+    /*
+        Receive messages with possibility of direct response
+    */
+    switch(request) {
+        case 'requestConfig':
+            console.log(`MSG RECV: ${request}`);
+            return Promise.resolve({ "config": config });
+        default:
+            console.log(`Received unknown message: ${request}`);
+            break;
+    }
+    
+});
+
 
 // window.addEventListener('unhandledrejection', function(event) {
 //   // the event object has two special properties:

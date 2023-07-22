@@ -1,11 +1,13 @@
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" dir="ltr" lang="en-US">
   <head>
     <meta name="color-scheme" content="light dark" />
     <link rel="icon" id="favicon" href="../../images/F-D_dark.png" />
+    <link rel="stylesheet" href="./config-page.css" />
     <title>F-PKI Plugin Configuration</title></head>
   <body>
-    <div id="config">
-      <p>Config</p>
+    <div id="options">
+      <h1>Config</h1>
       <button id="printConfig">Print Config</button>
       <button id="downloadConfig">Download Config</button>
       <button id="resetConfig">Reset Config to Default</button>
@@ -14,12 +16,32 @@
       <input type="file" id="file" onchange="handle_files()">
       <button id="uploadConfig">Upload</button>
       <br/>
+      <button id="saveChanges">Save Changes</button>
+      <br/>
+
+      <h3>Mapservers</h3>
+      <table id="mapservers-table">
+        <thead>
+            <tr>
+                <th colspan="1">Identity</th>
+                <th colspan="1">Domain</th>
+                <th colspan="1">Query Type</th>
+            </tr>
+        </thead>
+        <tbody id="mapservers-table-body">
+            <!-- Mapservers will be inserted based on JSON configuration -->
+        </tbody>
+    </table>
+
+    </div>
+    <div id="output">
       <pre>
         <code id="config-code">
           { "hello": "world" }
         </code>
       </pre>
     </div>
+
+    <script type="module" src="./config-page.js"></script>
   </body>
-  <script src="config-page.js" type="module"></script>
 </html>
