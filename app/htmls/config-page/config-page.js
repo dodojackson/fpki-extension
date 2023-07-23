@@ -89,10 +89,9 @@ async function reloadSettings() {
         TODO: Kann vielleicht auch einfach mit in 'printConfig'
     */
     let json_config = JSON.parse(exportConfigToJSON(await getConfig()))
-    // let config = null;
+
     // Load mapservers into table
     var mapserver_rows = "";
-    // console.log(JSON.stringify(config))
     json_config.mapservers.forEach(mapserver => {
         mapserver_rows +=  "<tr>" + 
                                 "<td>" + mapserver.identity + "</td>" +
@@ -102,9 +101,10 @@ async function reloadSettings() {
                             "</tr>";
     });
     mapserver_rows +=   "<tr id='row_mapserver_add'>" + 
-                            "<td><input type='text' placeholder='Identity' /></td>" +
-                            "<td></td> <td></td>" +
-                            "<td> <button class='btn_mapserver_add'>Add Mapserver</button> </td>" +
+                            "<td><input id='input_mapserver_add_identity' type='text' placeholder='Identity' /></td>" +
+                            "<td><input id='input_mapserver_add_domain' type='text' placeholder='Domain' /></td>" +
+                            "<td><input type='text' placeholder='lfpki-http-get' disabled='disabled' /></td>" +
+                            "<td> <button id='btn_mapserver_add'>Add Mapserver</button> </td>" +
                         "</tr>";
     document.getElementById('mapservers-table-body').innerHTML = mapserver_rows;
     // Add event listener to buttons to delete mapservers
@@ -119,8 +119,15 @@ async function reloadSettings() {
             return;
         });
     });
-    
-        
-    
-    
+    // Add event listener to button for adding a mapserver
+    document.getElementById('btn_mapserver_add').addEventListener("click", () => {
+        json_config.mapservers.push({
+            "identity": document.getElementById('input_mapserver_add_identity').value,
+            "domain": document.getElementById('input_mapserver_add_domain').value,
+            "querytype": "lfpki-http-get"
+        })
+        importConfigFromJSON(JSON.stringify(json_config));
+        reloadSettings();
+        return;
+    });
 }

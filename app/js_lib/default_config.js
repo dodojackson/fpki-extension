@@ -1,4 +1,4 @@
-{
+let default_config = {
     "mapservers": [
         {
             "identity": "local-mapserver",
