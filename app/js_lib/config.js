@@ -98,11 +98,12 @@ function defaultConfig() {
     return c;
 }
 
+/**
+ * Loads config from local storage (across browser sessions) OR 
+ * initializes live config object with default config settings
+ */
 function initializeConfig() {
-    /*
-        Loads config from local storage (across browser sessions) OR 
-        initializes live config object with default config settings
-    */
+    
     let c = localStorage.getItem("config");
     if (c === null) {
         console.log("initializing using default config");
@@ -145,10 +146,10 @@ export function exportConfigToJSON(configMap, indent=false) {
 }
 
 var oldConfig;
+/**
+ * Converts the JSON string to a Map object and replaces the live config object
+ */
 export function importConfigFromJSON(jsonConfig) {
-    /*
-        Converts the JSON string to a Map object and replaces the live config object
-    */
     const c = new Map();
     const parsedMap = new Map(Object.entries(JSON.parse(jsonConfig)));
     // convert necessary fields to Map type

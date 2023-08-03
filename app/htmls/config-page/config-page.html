@@ -7,7 +7,7 @@
     <title>F-PKI Plugin Configuration</title></head>
   <body>
     <div id="options">
-      <h1>Configuration</h1>
+      <h1>Configuration Page</h1>
       <button id="printConfig">Print Config</button>
       <button id="downloadConfig">Download Config</button>
       <button id="resetConfig">Reset Config to Default</button>
@@ -16,22 +16,97 @@
       <input type="file" id="file" onchange="handle_files()">
       <button id="uploadConfig">Upload</button>
       <br/>
-      <button id="saveChanges">Save Changes</button>
-      <br/>
 
-      <h3>Mapservers</h3>
-      <table id="mapservers-table">
+      <div class="settings-section">
+        <h2>Mapservers</h3>
+        <table id="mapservers-table">
+          <thead>
+              <tr>
+                  <th colspan="1">Identity</th>
+                  <th colspan="1">Domain</th>
+                  <th colspan="1">Query Type</th>
+                  <th colcpan="1">Action</th>
+              </tr>
+          </thead>
+          <tbody id="mapservers-table-body">
+              <!-- Mapservers will be inserted based on JSON configuration -->
+          </tbody>
+        </table>
+        <button class="save-changes">Save Changes</button>
+      </div>
+
+      <h2>CA Sets</h3>
+      <table id="ca-sets-table">
         <thead>
             <tr>
-                <th colspan="1">Identity</th>
-                <th colspan="1">Domain</th>
-                <th colspan="1">Query Type</th>
+                <th colspan="1">Identifier</th>
+                <th colspan="1">CA List</th>
             </tr>
         </thead>
-        <tbody id="mapservers-table-body">
-            <!-- Mapservers will be inserted based on JSON configuration -->
+        <tbody id="ca-sets-table-body">
+            <tr>
+              <td>US CA</td>
+              <td>
+                <table>
+                  <tbody>
+                    <tr><td>asdf</td></tr>
+                    <tr><td>e5jetzhf</td></tr>
+                    <tr><td>tezvjts</td></tr>
+                  </tbody>
+                </table>
+                
+              </td>
+            </tr>>
         </tbody>
-    </table>
+      </table>
+
+      <div class="settings-section">
+        <h2>Other Settings</h3>
+        <table id="other-table">
+          <thead>
+              <tr>
+                  <th colspan="1">Setting</th>
+                  <th colspan="1">Value</th>
+              </tr>
+          </thead>
+          <tbody id="other-table-body">
+              <tr>
+                <td>Cache Timeout: </td>
+                <td><input type="int" class="cache-timeout" /></td>
+              </tr>
+              <tr>
+                <td>Max Connection Setup Time: </td>
+                <td><input type="int" class="max-connection-setup-time" /></td>
+              </tr>
+              <tr>
+                <td>Proof Fetch Timeout: </td>
+                <td><input type="int" class="proof-fetch-timeout" /></td>
+              </tr>
+              <tr>
+                <td>Proof Fetch Max Tries: </td>
+                <td><input type="int" class="proof-fetch-max-tries" /></td>
+              </tr>
+              <tr>
+                <td>Mapserver Quorum: </td>
+                <td><input type="int" class="mapserver-quorum" /></td>
+              </tr>
+              <tr>
+                <td>Mapserver Instances Queried: </td>
+                <td><input type="int" class="mapserver-instances-queried" /></td>
+              </tr>
+              <tr>
+                <td>Send Log Entries via Event: </td>
+                <td><input type="int" class="send-log-entries-via-event" /></td>
+              </tr>
+              <tr>
+                <td>Wasm Certificate Parsing: </td>
+                <td><input type="int" class="wasm-certificate-parsing" /></td>
+              </tr>
+          </tbody>
+        </table>
+        <button class="reset-changes">Reset Changes</button>
+        <button class="save-changes">Save Changes</button>
+      </div>
 
     </div>
     <div id="output">

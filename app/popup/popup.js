@@ -7,8 +7,6 @@ var port = browser.runtime.connect({
     name: "popup to background communication"
 });
 
-    // hide other divs
-
 document.addEventListener('DOMContentLoaded', function() {
     try {
         getElement('openConfigWindow').addEventListener('click', function() {

@@ -30,10 +30,12 @@ WebAssembly.instantiateStreaming(fetch("../js_lib/wasm/parsePEMCertificates.wasm
     go.run(result.instance);
 });
 
+/** 
+ * Receive one way messages from extension pages
+ */
+browser.runtime.onConnect.addListener( (port) => {
 
-// communication between browser plugin popup and this background script
-browser.runtime.onConnect.addListener(function(port) {
-    port.onMessage.addListener(async function(msg) {
+    port.onMessage.addListener(async (msg) => {
         switch (msg.type) {
         case "acceptCertificate":
             const {domain, certificateFingerprint, tabId, url} = msg;
@@ -91,13 +93,18 @@ browser.runtime.onConnect.addListener(function(port) {
     });
 })
 
+/**
+ * Receive messages with possibility of direct response
+ */
 browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
-    /*
-        Receive messages with possibility of direct response
-    */
+    
     switch(request) {
         case 'requestConfig':
             console.log(`MSG RECV: ${request}`);
+            return Promise.resolve({ "config": config });
+        case 'resetConfig':
+            console.log(`MSG RECV: ${request}`);
+            resetConfig();
             return Promise.resolve({ "config": config });
         default:
             console.log(`Received unknown message: ${request}`);
@@ -113,7 +120,6 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
 //   alert(event.reason); // Error: Whoops! - the unhandled error object
 // });
 
-
 const trustDecisions = new Map();
 
 // contains certificates that are trusted even if legacy (and policy) validation fails
@@ -121,8 +127,11 @@ const trustDecisions = new Map();
 // https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/webRequest/CertificateInfo
 const trustedCertificates = new Map();
 
+/**
+ * Redirect to an error page, depending on the type of validation error.
+ */
 function redirect(details, error, certificateChain=null) {
-    cLog(details.requestId, "verification failed! -> redirecting. Reason: " + error+ " ["+details.url+"]");
+    cLog(details.requestId, "verification failed! -> redirecting. Reason: " + error + " [" + details.url + "]");
     // if any error is caught, redirect to the blocking page, and show the error page
     let { tabId } = details;
     let htmlErrorFile;
@@ -160,10 +169,16 @@ function redirect(details, error, certificateChain=null) {
     browser.tabs.update(tabId, {url: url});
 }
 
+/**
+ * Checks whether the given domain should be validated.
+ * 
+ * @returns `false` if domain is a mapserver, else `true`
+ */
 function shouldValidateDomain(domain) {
     // ignore mapserver addresses since otherwise there would be a circular dependency which could not be resolved
     return config.get("mapservers").every(({ domain: d }) => getDomainNameFromURL(d) !== domain);
 }
+
 
 function addTrustDecision(details, trustDecision) {
     // find document url of this request
@@ -173,6 +188,7 @@ function addTrustDecision(details, trustDecision) {
     urlMap.set(url, tiList.concat(trustDecision));
     trustDecisions.set(details.tabId, urlMap);
 }
+
 
 async function requestInfo(details) {
     const perfStart = performance.now();
@@ -255,17 +271,19 @@ async function checkInfo(details) {
 
     let decision = "accept";
     try {
-        // check if this certificate for this domain was accepted despite the F-PKI legacy (or policy) warning
         const certificateFingerprint = certificateChain[0].fingerprintSha256;
         if (mapGetSet(trustedCertificates, domain).has(certificateFingerprint)) {
+            // Skip validation, if the certificate is in `trustedCertificates`
             cLog(details.requestId, "skipping validation for domain ("+domain+") because of the trusted certificate: "+certificateFingerprint);
         } else {
+            // Save policies and certificates per mapserver
             const policiesMap = new Map();
             const certificatesMap = new Map();
             for (const [index, mapserver] of config.get("mapservers").entries()) {
                 if (index === config.get("mapserver-instances-queried")) {
                     break;
                 }
+                // Query mapserver for domain information
                 const fpkiRequest = new FpkiRequest(mapserver, domain, details.requestId);
                 // cLog(details.requestId, "await fpki request for ["+domain+", "+mapserver.identity+"]");
                 const {policies, certificates, metrics} = await fpkiRequest.fetchPolicies();
@@ -277,13 +295,13 @@ async function checkInfo(details) {
                 // cLog(details.requestId, "await finished for fpki request for ["+domain+", "+mapserver.identity+"]");
             }
 
-            // remember if policy validations has been performed
+            // remember if policy validation has been performed
             let policyChecksPerformed = false;
             // check each policy and throw an error if one of the verifications fails
-            policiesMap.forEach((p, m) => {
+            policiesMap.forEach((policy, mapserver) => {
                 // cLog(details.requestId, "starting policy verification for ["+domain+", "+m.identity+"] with policies: "+printMap(p));
 
-                const {trustDecision} = policyValidateConnection(certificateChain, config, domain, p, m);
+                const {trustDecision} = policyValidateConnection(certificateChain, config, domain, policy, mapserver);
                 addTrustDecision(details, trustDecision);
 
                 if (hasApplicablePolicy(trustDecision)) {
@@ -365,6 +383,7 @@ browser.webRequest.onBeforeRequest.addListener(
     [])
 
 // add listener to header-received. 
+// https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/webRequest/onHeadersReceived
 browser.webRequest.onHeadersReceived.addListener(
     checkInfo, {
         urls: ["*://*/*"]

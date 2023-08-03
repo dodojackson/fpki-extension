@@ -3,14 +3,24 @@ import {FpkiError} from "./errors.js"
 import {printMap} from "./helper.js"
 import {LegacyTrustInfo, LegacyTrustDecision, PolicyEvaluation, PolicyTrustInfo, PolicyTrustDecision, PolicyAttributes, EvaluationResult} from "./validation-types.js"
 
-// policy mode
+// POLICY MODE
+// 
 // start from highest ancestor -> go to actual domain
-// for each domain in all ancestor domains (+ the actual domain), find policies issued by PCAs with highest trust level and validate the connection certificate using them
+//
+// for each domain in all ancestor domains (+ the actual domain), find policies 
+// issued by PCAs with highest trust level and validate the connection 
+// certificate using them
+//
 // -> behavior may change if we allow attributes to be inherited
 
-// legacy mode
+
+// LEGACY MODE
+//
 // only consider the actual domain without including ancestor domains
-// including ancestor domains is difficult, because of what would happen if an ancestor cert is issued by more highly trusted CA? -> we probably cannot block the certificate as it would lead to many false positives
+//
+// including ancestor domains is difficult, because of what would happen if an 
+// ancestor cert is issued by more highly trusted CA? -> we probably cannot 
+// block the certificate as it would lead to many false positives
 
 function policyFilterHighestTrustLevelPolicies(trustPreferenceEntries, domainPolicies) {
     let highestTrustLevelPolicies = new Map();
@@ -88,7 +98,10 @@ function policyValidateParentDomain(tlsCertificateChain, config, actualDomain, p
 }
 
 // check connection using the policies retrieved from a single mapserver
-// allPolicies has the following structure: {domain: {pca: SP}}, where SP has the structure: {attribute: value}, e.g., {AllowedSubdomains: ["allowed.mydomain.com"]}
+// allPolicies has the following structure: 
+//
+// {domain: {pca: SP}}, where SP has the structure: 
+// {attribute: value}, e.g., {AllowedSubdomains: ["allowed.mydomain.com"]}
 export function policyValidateConnection(tlsCertificateChain, config, domainName, allPolicies, mapserver) {
     // iterate over all policies from all (trusted) mapservers
     // for example: the request for video.google.com, will contain the policies for "video.google.com" and "google.com"

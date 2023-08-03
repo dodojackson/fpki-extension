@@ -1,13 +1,25 @@
 // Map helper functions
 
+/**
+ * Get the value for specified key in map OR return a new empty list.
+ * 
+ */
 export function mapGetList(map, key) {
     return map.get(key) || [];
 };
 
+/**
+ * Get the value for specified key in map OR return a new empty Map.
+ * 
+ */
 export function mapGetMap(map, key) {
     return map.get(key) || new Map();
 };
 
+/**
+ * Get the value for specified key in map OR return a new empty Set.
+ * 
+ */
 export function mapGetSet(map, key) {
     return map.get(key) || new Set();
 };

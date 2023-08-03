@@ -9,7 +9,18 @@ tfoot {
     color: #fff;
 }
 
-#mapservers-table td {
+td {
     padding-left: 10pt;
     padding-right: 10pt;
+}
+
+
+div.settings-section {
+    display: flex;
+    flex-direction: column;
+    width: auto;
+}
+div.settings-section > button {
+    margin-top: 1rem;
+    float: right;
 }

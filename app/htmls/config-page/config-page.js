@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', async() => { // TODO: muss nicht o
             port.postMessage("downloadConfig");
         });
         document.getElementById('resetConfig').addEventListener('click', function() {
-            port.postMessage("resetConfig");
+            resetConfig();
             console.log("posted message: resetConfig");
         });
         document.getElementById('uploadConfig').addEventListener('click', function() {
@@ -33,9 +33,12 @@ document.addEventListener('DOMContentLoaded', async() => { // TODO: muss nicht o
             }
             reader.readAsText(file);
         });
-        document.getElementById('saveChanges').addEventListener('click', () => {
-            postConfig();
-            console.log("Configuration changes have been saved");
+        document.querySelectorAll('button.save-changes').forEach( (elem) => {
+            elem.addEventListener('click', async () => {
+                await loadCurrentInputToLocalConfig()
+                await postConfig();
+                console.log("Configuration changes have been saved");
+            });
         });
 
         await requestConfig();
@@ -58,27 +61,36 @@ port.onMessage.addListener( (msg) => {
     }
 });
 
+/**
+ * Prints live config object to html as JSON string
+ */
 async function printConfig() {
-    /*
-        Prints live config object to html as JSON string
-    */
     var configCodeElement = document.getElementById("config-code");
     configCodeElement.innerHTML = "config = " + exportConfigToJSON(await getConfig(), true);
     reloadSettings();
 }
 
+/**
+ * Ask background script to reset config to default.
+ * Background script in turn will respond with the reset config.
+ */
+async function resetConfig() {
+    const response = await browser.runtime.sendMessage("resetConfig");
+    setConfig(response.config);
+}
+
+/**
+ * Request live config from background script
+ */
 async function requestConfig() {
-    /*
-        Request live config from background script
-    */
     const response = await browser.runtime.sendMessage("requestConfig");
     setConfig(response.config);
 }
 
+/**
+ * Post configuration changes to live config in background script
+ */
 async function postConfig() {
-    /*
-        Post configuration changes to live config in background script
-    */
    port.postMessage({ "type": "postConfig", "value": await getConfig() });
 }
 
@@ -88,7 +100,7 @@ async function reloadSettings() {
 
         TODO: Kann vielleicht auch einfach mit in 'printConfig'
     */
-    let json_config = JSON.parse(exportConfigToJSON(await getConfig()))
+    let json_config = JSON.parse(exportConfigToJSON(await getConfig()));
 
     // Load mapservers into table
     var mapserver_rows = "";
@@ -130,4 +142,29 @@ async function reloadSettings() {
         reloadSettings();
         return;
     });
+
+    // Load current config values into input fields
+    document.querySelector("input.cache-timeout").value = json_config['cache-timeout'];
+    document.querySelector("input.max-connection-setup-time").value = json_config['max-connection-setup-time'];
+    document.querySelector("input.proof-fetch-timeout").value = json_config['proof-fetch-timeout'];
+    document.querySelector("input.proof-fetch-max-tries").value = json_config['proof-fetch-max-tries'];
+    document.querySelector("input.mapserver-quorum").value = json_config['mapserver-quorum'];
+    document.querySelector("input.mapserver-instances-queried").value = json_config['mapserver-instances-queried'];
+    document.querySelector("input.send-log-entries-via-event").value = json_config['send-log-entries-via-event'];
+    document.querySelector("input.wasm-certificate-parsing").value = json_config['wasm-certificate-parsing'];
+}
+
+async function loadCurrentInputToLocalConfig() {
+    let json_config = JSON.parse(exportConfigToJSON(await getConfig()));
+
+    json_config['cache-timeout'] = document.querySelector("input.cache-timeout").value;
+    json_config['max-connection-setup-time'] = document.querySelector("input.max-connection-setup-time").value;
+    json_config['proof-fetch-timeout'] = document.querySelector("input.proof-fetch-timeout").value;
+    json_config['proof-fetch-max-tries'] = document.querySelector("input.proof-fetch-max-tries").value;
+    json_config['mapserver-quorum'] = document.querySelector("input.mapserver-quorum").value;
+    json_config['mapserver-instances-queried'] = document.querySelector("input.mapserver-instances-queried").value;
+    json_config['send-log-entries-via-event'] = document.querySelector("input.send-log-entries-via-event").value;
+    json_config['wasm-certificate-parsing'] = document.querySelector("input.wasm-certificate-parsing").value;
+
+    importConfigFromJSON(JSON.stringify(json_config));
 }
