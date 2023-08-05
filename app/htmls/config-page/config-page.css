@@ -9,11 +9,16 @@ tfoot {
     color: #fff;
 }
 
+table input,table select,table button {
+    box-sizing: border-box;
+    width: 100%;
+    padding: 0 10pt;
+}
+
 td {
     padding-left: 10pt;
     padding-right: 10pt;
 }
-
 
 div.settings-section {
     display: flex;
@@ -23,4 +28,25 @@ div.settings-section {
 div.settings-section > button {
     margin-top: 1rem;
     float: right;
+}
+
+button {
+    border: 1px solid grey;
+    border-radius: 3px;
+}
+
+button:hover {
+    background-image: linear-gradient(rgb(0 0 0/30%) 0 0);
+}
+
+button.delete {
+    background-color: lightcoral;
+}
+
+button.reset-changes {
+    background-color: rgba(238, 159, 56, 0.911)
+}
+
+button.save-changes {
+    background-color: lightgreen;
 }

@@ -7,10 +7,10 @@ import {download} from "./helper.js"
 // TODO: Why a Map object and not a JSON object?
 export let config = null;
 
-export async function getConfig() {
+export function getConfig() {
     console.log("getConfig: config is " + config);
     if (config === null) {
-        await initializeConfig();
+        initializeConfig();
         return config;
     } else {
         return config;
@@ -65,7 +65,10 @@ function defaultConfig() {
     // CAs with higher levels take precedence over CAs with lower levels
     c.set("legacy-trust-preference", (()=>{
         const tp = new Map();
-        tp.set("microsoft.com", [{caSet: "Microsoft CA", level: 1}]);
+        tp.set("microsoft.com", [
+            {caSet: "Microsoft CA", level: 1},
+            {caSet: "TEST", level: 2}
+        ]);
         tp.set("bing.com", [{caSet: "Microsoft CA", level: 1}]);
         return tp;
     })());
@@ -124,12 +127,12 @@ export function saveConfig() {
     localStorage.setItem("config", exportConfigToJSON(config));
 }
 
+/**
+ * Returns a JSON string of the passed config Map object
+ */
 export function exportConfigToJSON(configMap, indent=false) {
-    /* 
-        Returns a JSON string of the passed config Map object
-    */
     let jsonConfig = new Map();
-    // console.log("ACHTUNG\n" + configMap);
+    console.log("ACHTUNG\n" + configMap);
     configMap.forEach((value, key) => {
         if (["ca-sets", "legacy-trust-preference", "policy-trust-preference", "root-pcas", "root-cas"].includes(key)) {
             jsonConfig.set(key, Object.fromEntries(value));
@@ -143,6 +146,14 @@ export function exportConfigToJSON(configMap, indent=false) {
     } else {
         return JSON.stringify(Object.fromEntries(jsonConfig));
     }
+}
+
+/**
+ * 
+ * @returns Config Object as JSON object
+ */
+export function getJSONConfig() {
+    return JSON.parse(exportConfigToJSON(config));
 }
 
 var oldConfig;

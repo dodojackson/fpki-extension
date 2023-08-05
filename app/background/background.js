@@ -3,7 +3,7 @@
 import { getDomainNameFromURL } from "../js_lib/domain.js"
 import { FpkiRequest } from "../js_lib/fpki-request.js"
 import { printMap, cLog, mapGetList, mapGetMap, mapGetSet } from "../js_lib/helper.js"
-import { config, downloadConfig, importConfigFromJSON, getConfig, saveConfig, resetConfig, exportConfigToJSON, setConfig } from "../js_lib/config.js"
+import { config, downloadConfig, importConfigFromJSON, getConfig, saveConfig, resetConfig, exportConfigToJSON, setConfig, getJSONConfig } from "../js_lib/config.js"
 import { LogEntry, getLogEntryForRequest, downloadLog, printLogEntriesToConsole, getSerializedLogEntries } from "../js_lib/log.js"
 import { FpkiError, errorTypes } from "../js_lib/errors.js"
 import { policyValidateConnection, legacyValidateConnection } from "../js_lib/validation.js"
@@ -102,6 +102,9 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
         case 'requestConfig':
             console.log(`MSG RECV: ${request}`);
             return Promise.resolve({ "config": config });
+        case 'requestJSONConfig':
+            console.log(`MSG RECV: ${request}`);
+            return Promise.resolve({ "config": getJSONConfig() });
         case 'resetConfig':
             console.log(`MSG RECV: ${request}`);
             resetConfig();
