@@ -148,27 +148,6 @@ async function reloadSettings() {
         return;
     });
 
-    // Load CA Sets
-    let ca_sets_rows = "";
-    for (const [key, value] of Object.entries(json_config['ca-sets'])) {
-        let ca_rows = ""
-        value.forEach(ca => {
-            ca_rows += `<tr><td>${ca}</td></tr>`
-        })
-
-        ca_sets_rows += `<tr> \
-                            <td>${key}</td> \
-                            <td> \
-                                <table> \
-                                    <tbody> \
-                                    ${ca_rows}
-                                    </tbody> \
-                                </table> \
-                            </td> \
-                        </tr>`
-    }
-    document.getElementById('ca-sets-table-body').innerHTML = ca_sets_rows;
-
     // Load legacy trust preferences
     let legacy_pref_rows = ""
     for (const[domain, ca_sets] of Object.entries(json_config['legacy-trust-preference'])) {
@@ -371,6 +350,31 @@ async function reloadSettings() {
             reloadSettings();
         });
     });
+
+    // Load CA Sets
+    let ca_sets_rows = "";
+    for (const [key, value] of Object.entries(json_config['ca-sets'])) {
+        value.forEach( (ca, idx) => {
+            if (idx == 0) {
+                ca_sets_rows += `<tr>
+                                    <td rowspan=${value.length}>${key}</td>
+                                    <td> 
+                                        ${ca}
+                                    </td>
+                                </tr>`
+            } else {
+                ca_sets_rows += `<tr>
+                                    <td hidden>${key}</td>
+                                    <td> 
+                                        ${ca}
+                                    </td>
+                                </tr>`
+            }
+        })
+
+        
+    }
+    document.getElementById('ca-sets-table-body').innerHTML = ca_sets_rows;
 
     // Load other settings
     document.querySelector("input.cache-timeout").value = json_config['cache-timeout'];
