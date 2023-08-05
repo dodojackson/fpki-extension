@@ -335,6 +335,43 @@ async function reloadSettings() {
                         </tr>`
     document.getElementById('policy-trust-preference-table-body').innerHTML = policy_pref_rows;
 
+    // Add event listeners for policy trust preference settings
+    document.querySelector('button.add_policy_preference_domain').addEventListener("click", (e) => {
+        let domain = document.querySelector('input.add_policy_preference_domain').value;
+        json_config['policy-trust-preference'][domain] = []
+        importConfigFromJSON(JSON.stringify(json_config))
+        reloadSettings();
+    });
+    document.querySelectorAll('button.delete_policy_preference').forEach(elem => {
+        elem.addEventListener("click", (e) => {
+            let domain = e.target.parentElement.parentElement.cells[0].innerHTML;
+            let pca = e.target.parentElement.parentElement.cells[1].innerHTML;
+            let filtered = json_config['policy-trust-preference'][domain].filter(item => item['pca'] !== pca);
+            if (filtered.length == 0) {
+                delete json_config['policy-trust-preference'][domain];
+            } else {
+                json_config['policy-trust-preference'][domain] = filtered;
+            }
+            importConfigFromJSON(JSON.stringify(json_config))
+            reloadSettings();
+
+            console.log(domain + pca)
+        });
+    });
+    document.querySelectorAll('button.add_policy_preference').forEach(elem => {
+        elem.addEventListener("click", (e) => {
+            let domain = e.target.parentElement.parentElement.cells[0].innerHTML;
+            let pca = e.target.parentElement.parentElement.cells[1].children[0].value;
+            let trust_level = e.target.parentElement.parentElement.cells[2].children[0].value;
+            json_config['policy-trust-preference'][domain].push({
+                "pca": pca,
+                "level": trust_level
+            });
+            importConfigFromJSON(JSON.stringify(json_config))
+            reloadSettings();
+        });
+    });
+
     // Load other settings
     document.querySelector("input.cache-timeout").value = json_config['cache-timeout'];
     document.querySelector("input.max-connection-setup-time").value = json_config['max-connection-setup-time'];
@@ -416,6 +453,13 @@ async function resetChanges(e) {
 
         reloadSettings();
     }
+    // Policy Trust Preferences
+    if (e.target.classList.contains('policy-trust-preference')) {
+        local_config['policy-trust-preference'] = live_config['policy-trust-preference'];
+        importConfigFromJSON(JSON.stringify(local_config));
+
+        reloadSettings();
+    }
     // Other Settings
     if (e.target.classList.contains('other-settings')) {
         local_config['cache-timeout'] = live_config['cache-timeout'];
@@ -445,8 +489,12 @@ function saveChanges(e) {
         postConfig();
     }
 
+    if (e.target.classList.contains('policy-trust-preference')) {
+        postConfig();
+    }
+
     if (e.target.classList.contains('other-settings')) {
-        loadCurrentInputToLocalConfig();
+        // loadCurrentInputToLocalConfig();
         postConfig();
     }
 
