@@ -114,7 +114,7 @@ async function reloadSettings() {
                                 "<td>" + mapserver.identity + "</td>" +
                                 "<td>" + mapserver.domain + "</td>" +
                                 "<td>" + mapserver.querytype + "</td>" +
-                                "<td> <button class='btn_mapserver_delete'>Delete</button> </td>" +
+                                "<td> <button class='delete btn_mapserver_delete'>Delete</button> </td>" +
                             "</tr>";
     });
     mapserver_rows +=   "<tr id='row_mapserver_add'>" + 
@@ -202,10 +202,17 @@ async function reloadSettings() {
         let hide_domain = ""
         if (ca_sets.length != 0) {hide_domain = "hidden"}
         // Row to add new preference
+        let ca_sets_options = ``;
+        for (const [set_name, _] of Object.entries(json_config['ca-sets'])) {
+            ca_sets_options += `<option value="${set_name}">${set_name}</option>`
+        }
         domain_pref_rows += `<tr>
                                 <td ${hide_domain}>${domain}</td>
                                 <td>
-                                    <input type="text" placeholder="CA Set" />
+                                    <select>
+                                        ${ca_sets_options}
+                                    </select>
+                                    <!--<input type="text" placeholder="CA Set" />-->
                                 </td>
                                 <td>
                                     <select name="test">
