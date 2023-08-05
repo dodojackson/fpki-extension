@@ -271,8 +271,71 @@ async function reloadSettings() {
         });
     });
 
+    // Load policy trust preferences
+    let policy_pref_rows = ""
+    for (const[domain, ca_sets] of Object.entries(json_config['policy-trust-preference'])) {
+        let domain_pref_rows = ``
+        ca_sets.forEach( (item, idx) => {
+            let trust_levels = {
+                0: "Untrusted",
+                1: "Normal Trust",
+                2: "High Trust"
+            }
+            if (idx == 0) {
+                domain_pref_rows += `<tr>
+                                        <td rowspan="${ca_sets.length + 1}">${domain}</td>
+                                        <td>${item['pca']}</td>
+                                        <td>${trust_levels[item['level']]}</td>
+                                        <td>
+                                            <button class="delete delete_policy_preference">Delete</button>
+                                        </td>
+                                    </tr>`
+            } else {
+                domain_pref_rows += `<tr>
+                                        <td hidden>${domain}</td>
+                                        <td>${item['pca']}</td>
+                                        <td>${trust_levels[item['level']]}</td>
+                                        <td>
+                                            <button class="delete delete_policy_preference">Delete</button>
+                                        </td>
+                                    </tr>`
+            }
+        });
+        let hide_domain = ""
+        if (ca_sets.length != 0) {hide_domain = "hidden"}
+        // Row to add new preference
+        let ca_sets_options = ``;
+        for (const [pca_name, _] of Object.entries(json_config['root-pcas'])) {
+            ca_sets_options += `<option value="${pca_name}">${pca_name}</option>`
+        }
+        domain_pref_rows += `<tr>
+                                <td ${hide_domain}>${domain}</td>
+                                <td>
+                                    <select>
+                                        ${ca_sets_options}
+                                    </select>
+                                </td>
+                                <td>
+                                    <select name="test">
+                                        <option value="0">Untrusted</option>
+                                        <option value="1" selected>Normal Trust</option>
+                                        <option value="2">High Trust</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <button class="add_policy_preference">Add</button>
+                                </td>
+                            </tr>`
+        policy_pref_rows += `${domain_pref_rows}`
+    }
+    policy_pref_rows += `<tr>
+                            <td><input class="add_policy_preference_domain" type="text" placeholder="Domain" /></td>
+                            <td colspan="2"></td>
+                            <td><button class="add_policy_preference_domain">Add Domain</button></td>
+                        </tr>`
+    document.getElementById('policy-trust-preference-table-body').innerHTML = policy_pref_rows;
 
-    // Load current config values into input fields
+    // Load other settings
     document.querySelector("input.cache-timeout").value = json_config['cache-timeout'];
     document.querySelector("input.max-connection-setup-time").value = json_config['max-connection-setup-time'];
     document.querySelector("input.proof-fetch-timeout").value = json_config['proof-fetch-timeout'];
