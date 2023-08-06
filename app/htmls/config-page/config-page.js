@@ -23,7 +23,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             reloadSettings();
             console.log("posted message: resetConfig");
         });
-        document.getElementById('uploadConfig').addEventListener('click', function() {
+        /*
+        document.getElementById('uploadConfig').addEventListener('click', function () {
             let file = document.getElementById("file").files[0];
             let reader = new FileReader();
             
@@ -32,11 +33,10 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
             reader.readAsText(file);
         });
+        */
         document.querySelectorAll('button.save-changes').forEach( (elem) => {
             elem.addEventListener('click', async (e) => {
                 saveChanges(e)
-                // await loadCurrentInputToLocalConfig()
-                //await postConfig();
                 console.log("Configuration changes have been saved");
             });
         });
@@ -226,7 +226,8 @@ async function reloadSettings() {
             let ca_set = e.target.parentElement.parentElement.cells[1].innerHTML;
             let filtered = json_config['legacy-trust-preference'][domain].filter(item => item['caSet'] !== ca_set);
             if (filtered.length == 0) {
-                delete json_config['legacy-trust-preference'][domain];
+                // delete json_config['legacy-trust-preference'][domain];
+                json_config['legacy-trust-preference'][domain] = filtered;
             } else {
                 json_config['legacy-trust-preference'][domain] = filtered;
             }

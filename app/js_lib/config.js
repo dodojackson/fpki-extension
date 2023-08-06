@@ -66,8 +66,7 @@ function defaultConfig() {
     c.set("legacy-trust-preference", (()=>{
         const tp = new Map();
         tp.set("microsoft.com", [
-            {caSet: "Microsoft CA", level: 1},
-            {caSet: "TEST", level: 2}
+            {caSet: "Microsoft CA", level: 1}
         ]);
         tp.set("bing.com", [{caSet: "Microsoft CA", level: 1}]);
         return tp;

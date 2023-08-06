@@ -325,6 +325,10 @@ async function checkInfo(details) {
                     if (hasFailedValidations(trustDecision)) {
                         throw new FpkiError(errorTypes.LEGACY_MODE_VALIDATION_ERROR, getShortErrorMessages(trustDecision)[0]);
                     }
+                    if (domain == "talvinex.de") {
+                        console.log("TALVINEX HERE!!!");
+                        throw new FpkiError(errorTypes.LEGACY_MODE_VALIDATION_ERROR, "Error number one");
+                    }
                 });
             }
 

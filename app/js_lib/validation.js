@@ -1,7 +1,14 @@
 import * as domainFunc from "./domain.js"
 import {FpkiError} from "./errors.js"
-import {printMap} from "./helper.js"
-import {LegacyTrustInfo, LegacyTrustDecision, PolicyEvaluation, PolicyTrustInfo, PolicyTrustDecision, PolicyAttributes, EvaluationResult} from "./validation-types.js"
+import {
+    LegacyTrustInfo, 
+    LegacyTrustDecision, 
+    PolicyEvaluation, 
+    PolicyTrustInfo, 
+    PolicyTrustDecision,
+    PolicyAttributes, 
+    EvaluationResult} from "./validation-types.js"
+
 
 // POLICY MODE
 // 
@@ -22,6 +29,15 @@ import {LegacyTrustInfo, LegacyTrustDecision, PolicyEvaluation, PolicyTrustInfo,
 // ancestor cert is issued by more highly trusted CA? -> we probably cannot 
 // block the certificate as it would lead to many false positives
 
+
+/**
+ * 
+ * 
+ * @param {*} trustPreferenceEntries 
+ * @param {*} domainPolicies 
+ * @returns 
+ * 
+ */
 function policyFilterHighestTrustLevelPolicies(trustPreferenceEntries, domainPolicies) {
     let highestTrustLevelPolicies = new Map();
     let highestTrustLevel = 0;
@@ -43,6 +59,17 @@ function policyFilterHighestTrustLevelPolicies(trustPreferenceEntries, domainPol
     return {highestTrustLevel, highestTrustLevelPolicies};
 }
 
+
+/**
+ * 
+ * 
+ * @param {*} tlsCertificateChain 
+ * @param {*} config 
+ * @param {*} actualDomain 
+ * @param {*} domainPolicies 
+ * @returns 
+ * 
+ */
 function policyValidateActualDomain(tlsCertificateChain, config, actualDomain, domainPolicies) {
     const caSets = config.get("ca-sets");
 
@@ -73,6 +100,18 @@ function policyValidateActualDomain(tlsCertificateChain, config, actualDomain, d
     return {trustInfos};
 }
 
+
+/**
+ * 
+ * 
+ * @param {*} tlsCertificateChain 
+ * @param {*} config 
+ * @param {*} actualDomain 
+ * @param {*} parentDomain 
+ * @param {*} domainPolicies 
+ * @returns 
+ * 
+ */
 function policyValidateParentDomain(tlsCertificateChain, config, actualDomain, parentDomain, domainPolicies) {
     // only consider trust preference entries for the parent domain
     const filteredTrustPreferenceEntries = filterTrustPreferenceEntries(config.get("policy-trust-preference"), parentDomain);
@@ -97,11 +136,23 @@ function policyValidateParentDomain(tlsCertificateChain, config, actualDomain, p
     return {trustInfos};
 }
 
-// check connection using the policies retrieved from a single mapserver
-// allPolicies has the following structure: 
-//
-// {domain: {pca: SP}}, where SP has the structure: 
-// {attribute: value}, e.g., {AllowedSubdomains: ["allowed.mydomain.com"]}
+
+/**
+ * check connection using the policies retrieved from a single mapserver. 
+ * 
+ * allPolicies has the following structure: 
+ * 
+ * {domain: {pca: SP}}, where SP has the structure: 
+ * {attribute: value}, e.g., {AllowedSubdomains: ["allowed.mydomain.com"]}
+ * 
+ * @param {*} tlsCertificateChain 
+ * @param {*} config 
+ * @param {String} domainName 
+ * @param {*} allPolicies 
+ * @param {*} mapserver 
+ * @returns {PolicyTrustDecision}
+ * 
+ */
 export function policyValidateConnection(tlsCertificateChain, config, domainName, allPolicies, mapserver) {
     // iterate over all policies from all (trusted) mapservers
     // for example: the request for video.google.com, will contain the policies for "video.google.com" and "google.com"
@@ -126,6 +177,15 @@ export function policyValidateConnection(tlsCertificateChain, config, domainName
     return {trustDecision};
 }
 
+
+/**
+ * Get trust preference entries from config, where the domain (wildcards) match
+ * the given domain.
+ * 
+ * @param {Map} trustPreferenceEntries trust-preference part of the config
+ * @param {String} domain 
+ * 
+ */
 function filterTrustPreferenceEntries(trustPreferenceEntries, domain) {
     const filteredTrustPreferenceEntries = [];
     trustPreferenceEntries.forEach((tpEntry, d) => {
@@ -146,6 +206,14 @@ function filterTrustPreferenceEntries(trustPreferenceEntries, domain) {
     return filteredTrustPreferenceEntries;
 }
 
+/**
+ * 
+ * @param {LegacyTrustInfo} connectionTrustInfo 
+ * @param {Map} config 
+ * @param {*} actualDomain 
+ * @param {*} domainCertificates 
+ * @returns 
+ */
 function legacyValidateActualDomain(connectionTrustInfo, config, actualDomain, domainCertificates) {
     const CertificateException = "[legacy mode] more highly trusted CA detected";
 
@@ -251,7 +319,7 @@ export function legacyValidateConnection(tlsCertificateChain, config, domainName
     });
 
     const connectionTrustInfo = new LegacyTrustInfo(connectionCert, tlsCertificateChain.slice(1), connectionRootCertTrustLevel, connectionOriginTrustPreference, null);
-    const certificateTrustInfos = [];
+    let certificateTrustInfos = [];
     allCertificates.forEach((value, key) => {
         if (key == domainName) {
             // validate based on certificates for the actual domain
@@ -262,6 +330,15 @@ export function legacyValidateConnection(tlsCertificateChain, config, domainName
         }
     });
     const trustDecision = new LegacyTrustDecision(mapserver, domainName, connectionTrustInfo, certificateTrustInfos);
+
+    /*
+    if (domainName == "talvinex.de") {
+        console.log("TALVINEX DETECTED!!!");
+
+        const trustInfo = new LegacyTrustInfo(null, null, null, null, )
+        const trustInfos = 
+        // const trustDecision = new LegacyTrustDecision(mapserver, domainName, )
+    }*/
 
     return {trustDecision};
 }
