@@ -357,24 +357,80 @@ async function reloadSettings() {
         value.forEach( (ca, idx) => {
             if (idx == 0) {
                 ca_sets_rows += `<tr>
-                                    <td rowspan=${value.length}>${key}</td>
-                                    <td> 
-                                        ${ca}
+                                    <td rowspan=${value.length + 1}>${key}</td>
+                                    <td>${ca}</td>
+                                    <td>
+                                        <button class="delete delete_ca_from_set">Delete</button>
                                     </td>
                                 </tr>`
             } else {
                 ca_sets_rows += `<tr>
                                     <td hidden>${key}</td>
-                                    <td> 
-                                        ${ca}
+                                    <td>${ca}</td>
+                                    <td>
+                                        <button class="delete delete_ca_from_set">Delete</button>
                                     </td>
                                 </tr>`
             }
-        })
-
-        
+        });
+        let hide_set_name = ""
+        if (value.length != 0) {hide_set_name = "hidden"}
+        ca_sets_rows += `
+            <tr>
+                <td ${hide_set_name}>${key}</td>
+                <td>
+                    <input type="text" placeholder="Distinguished Name" />
+                </td>
+                <td>
+                    <button class="add_ca_to_set">Add</button>
+                </td>
+            </tr>`
     }
+    ca_sets_rows += `<tr>
+                        <td>
+                            <input type="text" placeholder="Set Name" />
+                        </td>
+                        <td></td>
+                        <td>
+                            <button class="add_ca_set">Add CA Set</button>
+                        </td>
+                    </tr>`
     document.getElementById('ca-sets-table-body').innerHTML = ca_sets_rows;
+
+    // Add CA Set event listeners
+    document.querySelectorAll('button.delete_ca_from_set').forEach(elem => {
+        elem.addEventListener("click", (e) => {
+            let set_name = e.target.parentElement.parentElement.cells[0].innerHTML;
+            let ca_distinguished_name = e.target.parentElement.parentElement.cells[1].innerHTML;
+            let filtered = json_config['ca-sets'][set_name].filter(elem => elem !== ca_distinguished_name);
+
+            if (filtered.length == 0) {
+                delete json_config['ca-sets'][set_name];
+            } else {
+                json_config['ca-sets'][set_name] = filtered;
+            }
+            
+            importConfigFromJSON(JSON.stringify(json_config));
+            reloadSettings();
+            console.log(ca_distinguished_name);
+            console.log(filtered);
+        });
+    });
+    document.querySelectorAll('button.add_ca_to_set').forEach(elem => {
+        elem.addEventListener("click", (e) => {
+            let set_name = e.target.parentElement.parentElement.cells[0].innerHTML;
+            let ca_distinguished_name = e.target.parentElement.parentElement.cells[1].children[0].value;
+            json_config['ca-sets'][set_name].push(ca_distinguished_name);
+            importConfigFromJSON(JSON.stringify(json_config));
+            reloadSettings();
+        });
+    });
+    document.querySelector('button.add_ca_set').addEventListener("click", (e) => {
+        let set_name = e.target.parentElement.parentElement.cells[0].children[0].value;
+        json_config['ca-sets'][set_name] = [];
+        importConfigFromJSON(JSON.stringify(json_config));
+        reloadSettings();
+    });
 
     // Load other settings
     document.querySelector("input.cache-timeout").value = json_config['cache-timeout'];
@@ -464,6 +520,13 @@ async function resetChanges(e) {
 
         reloadSettings();
     }
+    // CA Sets
+    if (e.target.classList.contains('ca-sets')) {
+        local_config['ca-sets'] = live_config['ca-sets'];
+        importConfigFromJSON(JSON.stringify(local_config));
+
+        reloadSettings();
+    }
     // Other Settings
     if (e.target.classList.contains('other-settings')) {
         local_config['cache-timeout'] = live_config['cache-timeout'];
@@ -494,6 +557,10 @@ function saveChanges(e) {
     }
 
     if (e.target.classList.contains('policy-trust-preference')) {
+        postConfig();
+    }
+
+    if (e.target.classList.contains('ca-sets')) {
         postConfig();
     }
 
