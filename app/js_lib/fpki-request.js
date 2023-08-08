@@ -3,9 +3,10 @@ import {queryMapServerHttp, extractPolicy, extractCertificates} from "./LF-PKI-a
 import {mapGetList, cLog, printMap} from "./helper.js"
 import {config} from "./config.js"
 
-var fpkiRequests = new Map();
 
+var fpkiRequests = new Map();
 var mapserverResponseCache = new Map();
+
 
 export class FpkiRequest {
     constructor(mapserver, domain, requestId) {
@@ -154,10 +155,12 @@ class MapserverResponseCacheEntry {
     }
 }
 
+
 function addMapserverResponse(timestamp, domain, mapserver, pcaPolicies, certificates) {
     const cacheEntry = new MapserverResponseCacheEntry(timestamp, mapserver, pcaPolicies, certificates);
     mapserverResponseCache.set(domain, mapGetList(mapserverResponseCache, domain).concat(cacheEntry));
 }
+
 
 function getLatestMapserverResponse(domain) {
     const latestPolicies = new Map();
@@ -173,9 +176,11 @@ function getLatestMapserverResponse(domain) {
     return latestPolicies;
 }
 
+
 function shouldFetchMapserverResponseForMapserver(domain, mapserver, maxTimeToExpiration=0) {
     return getValidMapserverResponseForMapserver(domain, mapserver, maxTimeToExpiration).length === 0;
 }
+
 
 function getValidMapserverResponseForMapserver(domain, mapserver, maxTimeToExpiration=0) {
     return getAllValidMapserverResponse(domain, maxTimeToExpiration).
@@ -183,6 +188,7 @@ function getValidMapserverResponseForMapserver(domain, mapserver, maxTimeToExpir
             ({mapserver: entryMapserver}) => entryMapserver === mapserver
         );
 }
+
 
 function getAllValidMapserverResponse(domain, maxTimeToExpiration=0) {
     const currentTime = new Date();

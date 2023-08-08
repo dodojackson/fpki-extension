@@ -43,6 +43,10 @@ class DomainToCertificateCacheEntry {
     }
 }
 
+/**
+ * Returns the certificate with the given hash from cache, or `null` if there
+ * is no such certificate in the cache.
+ */
 export function getCertificateEntryByHash(certificateHash) {
     if (window.GOCACHE) {
         if (certificateCacheGO.has(certificateHash)) {
@@ -57,7 +61,10 @@ export function getCertificateEntryByHash(certificateHash) {
     }
 }
 
-// returns the certificate stored in the cache for a specific key
+
+/**
+ * Returns the certificate stored in the cache for a specific key
+ */ 
 export function getCertificateFromCacheByHash(certificateHash) {
     if(window.GOCACHE) {
         if (certificateCacheGO.has(certificateHash)) {
@@ -118,10 +125,28 @@ function toHexString(byteArray) {
     }).join('')
 }
 
-// adds the certificate to the cache and returns its hash (i.e., the hash of the leaf certificate) as a reference (i.e., key in the cache)
-export async function addCertificateChainToCacheIfNecessary(pemCertificateWithoutHeader, pemCertificateChainWithoutHeader, requestId) {
-    const fullChain = [pemCertificateWithoutHeader].concat(pemCertificateChainWithoutHeader.map(c => c === null ? [] : c));
-    const fullChainHashes = await Promise.all(fullChain.map(async c => arrayToHexString(await hashPemCertificateWithoutHeader(c), ":")));
+
+/**
+ * adds the certificate to the cache and returns its hash (i.e., the hash of the
+ * leaf certificate) as a reference (i.e., key in the cache)
+ *
+ * @param {*} pemCertificateWithoutHeader 
+ * @param {*} pemCertificateChainWithoutHeader 
+ * @param {*} requestId 
+ * @returns 
+ */
+export async function addCertificateChainToCacheIfNecessary(
+    pemCertificateWithoutHeader, 
+    pemCertificateChainWithoutHeader, 
+    requestId)
+{
+
+    const fullChain = [pemCertificateWithoutHeader].concat(
+        pemCertificateChainWithoutHeader.map(c => c === null ? [] : c)
+    );
+    const fullChainHashes = await Promise.all(fullChain.map(
+        async c => arrayToHexString(await hashPemCertificateWithoutHeader(c), ":"))
+    );
     let nCertificatesParsed = 0;
 
     if(window.GOCACHE) {
@@ -138,9 +163,15 @@ export async function addCertificateChainToCacheIfNecessary(pemCertificateWithou
             const hash = fullChainHashes[i];
 
             if (certificateCacheGO.has(hash)) {
-                // the certificate was already parsed and thus all parents must have been parsed as well
-                // TODO: this is not true, since a CA could have two certificates with the same subject and public key but a diferent certificate (e.g., validity times, algorithms, serial numbers, ...)
-                // so, even if the certificate is already contained in the cache, we still need to check if we have to add another parent
+                // the certificate was already parsed and thus all parents must
+                // have been parsed as well
+                //
+                // TODO: this is not true, since a CA could have two
+                // certificates with the same subject and public key but a
+                // diferent certificate (e.g., validity times, algorithms,
+                // serial numbers, ...) so, even if the certificate is already
+                // contained in the cache, we still need to check if we have to
+                // add another parent
                 continue;
             } else {
                 nCertificatesParsed += 1;
