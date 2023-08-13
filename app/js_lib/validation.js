@@ -206,6 +206,7 @@ function filterTrustPreferenceEntries(trustPreferenceEntries, domain) {
     return filteredTrustPreferenceEntries;
 }
 
+
 /**
  * 
  * @param {LegacyTrustInfo} connectionTrustInfo 
@@ -215,6 +216,8 @@ function filterTrustPreferenceEntries(trustPreferenceEntries, domain) {
  * @returns 
  */
 function legacyValidateActualDomain(connectionTrustInfo, config, actualDomain, domainCertificates) {
+    console.log("TEST TEST: legacyValidateActualDomain() called");
+
     const CertificateException = "[legacy mode] more highly trusted CA detected";
 
     const caSets = config.get("ca-sets");
@@ -279,15 +282,33 @@ function legacyValidateActualDomain(connectionTrustInfo, config, actualDomain, d
             }
         });
     }
+    // --> TEST TEST
+    console.log("TEST TEST");
+    console.log(trustInfos);
+
     return {trustInfos};
 }
 
-// check connection using the policies retrieved from a single mapserver
-// allPolicies has the following structure: {domain: {pca: SP}}, where SP has the structure: {attribute: value}, e.g., {AllowedSubdomains: ["allowed.mydomain.com"]}
+
+/**
+ * iterate over all certificates from all (trusted) mapservers for example: the
+ * request for video.google.com, will only contain the certificates for
+ * "video.google.com"
+ *
+ * TODO: currently all certificates are included in the response, could not
+ * return certificates for the parent domain in the future
+ *
+ * @param {*} tlsCertificateChain 
+ * @param {*} config 
+ * @param {*} domainName 
+ * @param {*} allCertificates  policy certificates from mapservers
+ * @param {*} mapserver 
+ * @returns 
+ */
 export function legacyValidateConnection(tlsCertificateChain, config, domainName, allCertificates, mapserver) {
-    // iterate over all certificates from all (trusted) mapservers
-    // for example: the request for video.google.com, will only contain the certificates for "video.google.com"
-    // TODO: currently all certificates are included in the response, could not return certificates for the parent domain in the future
+    // 
+
+    console.log("TEST TEST: legacyValidateConnection() called");
 
     // get connection cert
     // TODO: ensure that the first certificate is always the actual certificate
@@ -304,11 +325,17 @@ export function legacyValidateConnection(tlsCertificateChain, config, domainName
     const caSets = config.get("ca-sets");
     const filteredTrustPreferenceEntries = filterTrustPreferenceEntries(config.get("legacy-trust-preference"), domainName);
 
+    // TEST TEST -->
+    console.log("TEST TEST: filteredTrustPreferenceEntries: ");
+
     // get connection root cert trust level (I)
     let connectionRootCertTrustLevel = 0;
     let connectionOriginTrustPreference = null;
     filteredTrustPreferenceEntries.forEach(tps => {
+        console.log("TEST TEST entry count");
+
         tps.forEach(tp => {
+            console.log("TEST TEST preference count. level: " + tp.level);
             if (caSets.get(tp.caSet).includes(connectionRootCertSubject)) {
                 if (tp.level > connectionRootCertTrustLevel) {
                     connectionRootCertTrustLevel = tp.level;
@@ -318,8 +345,17 @@ export function legacyValidateConnection(tlsCertificateChain, config, domainName
         });
     });
 
-    const connectionTrustInfo = new LegacyTrustInfo(connectionCert, tlsCertificateChain.slice(1), connectionRootCertTrustLevel, connectionOriginTrustPreference, null);
+    const connectionTrustInfo = new LegacyTrustInfo(
+        connectionCert, 
+        tlsCertificateChain.slice(1), 
+        connectionRootCertTrustLevel, 
+        connectionOriginTrustPreference, 
+        null
+    );
+    console.log("TEST TEST: Root trust level: " + connectionRootCertTrustLevel);
+
     let certificateTrustInfos = [];
+
     allCertificates.forEach((value, key) => {
         if (key == domainName) {
             // validate based on certificates for the actual domain
@@ -339,6 +375,13 @@ export function legacyValidateConnection(tlsCertificateChain, config, domainName
         const trustInfos = 
         // const trustDecision = new LegacyTrustDecision(mapserver, domainName, )
     }*/
+
+    // --> TEST TEST:
+    console.log("TEST TEST:" + trustDecision);
+    console.log("TEST TEST:");
+    trustDecision.certificateTrustInfos.forEach(cti => {
+        console.log(cti.evaluationResult);
+    });
 
     return {trustDecision};
 }

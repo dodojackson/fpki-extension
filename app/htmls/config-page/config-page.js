@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             reloadSettings();
             console.log("posted message: resetConfig");
         });
-        /*
+        
         document.getElementById('uploadConfig').addEventListener('click', function () {
             let file = document.getElementById("file").files[0];
             let reader = new FileReader();
@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
             reader.readAsText(file);
         });
-        */
+        
         document.querySelectorAll('button.save-changes').forEach( (elem) => {
             elem.addEventListener('click', async (e) => {
                 saveChanges(e)
@@ -154,7 +154,7 @@ async function reloadSettings() {
         let domain_pref_rows = ``
         ca_sets.forEach( (item, idx) => {
             let trust_levels = {
-                0: "Untrusted",
+                5: "Untrusted",
                 1: "Normal Trust",
                 2: "High Trust"
             }

@@ -281,6 +281,7 @@ async function getTlsCertificateChain(securityInfo) {
 
 
 async function checkInfo(details) {
+    //console.log("TEST TEST");
     const onHeadersReceived = performance.now();
     const logEntry = getLogEntryForRequest(details.requestId);
     cLog(details.requestId, "checkInfo ["+details.url+"]");
@@ -353,7 +354,7 @@ async function checkInfo(details) {
             // check each policy and throw an error if one of the verifications
             // fails
             policiesMap.forEach((policy, mapserver) => {
-                //cLog(details.requestId, "starting policy verification for ["+domain+", "+m.identity+"] with policies: "+printMap(p));
+                cLog(details.requestId, "starting policy verification for ["+domain+", "+mapserver.identity+"] with policies: "+printMap(policy));
 
                 const {trustDecision} = policyValidateConnection(certificateChain, config, domain, policy, mapserver);
                 addTrustDecision(details, trustDecision);

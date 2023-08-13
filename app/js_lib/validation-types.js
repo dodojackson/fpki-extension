@@ -59,7 +59,8 @@ export class LegacyTrustDecision {
         this.decision = hasFailedValidations(this) ? "negative" : "positive";
     }
 
-    // maybe we don't need to merge because we always stop as soon as the first negative decision is made
+    // maybe we don't need to merge because we always stop as soon as the first
+    // negative decision is made
     merge(other) {
         if (this.domain !== other.domain) {
             throw new FpkiError(errorTypes.INTERNAL_ERROR, "Merging trust decisions for different domains");
@@ -162,6 +163,20 @@ export function hasFailedValidations(trustDecision) {
     if (trustDecision.type === "policy") {
         return trustDecision.policyTrustInfos.some(pti => pti.evaluations.some(e => e.evaluationResult === EvaluationResult.FAILURE));
     } else {
+        
+        // TEST TEST -->
+        console.log("VALIDATION: Evaluation happening");
+        console.log(trustDecision.certificateTrustInfos);
+        trustDecision.certificateTrustInfos.forEach(cti => {
+            console.log(cti.evaluationResult);
+        });
+        if (trustDecision.certificateTrustInfos.some(cti => cti.evaluationResult === EvaluationResult.FAILURE)) {
+            console.log("VALIDATION: Validation negative");
+        } else {
+            console.log("VALIDATION: Validation positive");
+        }
+        // <-- TEST TEST
+
         return trustDecision.certificateTrustInfos.some(cti => cti.evaluationResult === EvaluationResult.FAILURE);
     }
 }
@@ -198,9 +213,9 @@ function getPolicyErrorMessage(trustDecision, trustInfo, evaluation) {
     let errorMessage = "";
     errorMessage += "[policy mode] ";
     if (evaluation.attribute === PolicyAttributes.TRUSTED_CA) {
-        errorMessage += "Detected certificate issued by an invalid CA: " + getSubject(trustDecision.connectionCertChain[trustDecision.connectionCertChain.length-1]);
+        errorMessage += "Detected certificate issued by an invalid CA: " + getSubject(trustDecision.connectionCertChain[trustDecision.connectionCertChain.length - 1]);
     } else if (evaluation.attribute === PolicyAttributes.SUBDOMAINS) {
-        errorMessage += "Detected certificate issued for a domain that is not allowed: "+trustDecision.domain;
+        errorMessage += "Detected certificate issued for a domain that is not allowed: " + trustDecision.domain;
     }
     errorMessage += " [policy issued by PCA: ";
     errorMessage += trustInfo.pca;
@@ -221,12 +236,12 @@ function getLegacyErrorMessage(trustDecision, trustInfo) {
     let errorMessage = "";
     errorMessage += "[legacy mode] Detected certificate issued by a CA that is more highly trusted than ";
     // Subject of the last certificate of the chain => ?!
-    errorMessage += getSubject(trustDecision.connectionTrustInfo.certChain[trustDecision.connectionTrustInfo.certChain.length-1]);
+    errorMessage += getSubject(trustDecision.connectionTrustInfo.certChain[trustDecision.connectionTrustInfo.certChain.length - 1]);
     errorMessage += " [certificate issued by CA: ";
     if (trustInfo.certChain.length === 0) {
         errorMessage += "unknown";
     } else {
-        errorMessage += getSubject(trustInfo.certChain[trustInfo.certChain.length-1]);
+        errorMessage += getSubject(trustInfo.certChain[trustInfo.certChain.length - 1]);
     }
     errorMessage += "]";
     return errorMessage;
