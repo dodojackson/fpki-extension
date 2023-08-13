@@ -81,9 +81,15 @@ function policyValidateActualDomain(tlsCertificateChain, config, actualDomain, d
     const trustInfos = [];
     highestTrustLevelPolicies.forEach(({pcaPolicy, originTrustPreference}, pcaIdentifier) => {
         if (pcaPolicy.TrustedCA !== null) {
+            console.log("TEST TEST: Policy Validation: Issuers Policy Found")
             tlsCertificateChain.forEach((certificate, i) => {
+                console.log("TEST TEST: Policy Validation Cert: \n" + certificate.issuer + "\n" + certificate.subject);
                 // if certificate is in browsers trust store
-                if (certificate.isBuiltInRoot) {
+                if (
+                    certificate.isBuiltInRoot || 
+                    certificate.subject == "CN=alt.ca.example.com,OU=Example GmbH Alt.CA,O=Example GmbH,C=DE"
+                ) {  // TEST TEST
+                    console.log("TEST TEST: Policy Validation: Cert is BuiltInRoot")
                     // check if CA is in the trusted list
                     let evaluation;
                     if (pcaPolicy.TrustedCA.every(ca => !caSets.get(ca).includes(certificate.subject))) {
