@@ -23,7 +23,7 @@ func issuePCandRPC(domainName string) {
 	flag.Parse()
 	prepareTestFolder()
 
-	domains := []string{"amazon.com", "baidu.com", "pay.amazon.com", "m.media-amazon.com", "ethz.ch"}
+	domains := []string{"amazon.com", "baidu.com", "pay.amazon.com", "m.media-amazon.com", "ethz.ch", "example.com"}
 
 	var policies []common.Policy
 	// generate SP
@@ -50,6 +50,11 @@ func issuePCandRPC(domainName string) {
 	policies = append(policies, common.Policy{
 		TrustedCA:         nil,
 		AllowedSubdomains: []string{"netsec.ethz.ch"},
+	})
+	// example.com (TEST)
+	policies = append(policies, common.Policy{
+		TrustedCA:         []string{"Example CA"},
+		AllowedSubdomains: []string{"store.example.com"},
 	})
 
 	// init domain owner
