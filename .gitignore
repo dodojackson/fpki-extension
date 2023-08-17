@@ -22,7 +22,10 @@ mapserver/rpc_and_sp/baidu.com_pca_rpc
 mapserver/rpc_and_sp/baidu.com_pca_sp
 mapserver/rpc_and_sp/ethz.ch_pca_rpc
 mapserver/rpc_and_sp/ethz.ch_pca_sp
+mapserver/rpc_and_sp/example.de_pca_rpc
+mapserver/rpc_and_sp/example.de_pca_sp
 mapserver/rpc_and_sp/m.media-amazon.com_pca_rpc
 mapserver/rpc_and_sp/m.media-amazon.com_pca_sp
 mapserver/rpc_and_sp/pay.amazon.com_pca_rpc
 mapserver/rpc_and_sp/pay.amazon.com_pca_sp
+mapserver/testdata/additional_certs/cert.pem
