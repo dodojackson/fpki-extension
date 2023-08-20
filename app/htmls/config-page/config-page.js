@@ -45,6 +45,14 @@ document.addEventListener('DOMContentLoaded', async () => {
                 await resetChanges(e);
             })
         });
+        document.getElementById('advancedButton').addEventListener("click", () => {
+            let adv_settings = document.getElementById('advanced-settings');
+            if (adv_settings.hidden) {
+                adv_settings.hidden = false;
+            } else {
+                adv_settings.hidden = true;
+            }
+        });
 
         await requestConfig();
         await reloadSettings();

@@ -9,6 +9,7 @@
   <body>
     <div id="options">
       <h1>Configuration Page</h1>
+
       <button id="printConfig">Print Config</button>
       <button id="downloadConfig">Download Config</button>
       <button id="resetConfig">Reset Config to Default</button>
@@ -17,25 +18,6 @@
       <input type="file" id="file" onchange="handle_files()">
       <button id="uploadConfig">Upload</button>
       <br/>
-
-      <div class="settings-section">
-        <h2>Mapservers</h2>
-        <table id="mapservers-table">
-          <thead>
-              <tr>
-                  <th colspan="1">Identity</th>
-                  <th colspan="1">Domain</th>
-                  <th colspan="1">Query Type</th>
-                  <th colcpan="1">Action</th>
-              </tr>
-          </thead>
-          <tbody id="mapservers-table-body">
-              <!-- Mapservers will be inserted based on JSON configuration -->
-          </tbody>
-        </table>
-        <button class="reset-changes mapservers">Undo Changes</button>
-        <button class="save-changes mapservers">Save Changes</button>
-      </div>
 
 
       <!-- LEGACY TRUST PREFERENCES -->
@@ -105,54 +87,83 @@
         <button class="save-changes ca-sets">Save Changes</button>
       </div>
 
+    
+      <!-- 
+        ADVANCED SETTINGS 
+      -->
+      <button id="advancedButton">Erweitert...</button>
 
-      <!-- OTHER SETTINGS -->
-      <div class="settings-section">
-        <h2>Other Settings</h2>
-        <table id="other-table">
-          <thead>
-              <tr>
-                  <th colspan="1">Setting</th>
-                  <th colspan="1">Value</th>
-              </tr>
-          </thead>
-          <tbody id="other-table-body">
-              <tr>
-                <td>Cache Timeout: </td>
-                <td><input type="int" class="cache-timeout" /></td>
-              </tr>
-              <tr>
-                <td>Max Connection Setup Time: </td>
-                <td><input type="int" class="max-connection-setup-time" /></td>
-              </tr>
-              <tr>
-                <td>Proof Fetch Timeout: </td>
-                <td><input type="int" class="proof-fetch-timeout" /></td>
-              </tr>
-              <tr>
-                <td>Proof Fetch Max Tries: </td>
-                <td><input type="int" class="proof-fetch-max-tries" /></td>
-              </tr>
-              <tr>
-                <td>Mapserver Quorum: </td>
-                <td><input type="int" class="mapserver-quorum" /></td>
-              </tr>
-              <tr>
-                <td>Mapserver Instances Queried: </td>
-                <td><input type="int" class="mapserver-instances-queried" /></td>
-              </tr>
-              <tr>
-                <td>Send Log Entries via Event: </td>
-                <td><input type="int" class="send-log-entries-via-event" /></td>
-              </tr>
-              <tr>
-                <td>Wasm Certificate Parsing: </td>
-                <td><input type="int" class="wasm-certificate-parsing" /></td>
-              </tr>
-          </tbody>
-        </table>
-        <button class="reset-changes other-settings">Reset Changes</button>
-        <button class="save-changes other-settings">Save Changes</button>
+      <div id="advanced-settings" hidden="">
+
+        <!-- MAPSERVER SETTINGS -->
+        <div class="settings-section">
+          <h2>Mapservers</h2>
+          <table id="mapservers-table">
+            <thead>
+                <tr>
+                    <th colspan="1">Identity</th>
+                    <th colspan="1">Domain</th>
+                    <th colspan="1">Query Type</th>
+                    <th colcpan="1">Action</th>
+                </tr>
+            </thead>
+            <tbody id="mapservers-table-body">
+                <!-- Mapservers will be inserted based on JSON configuration -->
+            </tbody>
+          </table>
+          <button class="reset-changes mapservers">Undo Changes</button>
+          <button class="save-changes mapservers">Save Changes</button>
+        </div>
+
+
+        <!-- OTHER SETTINGS -->
+        <div class="settings-section">
+          <h2>Other Settings</h2>
+          <table id="other-table">
+            <thead>
+                <tr>
+                    <th colspan="1">Setting</th>
+                    <th colspan="1">Value</th>
+                </tr>
+            </thead>
+            <tbody id="other-table-body">
+                <tr>
+                  <td>Cache Timeout: </td>
+                  <td><input type="int" class="cache-timeout" /></td>
+                </tr>
+                <tr>
+                  <td>Max Connection Setup Time: </td>
+                  <td><input type="int" class="max-connection-setup-time" /></td>
+                </tr>
+                <tr>
+                  <td>Proof Fetch Timeout: </td>
+                  <td><input type="int" class="proof-fetch-timeout" /></td>
+                </tr>
+                <tr>
+                  <td>Proof Fetch Max Tries: </td>
+                  <td><input type="int" class="proof-fetch-max-tries" /></td>
+                </tr>
+                <tr>
+                  <td>Mapserver Quorum: </td>
+                  <td><input type="int" class="mapserver-quorum" /></td>
+                </tr>
+                <tr>
+                  <td>Mapserver Instances Queried: </td>
+                  <td><input type="int" class="mapserver-instances-queried" /></td>
+                </tr>
+                <tr>
+                  <td>Send Log Entries via Event: </td>
+                  <td><input type="int" class="send-log-entries-via-event" /></td>
+                </tr>
+                <tr>
+                  <td>Wasm Certificate Parsing: </td>
+                  <td><input type="int" class="wasm-certificate-parsing" /></td>
+                </tr>
+            </tbody>
+          </table>
+          <button class="reset-changes other-settings">Reset Changes</button>
+          <button class="save-changes other-settings">Save Changes</button>
+        </div>
       </div>
 
     </div>
