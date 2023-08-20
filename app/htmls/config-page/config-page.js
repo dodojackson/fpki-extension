@@ -154,9 +154,10 @@ async function reloadSettings() {
         let domain_pref_rows = ``
         ca_sets.forEach( (item, idx) => {
             let trust_levels = {
-                5: "Untrusted",
-                1: "Normal Trust",
-                2: "High Trust"
+                0: "Untrusted",
+                1: "Standard Trust",
+                2: "High Trust",
+                3: "Perfect Trust"
             }
             if (idx == 0) {
                 domain_pref_rows += `<tr>
@@ -196,8 +197,9 @@ async function reloadSettings() {
                                 <td>
                                     <select name="test">
                                         <option value="0">Untrusted</option>
-                                        <option value="1" selected>Normal Trust</option>
+                                        <option value="1" selected>Standard Trust</option>
                                         <option value="2">High Trust</option>
+                                        <option value="3">Perfect Trust</option>
                                     </select>
                                 </td>
                                 <td>
@@ -258,8 +260,9 @@ async function reloadSettings() {
         ca_sets.forEach( (item, idx) => {
             let trust_levels = {
                 0: "Untrusted",
-                1: "Normal Trust",
-                2: "High Trust"
+                1: "Standard Trust",
+                2: "High Trust",
+                3: "Perfect Trust"
             }
             if (idx == 0) {
                 domain_pref_rows += `<tr>
@@ -298,8 +301,9 @@ async function reloadSettings() {
                                 <td>
                                     <select name="test">
                                         <option value="0">Untrusted</option>
-                                        <option value="1" selected>Normal Trust</option>
+                                        <option value="1" selected>Standard Trust</option>
                                         <option value="2">High Trust</option>
+                                        <option value="3">Perfect Trust</option>
                                     </select>
                                 </td>
                                 <td>

@@ -11,3 +11,18 @@
 
 # DS_Store
 .DS_Store
+
+mapserver/certs/mapserver_certs/ETHz_mapserver_cert.pem
+mapserver/certs/mapserver_certs/ETHz_mapserver_key.pem
+mapserver/certs/pca_certs/ETHz_pca_cert.pem
+mapserver/certs/pca_certs/ETHz_pca_key.pem
+mapserver/rpc_and_sp/amazon.com_pca_rpc
+mapserver/rpc_and_sp/amazon.com_pca_sp
+mapserver/rpc_and_sp/baidu.com_pca_rpc
+mapserver/rpc_and_sp/baidu.com_pca_sp
+mapserver/rpc_and_sp/ethz.ch_pca_rpc
+mapserver/rpc_and_sp/ethz.ch_pca_sp
+mapserver/rpc_and_sp/m.media-amazon.com_pca_rpc
+mapserver/rpc_and_sp/m.media-amazon.com_pca_sp
+mapserver/rpc_and_sp/pay.amazon.com_pca_rpc
+mapserver/rpc_and_sp/pay.amazon.com_pca_sp
