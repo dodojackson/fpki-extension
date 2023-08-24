@@ -53,6 +53,14 @@ document.addEventListener('DOMContentLoaded', async () => {
                 adv_settings.hidden = true;
             }
         });
+        document
+            .querySelectorAll("span.info-icon")
+            .forEach(elem => {
+                elem.addEventListener("click", (e) => {
+                    let box = e.target.parentElement.children[2];
+                    toggleInfoBox(box);
+                });
+            });
 
         await requestConfig();
         await reloadSettings();
@@ -73,6 +81,16 @@ port.onMessage.addListener( (msg) => {
         printConfig();
     }
 });
+
+
+function toggleInfoBox(box) {
+    if (box.hidden === true) {
+        box.hidden = false;
+    } else {
+        box.hidden = true;
+    }
+}
+
 
 /**
  * Prints live config object to html as JSON string
