@@ -45,11 +45,13 @@ document.addEventListener('DOMContentLoaded', async () => {
                 await resetChanges(e);
             })
         });
-        document.getElementById('advancedButton').addEventListener("click", () => {
+        document.getElementById('advancedButton').addEventListener("click", (e) => {
             let adv_settings = document.getElementById('advanced-settings');
             if (adv_settings.hidden) {
+                e.target.innerHTML = "Hide";
                 adv_settings.hidden = false;
             } else {
+                e.target.innerHTML = "Show";
                 adv_settings.hidden = true;
             }
         });
