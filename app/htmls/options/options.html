@@ -10,111 +10,118 @@
   </head>
   <body>
     <main>
-        <h1>F-PKI</h1>
-        <p>
-          F-PKI (<b>Flexible</b> Public-Key-Infrastructure) bringt
-          <b>Vertrauensverhältnisse</b> ins Internet.
-        </p>
-        <p>
-          <a href="../config-page/config-page.html">Konfigurationsseite</a>
-        </p>
+      <p>
+        <a href="../config-page/config-page.html" target="_blank">Konfigurationsseite</a>
+      </p>
+      <h1>F-PKI</h1>
+      <p>
+        F-PKI (<b>Flexible</b> Public-Key-Infrastructure) bringt
+        <b>Vertrauensverhältnisse</b> ins Internet.
+      </p>
 
-        <h2>Trust Flexibility</h2>
-        <p>
-          Vertraust du deinem <b>besten Freund</b> mehr als Olaf Scholz?
-        </p>
-        <p>
-          <b>Vertrauen ist relativ</b> zum Gegenüber, aber im Internet vertrauen wir
-          allen unsern Gegenübern 
+      <h2>Trust Flexibility</h2>
+      <p>
+        Vertraust du deinem <b>besten Freund</b> mehr als Olaf Scholz?
+      </p>
+      <p>
+        <b>Vertrauen ist relativ</b> zum Gegenüber, aber im Internet vertrauen wir
+        allen unsern Gegenübern 
+        <span 
+          class="info-icon"
+          title="Certification Authorities (CAs) stellen Zertifikate für Domains aus und bestätigen dadurch deren Identität für Endnutzer."
+          style="text-decoration: underline;">
+          (CAs)
+        </span>
+        gleich viel, ohne zu differenzieren.
+      </p>
+      <p>
+        F-PKI ändert das!
+      </p>
+
+
+      <h2>User Policies</h2>
+      <p>
+          Konfiguriere deine <b>individuellen Vertrauenspräferenzen</b>!
+      </p>
+      <p>
+          Du vertraust amerikanischen
           <span 
             class="info-icon"
             title="Certification Authorities (CAs) stellen Zertifikate für Domains aus und bestätigen dadurch deren Identität für Endnutzer."
             style="text-decoration: underline;">
-            (CAs)
+            CAs
           </span>
-          gleich viel, ohne zu differenzieren.
-        </p>
+          für amerikanische Domains mehr als anderen? 
+      </p>
+      <p>
+          Dann <b>sag es deinem Browser</b> <a href="../config-page/config-page.html">hier</a>!
+      </p>
+      <div style="margin-top: 25px; display: flex; flex-direction: column; align-items: center;">
+        <figure style="width: 62%;">
+          <img 
+            src="user_policies.png" 
+            alt="Schaubild, das User Policies demonstriert"
+            width="100%""
+            style="border: 2px solid black; border-radius: 10px;"
+          >
+          <figcaption>
+            User 1 (U<sub>1</sub>) benutzt Zertifikat 1 (C<sub>1</sub>)
+            anstelle von Zertifikat 2 (C<sub>2</sub>), weil er der
+            Zertifizierungsstelle 1 (CA<sub>2</sub>) mehr vertraut aus
+            Zertifizierungsstelle 2 (CA<sub>2</sub>).
+          </figcaption>
+        </figure>
+      </div>
+
+      <h2>Domain Policies</h2>
+      <p>
+        Domain Besitzer konfigurieren ihre <b>eigenen
+        Vertrauenspräferenzen</b>!
+      </p>
+      <p>
+        Google stellt sich seine eigenen Zertifikate aus, warum sollte es
+        <b>nicht-Google CAs</b> geben, die <b>Zertifikate für Google.com</b>
+        ausstellen?
+      </p>
+      <h3>Mögliche Policies:</h3>
+      <div style="text-align: center;">
+        <ul style=" display: inline-block;
+                    padding: 15px;
+                    margin: auto;
+                    list-style-type: none;
+                    border: 2px solid black;
+                    border-radius: 10px;">
+          <li style="margin-bottom: 15px; text-align: center;">
+            <b>ISSUERS</b><br>
+            Erlaubte Zertifizierungsstellen (CAs)
+          </li>
+          <li style="margin-bottom: 15px; text-align: center;">
+            <b>SUBDOMAINS</b><br>
+            Zertifizierte Subdomains
+          </li>
+          <li style="margin-bottom: 15px; text-align: center;">
+            <b>WILDCARDS</b><br>
+            Wildcards (*.example.com) in Zertifkaten erlaubt?
+          </li>
+          <li style="text-align: center;">
+            <b>MAX LIFETIME</b><br>
+            Maximale Zertifikat Lebensdauer
+          </li>
+        </ul>
+
         <p>
-          F-PKI ändert das!
+          Mit <b>dieser Extension</b> überprüft dein Browser automatisch, ob
+          empfangene Zertifikate sich an die existierenden <b>Domain
+          Policies</b> des Domainbetreibers halten!
         </p>
+      </div>
 
 
-        <h2>User Policies</h2>
-        <p>
-            Konfiguriere deine <b>individuellen Vertrauenspräferenzen</b>!
-        </p>
-        <p>
-            Du vertraust amerikanischen
-            <span 
-              class="info-icon"
-              title="Certification Authorities (CAs) stellen Zertifikate für Domains aus und bestätigen dadurch deren Identität für Endnutzer."
-              style="text-decoration: underline;">
-              CAs
-            </span>
-            für amerikanische Domains mehr als anderen? 
-        </p>
-        <p>
-            Dann <b>sag es deinem Browser</b> <a href="../config-page/config-page.html">hier</a>!
-        </p>
-        <div style="margin-top: 25px; display: flex; flex-direction: column; align-items: center;">
-          <figure style="width: 62%;">
-            <img 
-              src="user_policies.png" 
-              alt="Schaubild, das User Policies demonstriert"
-              width="100%""
-              style="border: 2px solid black; border-radius: 10px;"
-            >
-            <figcaption>
-              User 1 (U<sub>1</sub>) benutzt Zertifikat 1 (C<sub>1</sub>)
-              anstelle von Zertifikat 2 (C<sub>2</sub>), weil er der
-              Zertifizierungsstelle 1 (CA<sub>2</sub>) mehr vertraut aus
-              Zertifizierungsstelle 2 (CA<sub>2</sub>).
-            </figcaption>
-          </figure>
-        </div>
-
-        <h2>Domain Policies</h2>
-        <p>
-          Domain Besitzer konfigurieren ihre <b>eigenen
-          Vertrauenspräferenzen</b>!
-        </p>
-        <p>
-          Google stellt sich seine eigenen Zertifikate aus, warum sollte es
-          <b>nicht-Google CAs</b> geben, die <b>Zertifikate für Google.com</b>
-          ausstellen?
-        </p>
-        <h3>Mögliche Policies:</h3>
-        <div style="text-align: center;">
-          <ul style=" display: inline-block;
-                      padding: 15px;
-                      margin: auto;
-                      list-style-type: none;
-                      border: 2px solid black;
-                      border-radius: 10px;">
-            <li style="margin-bottom: 15px; text-align: center;">
-              <b>ISSUERS</b><br>
-              Erlaubte Zertifizierungsstellen (CAs)
-            </li>
-            <li style="margin-bottom: 15px; text-align: center;">
-              <b>SUBDOMAINS</b><br>
-              Zertifizierte Subdomains
-            </li>
-            <li style="margin-bottom: 15px; text-align: center;">
-              <b>WILDCARDS</b><br>
-              Wildcards (*.example.com) in Zertifkaten erlaubt?
-            </li>
-            <li style="text-align: center;">
-              <b>MAX LIFETIME</b><br>
-              Maximale Zertifikat Lebensdauer
-            </li>
-          </ul>
-        </div>
-
-        <h2 style="margin-top: 30px;">Weitere Informationen</h2>
-        <p>
-          <a href="">Weitere Informationen</a> zu F-PKI und dieser Browser
-          Extension.
-        </p>
+      <h2 style="margin-top: 30px;">Weitere Informationen</h2>
+      <p>
+        <a href="">Weitere Informationen</a> zu F-PKI und der F-PKI Browser
+        Extension.
+      </p>
     </main>
   </body>
 </html>
