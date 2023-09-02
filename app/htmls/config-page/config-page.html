@@ -1,7 +1,8 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" dir="ltr" lang="en-US">
+<html xmlns="http://www.w3.org/1999/xhtml" dir="ltr" lang="de-DE">
   <head>
     <meta name="color-scheme" content="light dark" />
+    <meta charset="UTF-8">
     <link rel="icon" id="favicon" href="../../images/F-D_dark.png" />
     <link rel="stylesheet" href="./config-page.css" />
     <title>Settings F-PKI Plugin</title>
@@ -10,16 +11,73 @@
     <div id="options">
       <h1>Configuration Page</h1>
 
+      <p>
+        An dieser Stelle stehen ein paar einleitende Worte, die grob
+        zusammenfassen, was man alles auf dieser Seite eintellen kann.
+      </p>
+      <p>
+        Man könnte auch beispielsweise auf die Infoseite des Plugins bzw.
+        weiterführende Informationen verweisen an dieser Stelle.
+        
+        Aber jetzt erstmal viel Spaß mit den Settings!
+      </p>
       
 
 
       <!-- LEGACY TRUST PREFERENCES -->
       <div class="settings-section">
         <div class="settings-section-header">
-          <h2 style="display: inline-block;">Legacy Trust Preferences</h2>
+          <h2 style="display: inline-block;">User Policies</h2>
           <span class="info-icon">&#9432;</span>
           <div class="info-box" hidden>
-            <p>Here is some more info..</p>
+            <p>
+              User Policies haben eine oder mehrere <span
+              class="keyword">Domains</span> als <b>Scope</b>.
+            </p>
+            <p>
+              Domains können mit <b>Wildcards</b> angegeben werden, d.h. <span
+              class="code">*.example.com</span> oder <span
+              class="code">*.de</span> sind valide Angaben, um alle Subdomains
+              von example.com bzw. alle Domains mit <q>de</q> als
+              Top-Level-Domain zu selektieren
+            </p>
+            <p>
+              Innerhalb dieses Scopes können für beliebig viele <span
+              class="keyword">CA-Sets</span> (<a href="#">hier</a>
+              konfigurierbar) individuelle <span
+              class="keyword">Trust Level</span> gewählt werden:
+            </p>
+
+            <ul>
+              <li style="margin-bottom: 5px;">
+                <b>Untrusted:</b> Zertifikate werden nicht akzeptiert
+              </li>
+              <li style="margin-bottom: 5px;">
+                <b>Trusted:</b> Zertifikate werden akzeptiert, esseidenn es
+                existieren Zertifikate für die Domain, welche von CAs mit
+                konfiguriertem Trust-Level <span class="code">High Trust</span>
+                oder <span class="code">Perfect Trust</span> ausgestellt
+                wurden.<sup>1,2</sup>
+              </li>
+              <li>
+                <b>High Trust:</b> Zertifikate werden akzeptiert, esseidenn es
+                existieren Zertifikate für die Domain, welche von CAs mit
+                konfiguriertem Trust-Level <span class="code">Perfect
+                Trust</span> ausgestellt wurden.<sup>1,2</sup>
+              </li>
+              <li>
+                <b>Perfect Trust:</b> Zertifikate werden akzeptiert.<sup>1</sup>
+              </li>
+            </ul>
+
+            <p style="margin-left: 25px;">
+              <sup>1</sup> Zertifikate können auch durch <a href="#">Domain
+              Policies</a> invalidiert werden.
+              <br>
+              <sup>2</sup> Existierende Zertifikate werden von <a
+              href="#">Mapservern</a> gesammelt und zur Verfügung gestellt, die
+              ähnlich wie Certificate-Transparency-Logs funktionieren.
+            </p>
           </div>
         </div>
         
@@ -31,7 +89,7 @@
                 <th rowspan="2"></th>
               </tr>
               <tr>
-                <th>CA Set</th>
+                <th><span style="border: 2px dotted white;">CA Set</span></th>
                 <th>Trust Level</th>
               </tr>
           </thead>

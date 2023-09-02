@@ -1,6 +1,7 @@
 body {
     width: 62%;
     margin: auto;
+    background-color:whitesmoke;
 }
 
 table,
@@ -21,8 +22,11 @@ table input,table select,table button {
 }
 
 td {
-    padding-left: 10pt;
-    padding-right: 10pt;
+    padding: 3pt 10pt;
+}
+
+th {
+    padding: 10pt;
 }
 
 div.settings-section {
@@ -41,9 +45,10 @@ div.settings-section-header {
 
 span.info-icon {
     color: grey;
-    font-weight: bold;
+    font-weight: bolder;
     font-size: x-large;
     cursor: pointer;
+    margin-left: 5px;
 }
 
 div.info-box {
@@ -52,6 +57,19 @@ div.info-box {
     background-color: rgba(104, 169, 223, 0.3);
     margin-bottom: 0.75em;
     padding: 10px;
+    line-height: 1.5;
+}
+
+span.keyword {
+    border: 2px dotted black;
+    padding: 0px 4px;
+    cursor: pointer;
+}
+
+span.code {
+    border-radius: 5px;
+    background-color: lightgrey;
+    padding: 1px 8px;
 }
 
 button {
