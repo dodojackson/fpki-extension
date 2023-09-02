@@ -25,7 +25,7 @@
 
 
       <!-- LEGACY TRUST PREFERENCES -->
-      <div class="settings-section">
+      <div class="settings-section" id="user-policies-settings-section">
         <div class="settings-section-header">
           <h2 style="display: inline-block;">User Policies</h2>
           <span class="info-icon">&#9432;</span>
@@ -43,7 +43,8 @@
             </p>
             <p>
               Innerhalb dieses Scopes können für beliebig viele <span
-              class="keyword">CA-Sets</span> (<a href="#">hier</a>
+              class="keyword">CA-Sets</span> (<a
+              href="#ca-sets-settings-section">hier</a>
               konfigurierbar) individuelle <span
               class="keyword">Trust Level</span> gewählt werden:
             </p>
@@ -102,6 +103,43 @@
       </div>
 
 
+      <!-- CA SETS -->
+      <div class="settings-section" id="ca-sets-settings-section">
+        <div class="settings-section-header">
+          <h2 style="display: inline-block;">CA Sets</h2>
+          <span class="info-icon">&#9432;</span>
+          <div class="info-box" hidden>
+            <p>
+              CA Sets sind <b>Mengen von Root CAs</b> (Certificate Authorities),
+              die sich in dem <b>Trust Store</b> deines Browsers befinden.
+            </p>
+            <p>
+              Sie haben einen <span class="keyword">Set Namen</span> über den
+              sich das <span class="keyword"> CA Set</span> in <a
+              href="#user-policies-settings-section">User Policies</a>
+              ansprechen lässt, um individuelle <b>Trust Levels</b> zu
+              konfigurieren.
+            </p>
+          </div>
+        </div>
+
+        <table id="ca-sets-table">
+          <thead>
+              <tr>
+                  <th colspan="1">Set Name</th>
+                  <th colspan="1">CA Set</th>
+                  <th></th>
+              </tr>
+          </thead>
+          <tbody id="ca-sets-table-body">
+              <!-- javascript generated -->
+          </tbody>
+        </table>
+        <button class="reset-changes ca-sets">Reset Changes</button>
+        <button class="save-changes ca-sets">Save Changes</button>
+      </div>
+
+
       <!-- POLICY TRUST PREFERENCES -->
       <div class="settings-section">
         <h2>Policy Trust Preferences</h2>
@@ -123,26 +161,6 @@
         </table>
         <button class="reset-changes policy-trust-preference">Reset Changes</button>
         <button class="save-changes policy-trust-preference">Save Changes</button>
-      </div>
-
-
-      <!-- CA SETS -->
-      <div class="settings-section">
-        <h2>CA Sets</h2>
-        <table id="ca-sets-table">
-          <thead>
-              <tr>
-                  <th colspan="1">Set Name</th>
-                  <th colspan="1">CA List</th>
-                  <th></th>
-              </tr>
-          </thead>
-          <tbody id="ca-sets-table-body">
-              <!-- javascript generated -->
-          </tbody>
-        </table>
-        <button class="reset-changes ca-sets">Reset Changes</button>
-        <button class="save-changes ca-sets">Save Changes</button>
       </div>
 
     
