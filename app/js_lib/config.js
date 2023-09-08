@@ -65,10 +65,9 @@ function defaultConfig() {
     // CAs with higher levels take precedence over CAs with lower levels
     c.set("legacy-trust-preference", (()=>{
         const tp = new Map();
-        tp.set("microsoft.com", [
-            {caSet: "Microsoft CA", level: 1}
+        tp.set("*", [
+            {caSet: "All Trust Store CAs", level: 1}
         ]);
-        tp.set("bing.com", [{caSet: "Microsoft CA", level: 1}]);
         return tp;
     })());
     // the default level of a root certificate is 0

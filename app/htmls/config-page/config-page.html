@@ -8,18 +8,19 @@
     <title>Settings F-PKI Plugin</title>
   </head>
   <body>
-    <div id="options">
-      <h1>Configuration Page</h1>
+    <div id="options" style="margin-bottom: 100px;">
+      <h1>F-PKI Settings</h1>
 
       <p>
-        An dieser Stelle stehen ein paar einleitende Worte, die grob
-        zusammenfassen, was man alles auf dieser Seite eintellen kann.
+        Sie finden <b>weiterführende Informationen</b> zu jeder der
+        Einstellungen über die entsprechenden <b>Infoboxen <q>&#9432;</q></b>.
       </p>
       <p>
-        Man könnte auch beispielsweise auf die Infoseite des Plugins bzw.
-        weiterführende Informationen verweisen an dieser Stelle.
-        
-        Aber jetzt erstmal viel Spaß mit den Settings!
+        Für einen <b>tieferen Einblick</b> in F-PKI empfehlen wir die <a
+        href="#">F-PKI Dokumentation</a> oder das originale Paper <q><a
+        href="https://netsec.ethz.ch/publications/papers/chuat2022fpki.pdf">F-PKI:
+        Enabling Innovation and Trust Flexibility in the HTTPS Public-Key
+        Infrastructure</a></q>.
       </p>
       
 
@@ -30,6 +31,11 @@
           <h2 style="display: inline-block;">User Policies</h2>
           <span class="info-icon">&#9432;</span>
           <div class="info-box" hidden>
+            <p>
+              User Policies ermöglichen die feinere <b>Differenzierung von
+              Vertrauen</b>, das der Nutzer bestimmten CAs für bestimmte Domains
+              entgegenbringt.
+            </p>
             <p>
               User Policies haben eine oder mehrere <span
               class="keyword">Domains</span> als <b>Scope</b>.
@@ -54,8 +60,8 @@
                 <b>Untrusted:</b> Zertifikate werden nicht akzeptiert
               </li>
               <li style="margin-bottom: 5px;">
-                <b>Trusted:</b> Zertifikate werden akzeptiert, esseidenn es
-                existieren Zertifikate für die Domain, welche von CAs mit
+                <b>Standard Trust:</b> Zertifikate werden akzeptiert, esseidenn
+                es existieren Zertifikate für die Domain, welche von CAs mit
                 konfiguriertem Trust-Level <span class="code">High Trust</span>
                 oder <span class="code">Perfect Trust</span> ausgestellt
                 wurden.<sup>1,2</sup>
@@ -70,6 +76,23 @@
                 <b>Perfect Trust:</b> Zertifikate werden akzeptiert.<sup>1</sup>
               </li>
             </ul>
+
+            <div style="margin-top: 25px; display: flex; flex-direction: column; align-items: center;">
+              <figure style="width: 38%;">
+                <img 
+                  src="user_policies.png" 
+                  alt="Schaubild, das User Policies demonstriert"
+                  width="100%""
+                  style="border: 2px solid black; border-radius: 10px;"
+                >
+                <figcaption style="font-size: small;">
+                  User 1 (U<sub>1</sub>) benutzt Zertifikat 1 (C<sub>1</sub>)
+                  anstelle von Zertifikat 2 (C<sub>2</sub>), weil er der
+                  Zertifizierungsstelle 1 (CA<sub>2</sub>) mehr vertraut aus
+                  Zertifizierungsstelle 2 (CA<sub>2</sub>).
+                </figcaption>
+              </figure>
+            </div>
 
             <p style="margin-left: 25px;">
               <sup>1</sup> Zertifikate können auch durch <a href="#">Domain
@@ -141,8 +164,75 @@
 
 
       <!-- POLICY TRUST PREFERENCES -->
-      <div class="settings-section">
-        <h2>Policy Trust Preferences</h2>
+      <div class="settings-section pca-preferences-settings-section">
+        <div class="settings-section-header">
+          <h2 style="display: inline-block;">User Policies (PCA)</h2>
+          <span class="info-icon">&#9432;</span>
+          <div class="info-box" hidden>
+            <p>
+              PCAs (Policy-Certificate-Authorities) stellen <b>Zertifikate für
+              Domain Policies</b> der Domainbetreiber aus. Für weitere
+              Informationen zu Domain Policies siehe <a href="">hier</a>.
+            </p>
+            <p>
+              Diese Settings verhalten sich analog zu den <a
+              href="#user-policies-settings-section">User Policies</a> für
+              übliche CAs:
+            </p>
+            <div style="font-weight:300;">
+              <p>
+                User Policies haben eine oder mehrere <span
+                class="keyword">Domains</span> als <b>Scope</b>.
+              </p>
+              <p>
+                Domains können mit <b>Wildcards</b> angegeben werden, d.h. <span
+                class="code">*.example.com</span> oder <span
+                class="code">*.de</span> sind valide Angaben, um alle Subdomains
+                von example.com bzw. alle Domains mit <q>de</q> als
+                Top-Level-Domain zu selektieren
+              </p>
+              <p>
+                Innerhalb dieses Scopes können für beliebig viele <span
+                class="keyword">PCAs</span> <!--(<a
+                href="#pcas-settings-section">hier</a>
+                konfigurierbar)--> individuelle <span class="keyword">Trust
+                Level</span> gewählt werden:
+              </p>
+
+              <ul>
+                <li style="margin-bottom: 5px;">
+                  <b>Untrusted:</b> Policy-Zertifikate werden nicht akzeptiert
+                </li>
+                <li style="margin-bottom: 5px;">
+                  <b>Trusted:</b> Policy-Zertifikate werden akzeptiert, esseidenn
+                  es existieren Policy-Zertifikate für die Domain, welche von PCAs
+                  mit konfiguriertem Trust-Level <span class="code">High
+                  Trust</span>
+                  oder <span class="code">Perfect Trust</span> ausgestellt
+                  wurden.<sup>1</sup>
+                </li>
+                <li>
+                  <b>High Trust:</b> Policy-Zertifikate werden akzeptiert,
+                  esseidenn es existieren Policy-Zertifikate für die Domain,
+                  welche von PCAs mit konfiguriertem Trust-Level <span
+                  class="code">Perfect Trust</span> ausgestellt
+                  wurden.<sup>1</sup>
+                </li>
+                <li>
+                  <b>Perfect Trust:</b> Policy-Zertifikate werden akzeptiert.
+                </li>
+              </ul>
+
+              <p style="margin-left: 25px;">
+                <sup>1</sup> Existierende Policy-Zertifikate werden von <a
+                href="#">Mapservern</a> gesammelt und zur Verfügung gestellt, die
+                ähnlich wie Certificate-Transparency-Logs funktionieren.
+              </p>
+            </div>
+          </div>
+        </div>
+
+
         <table id="policy-trust-preference-table">
           <thead>
               <tr>
@@ -163,7 +253,10 @@
         <button class="save-changes policy-trust-preference">Save Changes</button>
       </div>
 
-    
+      
+      <hr style="margin-top: 50px; margin-bottom: 20px;">
+
+
       <!-- 
         ADVANCED SETTINGS 
       -->
@@ -184,14 +277,17 @@
 
       <div id="advanced-settings" hidden="">
 
-        <button id="printConfig">Print Config</button>
-        <button id="downloadConfig">Download Config</button>
+        <p>
+          Diese Einstellungen richten sich an <b>fortgeschrittene Benutzer</b>. 
+        </p>
+        <p>
+          Bitte nimm <b>keine Änderungen</b> an den Einstellungen vor, wenn du dir
+          unsicher bist.
+        </p>
+
+        <!-- TODO: Placement -->
         <button id="resetConfig">Reset Config to Default</button>
-        <br/>
-        Upload new config:
-        <input type="file" id="file" onchange="handle_files()">
-        <button id="uploadConfig">Upload</button>
-        <br/>
+        
 
         <!-- MAPSERVER SETTINGS -->
         <div class="settings-section">
@@ -262,17 +358,38 @@
           <button class="reset-changes other-settings">Reset Changes</button>
           <button class="save-changes other-settings">Save Changes</button>
         </div>
+
+        <div id="output">
+          <h2>JSON Config</h2>
+          <p>
+            Die gesamten Einstellungen auf dieser Seite können im JSON-Format
+            heruntergeladen, bearbeitet sowie hochgeladen werden.
+          </p>
+          <p>
+            Nutzen Sie nur Settings-Dateien aus <b>vertrauenswürdigen
+            Quellen</b>!
+          </p>
+
+          <div style="line-height: 2;">
+            <button id="printConfig">Print Config</button>
+            <br/>
+            <button id="downloadConfig">Download Config</button>
+            <br/>
+            <label for="file">Upload new config:</label>
+            <input type="file" id="file" onchange="handle_files()">
+            <button id="uploadConfig">Upload</button>
+          </div>
+          <pre class="default-border">
+            <code id="config-code">
+              { "hello": "world" }
+            </code>
+          </pre>
+        </div>
+
       </div>
-
     </div>
 
-    <div id="output">
-      <pre>
-        <code id="config-code">
-          { "hello": "world" }
-        </code>
-      </pre>
-    </div>
+    
 
     <script type="module" src="./config-page.js"></script>
   </body>

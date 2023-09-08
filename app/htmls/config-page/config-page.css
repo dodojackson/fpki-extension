@@ -1,7 +1,15 @@
+html {
+    font-size: 1rem;
+}
+
 body {
     width: 62%;
     margin: auto;
     background-color:whitesmoke;
+}
+
+p {
+    line-height: 1.5;
 }
 
 table,
@@ -95,4 +103,23 @@ button.save-changes {
     width: 38%;
     margin-left: auto;
     background-color: lightgreen;
+}
+
+.default-border {
+    border: 2px solid black;
+    border-radius: 10px;
+    padding: 10px;
+}
+
+.btn {
+    border: 1px solid grey;
+    border-radius: 3px;
+    font-size: small;
+    font-family: sans-serif;
+    padding: 2px;
+    background-color: rgb(231, 231, 231);
+}
+
+.btn:hover {
+    background-image: linear-gradient(rgb(0 0 0/30%) 0 0);
 }
