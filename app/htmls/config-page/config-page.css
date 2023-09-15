@@ -123,3 +123,10 @@ button.save-changes {
 .btn:hover {
     background-image: linear-gradient(rgb(0 0 0/30%) 0 0);
 }
+
+div.todo {
+    border: 2px solid darkred;
+    border-radius: 10px;
+    background-image: linear-gradient(rgba(224, 30, 30, 0.3) 0 0);
+    padding: 10px;
+}
