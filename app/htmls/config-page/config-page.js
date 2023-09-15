@@ -337,12 +337,14 @@ async function reloadSettings() {
                                 <td>
                                     <button class="add_policy_preference">Add</button>
                                 </td>
-                            </tr>`
+                            </tr>
+                            <tr class="spacing"><td colspan="4"></td></tr>`
         policy_pref_rows += `${domain_pref_rows}`
     }
-    policy_pref_rows += `<tr>
-                            <td><input class="add_policy_preference_domain" type="text" placeholder="Domain" /></td>
-                            <td colspan="2"></td>
+    policy_pref_rows += `
+                        <tr">
+                            <td colspan="3"><input class="add_policy_preference_domain" type="text" placeholder="Domain" /></td>
+                            
                             <td><button class="add_policy_preference_domain">Add Domain</button></td>
                         </tr>`
     document.getElementById('policy-trust-preference-table-body').innerHTML = policy_pref_rows;

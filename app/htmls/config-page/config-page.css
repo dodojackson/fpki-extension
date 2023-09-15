@@ -29,6 +29,16 @@ table input,table select,table button {
     padding: 0 10pt;
 }
 
+table.inner-table {
+    border-collapse: collapse;
+    border: none;
+    width: 100%;
+}
+
+table.inner-table tr{
+    border: none;
+}
+
 td {
     padding: 3pt 10pt;
 }
@@ -118,6 +128,7 @@ button.save-changes {
     font-family: sans-serif;
     padding: 2px;
     background-color: rgb(231, 231, 231);
+    text-align: center;
 }
 
 .btn:hover {
@@ -129,4 +140,9 @@ div.todo {
     border-radius: 10px;
     background-image: linear-gradient(rgba(224, 30, 30, 0.3) 0 0);
     padding: 10px;
+}
+
+tr.spacing {
+    height: 10px;
+    background-color: #333;
 }
