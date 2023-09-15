@@ -132,7 +132,7 @@
 
         <!-- TEST -->
         <table>
-          <thead>
+          <thead style="font-size: larger;">
             <tr>
               <th colspan="2">Domain</th>
               <th rowspan="2"></th>
@@ -144,8 +144,12 @@
           </thead>
           <tbody>
             <tr class="text-align: center;">
-              <td colspan="2" style="height: 30px; text-align: center; font-weight:bolder;">*.example.com</td>
-              <td class="btn" style="height: 30px; background-color:coral;">+</td>
+              <td colspan="2" style="font-size: larger; background-color: #F2D995; height: 30px; text-align: center; font-weight:bolder;">
+                *.example.com
+              </td>
+              <td class="btn" style="font-size: larger; font-weight: bolder; height: 30px; background-color:#F2D995;">
+                -
+              </td>
             </tr>
             <!--
             <tr>
@@ -169,13 +173,13 @@
             <tbody style="border: 2px solid black;">
             <tr>
               <td style="padding: 0; border: none;">
-                <select style="height: 30px;">
+                <select style="height: 30px;background-color: #56CAC0;">
                   <option style="text-align:center;">All CAs</option>
                   <option value="">German CAs</option>
                 </select>
               </td>
               <td style="padding: 0; border: none;">
-                <select style="height: 30px;">
+                <select style="height: 30px;background-color: #56CAC0;">
                   <option style="text-align:center;">Standard Trust</option>
                   <option value="">High Trust</option>
                 </select>
@@ -184,13 +188,13 @@
             </tr>
             <tr>
               <td style="padding: 0; border: none;">
-                <select style="height: 30px;">
+                <select style="height: 30px;background-color: #56CAC0;">
                   <option style="text-align:center;">All CAs</option>
                   <option selected value="">German CAs</option>
                 </select>
               </td>
               <td style="padding: 0; border: none;">
-                <select style="height: 30px;">
+                <select style="height: 30px;background-color: #56CAC0;">
                   <option style="text-align:center;">Standard Trust</option>
                   <option selected>High Trust</option>
                 </select>
@@ -199,13 +203,13 @@
             </tr>
             <tr>
               <td style="padding: 0; border: none;">
-                <select style="height: 30px;">
+                <select style="height: 30px;background-color: #56CAC0;">
                   <option style="text-align:center;">Select</option>
                   <option value="">German CAs</option>
                 </select>
               </td>
               <td style="padding: 0; border: none;">
-                <select style="height: 30px;">
+                <select style="height: 30px; background-color: #56CAC0;">
                   <option style="text-align:center;">Select</option>
                   <option value="">High Trust</option>
                 </select>
@@ -213,13 +217,23 @@
               <td class="btn" style="text-align: center;">x</td>
             </tr>
             <tr>
-              <td colspan="2" class="btn" style="background-color:aqua;">Neues CA Set</td>
+              <td colspan="2" class="btn" style=" font-weight: bolder; color: whitesmoke; height:30px; background-color:#3D7F6E; font-size: larger;">+</td>
+            </tr>
+            <tr>
+              <td colspan="3" style="height: 20px; border: none;">
+
+              </td>
             </tr>
             </tbody>
+            
             <tbody>
             <tr class="text-align: center;">
-              <td colspan="2" style=" height: 30px; text-align: center; font-weight:bolder;">*.com</td>
-              <td class="btn" style="background-color:coral;">+</td>
+              <td colspan="2" style="font-size:larger; background-color: #F2D995; height: 30px; text-align: center; font-weight:bolder;">
+                *.com
+              </td>
+              <td class="btn" style="font-size: larger; font-weight: bolder; background-color:#F2D995;">
+                +
+              </td>
             </tr>
             </tbody>
             <tbody hidden>
@@ -246,7 +260,7 @@
                 </select>
               </td>
               <td style="height: 30px; padding: 0; border: none;">
-                <select style="height: 30px;">
+                <select style="height: 30px; color: #56CAC0;">
                   <option style="text-align:center;">Standard Trust</option>
                   <option selected>High Trust</option>
                 </select>
@@ -256,15 +270,26 @@
           </tbody>
           <tbody>
             <tr>
-              <td colspan="2" class="btn" style="height: 30px; background-color: coral; font-weight: bolder;">
-                <span>New Domain</span>
+              <td colspan="2" class="btn" style="height: 30px; background-color: coral; font-weight: bolder; font-size: larger;">
+                <span style="color: whitesmoke">+</span>
               </td>
             </tr>
           </tbody>
+          <tfoot>
+            <tr>
+              <td colspan="3">
+                <span style="visibility: hidden;">hi</span>
+              </td>
+            </tr>
+          </tfoot>
         </table>
 
-        <button class="reset-changes legacy-trust-preference">Reset Changes</button>
-        <button class="save-changes legacy-trust-preference">Save Changes</button>
+        <button class="reset-changes legacy-trust-preference">
+                Reset Changes
+        </button>
+        <button class="save-changes legacy-trust-preference">
+                Save Changes
+        </button>
       </div>
 
 
