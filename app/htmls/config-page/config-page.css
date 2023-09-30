@@ -133,6 +133,7 @@ button.save-changes {
 
 .btn:hover {
     background-image: linear-gradient(rgb(0 0 0/30%) 0 0);
+    cursor: pointer;
 }
 
 div.todo {
@@ -145,4 +146,27 @@ div.todo {
 tr.spacing {
     height: 10px;
     background-color: #333;
+}
+
+.policy-header {
+    font-size: larger; 
+    background-color: #F2D995; 
+    height: 30px; 
+    text-align: center; 
+    font-weight:bolder;
+}
+
+.hidden {
+    display: none;
+}
+
+td.user-policy-dropdown {
+    padding: 0; 
+    border: none;
+}
+
+select.user-policy-dropdown {
+    height: 30px;
+    background-color: whitesmoke; 
+    font-weight:600;
 }

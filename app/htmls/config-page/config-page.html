@@ -117,7 +117,7 @@
           </p>
         </div>
         
-        <table id="legacy-trust-preference-table">
+        <table id="legacy-trust-preference-table" hidden>
           <thead>
               <tr>
                 <th colspan="1" rowspan="2">Domain</th>
@@ -135,7 +135,7 @@
         </table>
 
         <!-- TEST -->
-        <table>
+        <table id="user-policies-table">
           <thead>
             <tr>
               <th colspan="2" style="font-size: larger;">Domain</th>
@@ -146,142 +146,130 @@
               <th>Trust Level</th>
             </tr>
           </thead>
-          <tbody>
-            <tr class="text-align: center;">
-              <td colspan="2" style="font-size: larger; background-color: #F2D995; height: 30px; text-align: center; font-weight:bolder;">
-                *.example.com
-              </td>
-              <td class="btn" style="font-size: larger; font-weight: bolder; height: 30px; background-color:#F2D995;">
-                -
-              </td>
-            </tr>
-            <!--
-            <tr>
-              <td colspan="2" style="padding: 0; border: none;">
-                <table class="inner-table">
-                  <tbody>
-                    <tr>
-                      <td>All CAs</td>
-                      <td>Standard Trust</td>
-                    </tr>
-                    <tr>
-                      <td>German CAs</td>
-                      <td>High Trust</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </td>
-            </tr>
-            -->
+          <tbody id="user-policies-table-body">
+            <tbody>
+              <tr class="text-align: center;">
+                <td colspan="2" style="font-size: larger; background-color: #F2D995; height: 30px; text-align: center; font-weight:bolder;">
+                  *.example.com
+                </td>
+                <td class="btn" style="font-size: larger; font-weight: bolder; height: 30px; background-color:#F2D995;">
+                  -
+                </td>
+              </tr>
             </tbody>
             <tbody style="border: 2px solid black;">
-            <tr>
-              <td style="padding: 0; border: none;">
-                <select style="height: 30px;background-color: whitesmoke; font-weight:600;">
-                  <option style="text-align:center;">All CAs</option>
-                  <option value="">German CAs</option>
-                </select>
-              </td>
-              <td style="padding: 0; border: none;">
-                <select style="height: 30px;background-color: whitesmoke; font-weight:600;">
-                  <option style="text-align:center;">Standard Trust</option>
-                  <option value="">High Trust</option>
-                </select>
-              </td>
-              <td class="btn" style="text-align: center;">x</td>
-            </tr>
-            <tr>
-              <td style="padding: 0; border: none;">
-                <select style="height: 30px;background-color: whitesmoke; font-weight:600;">
-                  <option style="text-align:center;">All CAs</option>
-                  <option selected value="">German CAs</option>
-                </select>
-              </td>
-              <td style="padding: 0; border: none;">
-                <select style="height: 30px;background-color: rgba(12, 125, 0, 0.252); font-weight:600;">
-                  <option style="text-align:center;">Standard Trust</option>
-                  <option selected>High Trust</option>
-                </select>
-              </td>
-              <td class="btn" style="text-align: center;">x</td>
-            </tr>
-            <tr>
-              <td style="padding: 0; border: none;">
-                <select style="height: 30px;background-color: whitesmoke; font-weight:600;">
-                  <option style="text-align:center;">Select</option>
-                  <option value="">German CAs</option>
-                </select>
-              </td>
-              <td style="padding: 0; border: none;">
-                <select style="height: 30px; background-color: rgba(12, 125, 0, 0.898); font-weight:600; ">
-                  <option style="text-align:center;">Select</option>
-                  <option value="">High Trust</option>
-                </select>
-              </td>
-              <td class="btn" style="text-align: center;">x</td>
-            </tr>
-            <tr>
-              <td colspan="2" class="btn" style=" font-weight: bolder; color: whitesmoke; height:30px; background-color:#3D7F6E; font-size: larger;">+</td>
-            </tr>
-            <tr>
-              <td colspan="3" style="height: 20px; border: none;">
+              <tr>
+                <td style="padding: 0; border: none;">
+                  <select style="height: 30px;background-color: whitesmoke; font-weight:600;">
+                    <option style="text-align:center;">All CAs</option>
+                    <option value="">German CAs</option>
+                  </select>
+                </td>
+                <td style="padding: 0; border: none;">
+                  <select style="height: 30px;background-color: whitesmoke; font-weight:600;">
+                    <option style="text-align:center;">Standard Trust</option>
+                    <option value="">High Trust</option>
+                  </select>
+                </td>
+                <td class="btn" style="text-align: center;">x</td>
+              </tr>
+              <tr>
+                <td style="padding: 0; border: none;">
+                  <select style="height: 30px;background-color: whitesmoke; font-weight:600;">
+                    <option style="text-align:center;">All CAs</option>
+                    <option selected value="">German CAs</option>
+                  </select>
+                </td>
+                <td style="padding: 0; border: none;">
+                  <select style="height: 30px;background-color: rgba(12, 125, 0, 0.252); font-weight:600;">
+                    <option style="text-align:center;">Standard Trust</option>
+                    <option selected>High Trust</option>
+                  </select>
+                </td>
+                <td class="btn" style="text-align: center;">x</td>
+              </tr>
+              <tr>
+                <td style="padding: 0; border: none;">
+                  <select style="height: 30px;background-color: whitesmoke; font-weight:600;">
+                    <option style="text-align:center;">Select</option>
+                    <option value="">German CAs</option>
+                  </select>
+                </td>
+                <td style="padding: 0; border: none;">
+                  <select style="height: 30px; background-color: rgba(12, 125, 0, 0.898); font-weight:600; ">
+                    <option style="text-align:center;">Select</option>
+                    <option value="">High Trust</option>
+                  </select>
+                </td>
+                <td class="btn" style="text-align: center;">x</td>
+              </tr>
+              <tr>
+                <td colspan="2" class="btn" 
+                    style=" font-weight: bolder; color: whitesmoke; height:30px; 
+                            background-color:#3D7F6E; font-size: larger;">
+                  +
+                </td>
+              </tr>
+              <tr>
+                <td colspan="3" style="height: 20px; border: none;">
 
-              </td>
-            </tr>
+                </td>
+              </tr>
             </tbody>
             
             <tbody>
-            <tr class="text-align: center;">
-              <td colspan="2" style="font-size:larger; background-color: #F2D995; height: 30px; text-align: center; font-weight:bolder;">
-                *.com
-              </td>
-              <td class="btn" style="font-size: larger; font-weight: bolder; background-color:#F2D995;">
-                +
-              </td>
-            </tr>
+              <tr class="text-align: center;">
+                <td colspan="2" style="font-size:larger; background-color: #F2D995; height: 30px; text-align: center; font-weight:bolder;">
+                  *.com
+                </td>
+                <td class="btn" style="font-size: larger; font-weight: bolder; background-color:#F2D995;">
+                  +
+                </td>
+              </tr>
             </tbody>
             <tbody hidden>
-            <tr>
-              <td style="padding: 0; border: none;">
-                <select style="height: 30px;">
-                  <option style="text-align:center;">All CAs</option>
-                  <option value="">German CAs</option>
-                </select>
-              </td>
-              <td style="padding: 0; border: none;">
-                <select style="height: 30px;">
-                  <option style="text-align:center;">Standard Trust</option>
-                  <option value="">High Trust</option>
-                </select>
-              </td>
-              <td class="btn" style="text-align: center;">x</td>
-            </tr>
-            <tr>
-              <td style="padding: 0; border: none;">
-                <select style="height: 30px;">
-                  <option style="text-align:center;">All CAs</option>
-                  <option selected value="">German CAs</option>
-                </select>
-              </td>
-              <td style="height: 30px; padding: 0; border: none; color: rgb(58, 117, 52);">
-                <select style="height: 30px; color: #56CAC0;">
-                  <option style="text-align:center;">Standard Trust</option>
-                  <option selected>High Trust</option>
-                </select>
-              </td>
-              <td class="btn" style="text-align: center;">x</td>
-            </tr>
-          </tbody>
-          <tbody>
-            <tr>
-              <td colspan="2" style="padding:0;">
-                <input  type="text" placeholder="___" 
-                        style="background-color:#F2D995; height: 35px; text-align: center; font-weight: bolder; font-size: larger;">
-              </td>
-              <td class="btn" style="font-size: larger; font-weight: bolder; background-color:#F2D995;">
-                +
-              </td>
-            </tr>
+              <tr>
+                <td style="padding: 0; border: none;">
+                  <select style="height: 30px;">
+                    <option style="text-align:center;">All CAs</option>
+                    <option value="">German CAs</option>
+                  </select>
+                </td>
+                <td style="padding: 0; border: none;">
+                  <select style="height: 30px;">
+                    <option style="text-align:center;">Standard Trust</option>
+                    <option value="">High Trust</option>
+                  </select>
+                </td>
+                <td class="btn" style="text-align: center;">x</td>
+              </tr>
+              <tr>
+                <td style="padding: 0; border: none;">
+                  <select style="height: 30px;">
+                    <option style="text-align:center;">All CAs</option>
+                    <option selected value="">German CAs</option>
+                  </select>
+                </td>
+                <td style="height: 30px; padding: 0; border: none; color: rgb(58, 117, 52);">
+                  <select style="height: 30px; color: #56CAC0;">
+                    <option style="text-align:center;">Standard Trust</option>
+                    <option selected>High Trust</option>
+                  </select>
+                </td>
+                <td class="btn" style="text-align: center;">x</td>
+              </tr>
+            </tbody>
+            <tbody>
+              <tr>
+                <td colspan="2" style="padding:0;">
+                  <input  type="text" placeholder="___" 
+                          style="background-color:#F2D995; height: 35px; text-align: center; font-weight: bolder; font-size: larger;">
+                </td>
+                <td class="btn" style="font-size: larger; font-weight: bolder; background-color:#F2D995;">
+                  +
+                </td>
+              </tr>
+            </tbody>
           </tbody>
           <tfoot>
             <tr>
@@ -347,7 +335,7 @@
 
 
       <!-- POLICY TRUST PREFERENCES -->
-      <div class="settings-section pca-preferences-settings-section">
+      <div class="settings-section pca-preferences-settings-section" style="display: none;">
         <div class="settings-section-header">
           <h2 style="display: inline-block;">User Policies (PCA)</h2>
           <span class="info-icon">&#9432;</span>
@@ -376,10 +364,8 @@
               </p>
               <p>
                 Innerhalb dieses Scopes können für beliebig viele <span
-                class="keyword">PCAs</span> <!--(<a
-                href="#pcas-settings-section">hier</a>
-                konfigurierbar)--> individuelle <span class="keyword">Trust
-                Level</span> gewählt werden:
+                class="keyword">PCAs</span> individuelle <span
+                class="keyword">Trust Level</span> gewählt werden:
               </p>
 
               <ul>
@@ -429,7 +415,7 @@
               </tr>
           </thead>
           <tbody id="policy-trust-preference-table-body">
-                <!-- Table generated by javascript-->
+            <!-- Table generated by javascript -->
           </tbody>
         </table>
         <button class="reset-changes policy-trust-preference">Reset Changes</button>
@@ -460,6 +446,7 @@
 
       <div id="advanced-settings" hidden="">
 
+        <!-- Description -->
         <p>
           Diese Einstellungen richten sich an <b>fortgeschrittene Benutzer</b>. 
         </p>
@@ -471,6 +458,38 @@
         <!-- TODO: Placement -->
         <button id="resetConfig">Reset Config to Default</button>
         
+
+        <!-- Trust Levels -->
+        <div class="settings-section">
+          <h2>Trust Levels</h2>
+          <table id="trust-levels-table">
+            <thead>
+              <th>Bezeichnung</th>
+              <th>Rang</th>
+              <th></th>
+            </thead>
+            <tbody id="trust-levels-table-body">
+              <!-- Javascript-->
+              <!-- TODO: kann das hier dann weg? -->
+              <tr>
+                <td>
+                  <input type="number" min="1" max="100" />
+                </td>
+                <td>
+                  <input type="text" placeholder="Name">
+                </td>
+                <td class="btn" style="text-align: center;">x</td>
+              </tr>
+              <tr>
+                <td colspan="2" class="btn" 
+                    style=" font-weight: bolder; color: whitesmoke; height:30px; 
+                            background-color:#3D7F6E; font-size: larger;">
+                  +
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
 
         <!-- MAPSERVER SETTINGS -->
         <div class="settings-section">

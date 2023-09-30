@@ -60,7 +60,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             .forEach(elem => {
                 elem.addEventListener("click", (e) => {
                     let box = e.target.parentElement.children[2];
-                    toggleInfoBox(box);
+                    toggleElement(box);
                 });
             });
 
@@ -85,7 +85,7 @@ port.onMessage.addListener( (msg) => {
 });
 
 
-function toggleInfoBox(box) {
+function toggleElement(box) {
     if (box.hidden === true) {
         box.hidden = false;
     } else {
@@ -177,6 +177,8 @@ async function reloadSettings() {
     });
 
     // Load legacy trust preferences
+    loadUserPolicies(json_config);
+
     let legacy_pref_rows = ""
     for (const[domain, ca_sets] of Object.entries(json_config['legacy-trust-preference'])) {
         let domain_pref_rows = ``
@@ -644,6 +646,9 @@ async function reloadSettings() {
         reloadSettings();
     });
 
+    // Load trust levels settings
+    loadTrustLevelSettings(json_config);
+
     // Load other settings
     document.querySelector("input.cache-timeout").value = json_config['cache-timeout'];
     document.querySelector("input.max-connection-setup-time").value = json_config['max-connection-setup-time'];
@@ -686,6 +691,237 @@ async function reloadSettings() {
         json_config['wasm-certificate-parsing'] = document.querySelector("input.wasm-certificate-parsing").value;
         importConfigFromJSON(JSON.stringify(json_config));
     });
+}
+
+
+/**
+ * Lädt die User Policies in die Tabelle
+ */
+function loadUserPolicies(json_config) {
+    console.log(json_config['legacy-trust-preference']);
+
+    // Remove current table content
+    let tbl_bodies = document.querySelectorAll('#user-policies-table tbody');
+    tbl_bodies.forEach(elem => {
+        elem.remove();
+    })
+
+    let table_body = ``;
+
+    Object.entries(json_config['legacy-trust-preference']).forEach(entry => {
+        const [domain, rules] = entry;
+        console.log(domain + ":");
+
+        let domain_header = `
+            <tbody>
+            <tr class="text-align: center;">
+                <td colspan="2" class="policy-header btn">
+                    ${domain}
+                </td>
+                <td class="btn policy-header policy-toggle">
+                    -
+                </td>
+            </tr>
+            </tbody>`
+
+        let domain_body;
+        if (domain === "*") {
+            domain_body = `<tbody>`
+        }
+        else {
+            domain_body = `<tbody hidden>`
+        }
+        
+        rules.forEach(rule => {
+            console.log(rule['caSet'] + " has level " + rule['level']);
+            // CA Set
+            domain_body += `
+                <tr>
+                    <td class="user-policy-dropdown">
+                        <select class="user-policy-dropdown">`;
+
+            Object.entries(json_config['ca-sets']).forEach(entry => {
+                const [set_name, _] = entry;
+                let selected = (set_name == rule['caSet']) ? "selected" : "";
+                domain_body += `
+                    <option ${selected}>${set_name}</option>`;
+            });
+
+            domain_body += `
+                </select></td>
+                <td class="user-policy-dropdown">
+                    <select class="user-policy-dropdown">`;
+            // Trust Level
+            Object.entries(json_config['trust-levels']).forEach(entry => {
+                const [level_name, _] = entry;
+                let selected = (level_name == rule['level']) ? "selected" : "";
+                domain_body += `
+                    <option ${selected}>${level_name}</option>`
+            });
+            // Delete Button
+            domain_body += `
+                    </select></td>
+                    <td class="btn policy-del" style="text-align: center;">x</td>
+                </tr>`;
+        });
+
+        domain_body += `
+            <tr>
+            <td colspan="2" class="btn policy-add" 
+                style=" font-weight: bolder; color: whitesmoke; height:30px; 
+                        background-color:#3D7F6E; font-size: larger;">
+                +
+            </td>
+            </tr>
+
+            <tr>
+            <td colspan="3" style="height: 20px; border: none;"></td>
+            </tr>
+        </tbody>`
+
+        table_body += domain_header + domain_body;
+    });
+
+    table_body += `
+        <tbody>
+            <tr>
+            <td colspan="2" style="padding:0;">
+                <input  type="text" placeholder="___" 
+                        style="background-color:#F2D995; height: 35px; text-align: center; font-weight: bolder; font-size: larger;">
+            </td>
+            <td id="user-policy-domain-add" class="btn" style="font-size: larger; font-weight: bolder; background-color:#F2D995;">
+                +
+            </td>
+            </tr>
+        </tbody>`;
+
+    // console.log(table_body);
+
+    let table_head = document.querySelector("#user-policies-table").children[0]
+    table_head.insertAdjacentHTML("afterend", table_body);
+
+    setupUserPolicyEventListeners(json_config);
+}
+
+
+/**
+ * Event Listeners for buttons in user policy table
+ */
+function setupUserPolicyEventListeners(json_config) {
+    // Toggle visibility of policies for specific domain
+    let toggle_buttons = document.querySelectorAll('.policy-toggle');
+    toggle_buttons.forEach(btn => {
+        btn.addEventListener("click", (e) => {
+            // e.target
+            let div = e.target.parentElement.parentElement.nextSibling;
+            toggleElement(div);
+            if (div.hidden) {
+                e.target.innerHTML = "<";
+            } else {
+                e.target.innerHTML = "v"
+            }
+        });
+    });
+    // Add policy to domain
+    let add_policy_buttons = document.querySelectorAll('.policy-add');
+    add_policy_buttons.forEach(btn => {
+        btn.addEventListener("click", (e) => {
+            let policy_header = e.target.parentElement.parentElement.previousSibling;
+            let domain = policy_header.children[0].children[0].innerHTML.trim();
+
+            let first_caset = Object.entries(json_config['ca-sets'])[0][0]
+            json_config['legacy-trust-preference'][domain].push({
+                caSet: first_caset,
+                level: "Standard Trust"
+            });
+
+            importConfigFromJSON(JSON.stringify(json_config));
+            reloadSettings();
+        });
+    });
+    // Remove policy from domain
+    let del_policy_buttons = document.querySelectorAll('.policy-del');
+    del_policy_buttons.forEach(btn => {
+        btn.addEventListener("click", (e) => {
+            let caset = e.target.parentElement.children[0].children[0].value;
+
+            let policy_header = e.target.parentElement.parentElement.previousSibling;
+            let domain = policy_header.children[0].children[0].innerHTML.trim();
+            let indices2bremoved = [];
+            json_config['legacy-trust-preference'][domain].forEach(pref => {
+                if (pref['caSet'] == caset) {
+                    let index = json_config['legacy-trust-preference'][domain].indexOf(pref);
+                    console.log("index: " + index)
+                    indices2bremoved.push(index);
+                    //json_config['legacy-trust-preference'][domain].splice(index,1);
+                }
+            });
+            console.log(indices2bremoved);
+            // New preference array without removed
+            let prefs = [];
+            json_config['legacy-trust-preference'][domain].forEach(pref => {
+                let index = json_config['legacy-trust-preference'][domain].indexOf(pref);
+                if (!indices2bremoved.includes(index)) {
+                    prefs.push(pref);
+                }
+            });
+            console.log(prefs);
+            json_config['legacy-trust-preference'][domain] = prefs;
+
+            importConfigFromJSON(JSON.stringify(json_config));
+            reloadSettings();
+        });
+    });
+    // Add domain to add policies for
+    let domain_add_btn = document.getElementById("user-policy-domain-add");
+    domain_add_btn.addEventListener("click", (e) => {
+        let domain = e.target.parentElement.children[0].children[0].value;
+        if (!json_config['legacy-trust-preference'].hasOwnProperty(domain)) {
+            json_config['legacy-trust-preference'][domain] = [];
+            importConfigFromJSON(JSON.stringify(json_config));
+            reloadSettings();
+        }
+    });
+    
+}
+
+
+/**
+ * Lädt die Trust Levels Tabelle
+ */
+function loadTrustLevelSettings(json_config) {
+    let table_rows = "";
+    Object.entries(json_config['trust-levels']).forEach(entry => {
+        const [key, value] = entry;
+        console.log(key + " is " + value);
+
+        let rank_input = `<input type="number" min=1 max=100 value=${value} />`
+        let del_btn = `<td class="btn" style="text-align: center;">x</td>`;
+
+        if (key === "Untrusted" || key === "Standard Trust") {
+            del_btn = `<td></td>`;
+        }
+        if (key === "Untrusted") {
+            rank_input = ``
+        }
+
+        let table_row = `
+            <tr>
+                <td>${key}</td>
+                <td>${rank_input}</td>
+                ${del_btn}
+            </tr>`
+        table_rows += table_row;
+    });
+    let table_body = document.getElementById('trust-levels-table-body');
+    table_body.innerHTML = table_rows += `
+        <tr>
+            <td colspan="2" class="btn" 
+                style=" font-weight: bolder; color: whitesmoke; height:30px; 
+                        background-color:#3D7F6E; font-size: larger;">
+                +
+            </td>
+        </tr>`;
 }
 
 function loadCurrentInputToLocalConfig() {
