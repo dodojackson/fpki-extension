@@ -55,7 +55,9 @@ function defaultConfig() {
     c.set("wasm-certificate-parsing", true);
     c.set("ca-sets", (()=>{
         const caSet = new Map();
-        caSet.set("All Trust-Store CAs", [
+        caSet.set("All Trust-Store CAs", {
+            description: "Alle CAs, die im Trust-Store des Browsers enthalten sind", 
+            cas: [
             "CN=Actalis Authentication Root CA,O=Actalis S.p.A./03358520967,L=Milan,C=IT",
             "CN=TunTrust Root CA,O=Agence Nationale de Certification Electronique,C=TN",
             "CN=Amazon Root CA 1,O=Amazon,C=US",
@@ -223,18 +225,26 @@ function defaultConfig() {
             "CN=Trustwave Global ECC P256 Certification Authority,O=Trustwave Holdings\, Inc.,L=Chicago,ST=Illinois,C=US",
             "CN=Trustwave Global ECC P384 Certification Authority,O=Trustwave Holdings\, Inc.,L=Chicago,ST=Illinois,C=US",
             "CN=XRamp Global Certification Authority,O=XRamp Security Services Inc,OU=www.xrampsecurity.com,C=US",
-        ])
+        ]});
+        /*
         // note that this is simply a subset of all US CAs for testing purposes
-        caSet.set("US CA", ["CN=GTS CA 1C3,O=Google Trust Services LLC,C=US",
-                            "CN=GTS Root R1,O=Google Trust Services LLC,C=US",
-                            "CN=Amazon,OU=Server CA 1B,O=Amazon,C=US",
-                            "CN=Amazon Root CA 1,O=Amazon,C=US",
-                            "CN=DigiCert Global CA G2,O=DigiCert Inc,C=US",
-                            "CN=DigiCert Global Root G2,OU=www.digicert.com,O=DigiCert Inc,C=US"]);
+        caSet.set("US CA", {
+            description: "Lalala",
+            cas: [
+                "CN=GTS CA 1C3,O=Google Trust Services LLC,C=US",
+                "CN=GTS Root R1,O=Google Trust Services LLC,C=US",
+                "CN=Amazon,OU=Server CA 1B,O=Amazon,C=US",
+                "CN=Amazon Root CA 1,O=Amazon,C=US",
+                "CN=DigiCert Global CA G2,O=DigiCert Inc,C=US",
+                "CN=DigiCert Global Root G2,OU=www.digicert.com,O=DigiCert Inc,C=US"]
+        });
         // don't include the currently used root CA for testing purposes: "CN=DigiCert Global Root G2,OU=www.digicert.com,O=DigiCert Inc,C=US"
-        caSet.set("Microsoft CA",
+        caSet.set("Microsoft CA", {
+            description: "öasldkfj",
+            cas:
                   ["CN=Baltimore CyberTrust Root,OU=CyberTrust,O=Baltimore,C=IE",
-                   "CN=DigiCert Global Root CA,OU=www.digicert.com,O=DigiCert Inc,C=US"]);
+                   "CN=DigiCert Global Root CA,OU=www.digicert.com,O=DigiCert Inc,C=US"]});
+        */
         return caSet;
     })());
     // the default level of a root certificate is 0

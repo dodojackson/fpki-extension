@@ -321,7 +321,7 @@
           <thead>
               <tr>
                   <th colspan="1">Set Name</th>
-                  <th colspan="1">CA Set</th>
+                  <th colspan="1">Beschreibung</th>
                   <th></th>
               </tr>
           </thead>
@@ -329,6 +329,28 @@
               <!-- javascript generated -->
           </tbody>
         </table>
+
+        <div id="ca-sets-builder">
+          <h3>Neues CA Set anlegen</h3>
+          <input type="text" placeholder="Filter..." style="margin-bottom: 10px;"/>
+          <button id="filter-cas">Filter CAs</button>
+          <fieldset style="
+            height: 300px; overflow-y: scroll;">
+            <legend>
+              CAs wählen
+            </legend>
+            <div id="ca-sets-builder-cas">
+              <input type="checkbox" id="ca1">
+              <label for="ca1">CA Super Geil</label>
+            </div>
+            
+          </fieldset>
+
+          <input type="text" placeholder="Set Name" id="ca-sets-builder-name"/><br>
+          <input type="text" placeholder="Beschreibung" id="ca-sets-builder-description"/>
+          <button id="add-ca-set">CA-Set hinzufügen</button>
+        </div>
+
         <button class="reset-changes ca-sets">Reset Changes</button>
         <button class="save-changes ca-sets">Save Changes</button>
       </div>
