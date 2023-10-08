@@ -101,7 +101,7 @@ function toggleElement(box) {
  */
 async function printConfig() {
     var configCodeElement = document.getElementById("config-code");
-    configCodeElement.innerHTML = "config = " + exportConfigToJSON(await getConfig(), true);
+    configCodeElement.innerHTML = "config = " + exportConfigToJSON(getConfig(), true);
     reloadSettings();
 }
 
@@ -135,7 +135,7 @@ async function reloadSettings() {
 
         TODO: Kann vielleicht auch einfach mit in 'printConfig'
     */
-    let json_config = JSON.parse(exportConfigToJSON(await getConfig()));
+    let json_config = JSON.parse(exportConfigToJSON(getConfig()));
 
     // Load mapservers into table
     var mapserver_rows = "";
@@ -507,11 +507,17 @@ class CASet {
      * Print CASet HTML as needed
      */
     print() {
+        let del_btn;
+        if (this.name === "All Trust-Store CAs") {
+            del_btn = `<td></td>`
+        } else {
+            del_btn = `<td class="btn">x</td>`
+        }
         let set_html = `
         <tr class="${this.name} ca-set-html">
             <td class="btn">${this.name}</td>
             <td>${this.description}</td>
-            <td class="btn">x</td>
+            ${del_btn}
         </tr>
         <tr hidden>
             <td colspan="3">${this.set.join("<br>")}</td>
@@ -610,28 +616,35 @@ function setupCASetBuilderEventListeners(json_config) {
 
     // Add CA Set
     let add_btn = document.querySelector('button#add-ca-set');
-    add_btn.addEventListener("click", (e) => {
-        let set_name = document.querySelector('input#ca-sets-builder-name').value;
-        let set_description = document.querySelector('input#ca-sets-builder-description').value;
-        let set_cas = [];
-        set_builder.selected_cas.forEach(ca => {
-            set_cas.push(ca);
-        });
+    if (add_btn.getAttribute("listener") !== 'true') {
+        add_btn.addEventListener("click", (e) => {
+            let json_config = JSON.parse(exportConfigToJSON(getConfig()));
 
-        json_config['ca-sets'][set_name] = {
-            description: set_description,
-            cas: set_cas
-        }
-        document.querySelector('input#ca-sets-builder-name').value = "";
-        document.querySelector('input#ca-sets-builder-description').value = "";
-        document.querySelector('#ca-sets-settings-section').scrollIntoView();
-        //alert("Set hinzugefügt")
-        importConfigFromJSON(JSON.stringify(json_config));
-        reloadSettings();
-        
-        
-        //alert(set_name + " - " + set_description);
-    });
+            let set_name = document.querySelector('input#ca-sets-builder-name').value;
+            console.log(json_config['ca-sets']);
+            let set_description = document.querySelector('input#ca-sets-builder-description').value;
+            let set_cas = [];
+            set_builder.selected_cas.forEach(ca => {
+                set_cas.push(ca);
+            });
+    
+            json_config['ca-sets'][set_name] = {
+                description: set_description,
+                cas: set_cas
+            }
+            document.querySelector('input#ca-sets-builder-name').value = "";
+            document.querySelector('input#ca-sets-builder-description').value = "";
+            document.querySelector('#ca-sets-settings-section').scrollIntoView();
+            //alert("Set hinzugefügt")
+            e.target.setAttribute('listener', 'true');
+            importConfigFromJSON(JSON.stringify(json_config));
+            reloadSettings();
+            
+            
+            //alert(set_name + " - " + set_description);
+        });
+    }
+    
 }
 
 
@@ -640,13 +653,14 @@ function setupCASetBuilderEventListeners(json_config) {
  */
 function loadCASets(json_config) {
     // Test
-    let test = new CASets(json_config);
-    test.test();
+    //let test = new CASets(json_config);
+    //test.test();
 
-    test = new CASetBuilder(json_config);
-    test.test();
-    console.log(test.filter("Amazon"));
+    //test = new CASetBuilder(json_config);
+    //test.test();
+    //console.log(test.filter("Amazon"));
     //test.add_current(json_config);
+    //let json_config = JSON.parse(exportConfigToJSON(getConfig()));
 
     // Load selectable CAs from Trust Store (-ca-set)
     let trust_store_cas = json_config['ca-sets']['All Trust-Store CAs']['cas'];
@@ -677,88 +691,23 @@ function loadCASets(json_config) {
             //alert("hi");
         });
     });
-    /*
-    for (const [key, value] of Object.entries(json_config['ca-sets'])) {
-        console.log(value['cas']);
-        value['cas'].forEach( (ca, idx) => {
-            if (idx == 0) {
-                ca_sets_rows += `<tr>
-                                    <td rowspan=${value.length + 1}>${key}</td>
-                                    <td>${ca}</td>
-                                    <td>
-                                        <button class="delete delete_ca_from_set">Delete</button>
-                                    </td>
-                                </tr>`
-            } else {
-                ca_sets_rows += `<tr>
-                                    <td hidden>${key}</td>
-                                    <td>${ca}</td>
-                                    <td>
-                                        <button class="delete delete_ca_from_set">Delete</button>
-                                    </td>
-                                </tr>`
-            }
-        });
-        let hide_set_name = ""
-        if (value['cas'].length != 0) {hide_set_name = "hidden"}
-        ca_sets_rows += `
-            <tr>
-                <td ${hide_set_name}>${key}</td>
-                <td>
-                    ${ca_selection}
-                </td>
-                <td>
-                    <button class="add_ca_to_set">Add</button>
-                </td>
-            </tr>`
-    }
-    ca_sets_rows += `<tr>
-                        <td>
-                            <input type="text" placeholder="Set Name" />
-                        </td>
-                        <td></td>
-                        <td>
-                            <button class="add_ca_set">Add CA Set</button>
-                        </td>
-                    </tr>`
-    document.getElementById('ca-sets-table-body').innerHTML = ca_sets_rows;
-    
 
-    // Add CA Set event listeners
-    document.querySelectorAll('button.delete_ca_from_set').forEach(elem => {
-        elem.addEventListener("click", (e) => {
-            let set_name = e.target.parentElement.parentElement.cells[0].innerHTML;
-            let ca_distinguished_name = e.target.parentElement.parentElement.cells[1].innerHTML;
-            let filtered = json_config['ca-sets'][set_name].filter(elem => elem !== ca_distinguished_name);
-
-            if (filtered.length == 0) {
+    let delete_set_buttons = document.querySelectorAll('tr.ca-set-html');
+    delete_set_buttons.forEach(btn => {
+        if (btn.children[0].innerHTML !== "All Trust-Store CAs") {
+            btn.children[2].addEventListener("click", (e) => {
+                let json_config = JSON.parse(exportConfigToJSON(getConfig()));
+                let set_name = btn.children[0].innerHTML;
+                console.log("HOHO: ");
+                console.log(json_config['ca-sets']['All Trust-Store CAs'])
                 delete json_config['ca-sets'][set_name];
-            } else {
-                json_config['ca-sets'][set_name] = filtered;
-            }
-            
-            importConfigFromJSON(JSON.stringify(json_config));
-            reloadSettings();
-            console.log(ca_distinguished_name);
-            console.log(filtered);
-        });
+                console.log("HOHO: ");
+                console.log(json_config['ca-sets']['All Trust-Store CAs'])
+                importConfigFromJSON(JSON.stringify(json_config));
+                reloadSettings();
+            });
+        } 
     });
-    document.querySelectorAll('button.add_ca_to_set').forEach(elem => {
-        elem.addEventListener("click", (e) => {
-            let set_name = e.target.parentElement.parentElement.cells[0].innerHTML;
-            let ca_distinguished_name = e.target.parentElement.parentElement.cells[1].children[0].value;
-            json_config['ca-sets'][set_name].push(ca_distinguished_name);
-            importConfigFromJSON(JSON.stringify(json_config));
-            reloadSettings();
-        });
-    });
-    document.querySelector('button.add_ca_set').addEventListener("click", (e) => {
-        let set_name = e.target.parentElement.parentElement.cells[0].children[0].value;
-        json_config['ca-sets'][set_name] = [];
-        importConfigFromJSON(JSON.stringify(json_config));
-        reloadSettings();
-    });
-    */
 }
 
 
@@ -787,7 +736,7 @@ function loadUserPolicies(json_config) {
                     ${domain}
                 </td>
                 <td class="btn policy-header policy-toggle">
-                    -
+                    <
                 </td>
             </tr>
             </tbody>`
@@ -872,6 +821,11 @@ function loadUserPolicies(json_config) {
 }
 
 
+function loadTEST() {
+
+}
+
+
 /**
  * Event Listeners for buttons in user policy table
  */
@@ -886,26 +840,43 @@ function setupUserPolicyEventListeners(json_config) {
             if (div.hidden) {
                 e.target.innerHTML = "<";
             } else {
-                e.target.innerHTML = "v"
+                e.target.innerHTML = "v";
             }
+
+            // div neu laden
         });
     });
     // Add policy to domain
     let add_policy_buttons = document.querySelectorAll('.policy-add');
     add_policy_buttons.forEach(btn => {
-        btn.addEventListener("click", (e) => {
-            let policy_header = e.target.parentElement.parentElement.previousSibling;
-            let domain = policy_header.children[0].children[0].innerHTML.trim();
-
-            let first_caset = Object.entries(json_config['ca-sets'])[0][0]
-            json_config['legacy-trust-preference'][domain].push({
-                caSet: first_caset,
-                level: "Standard Trust"
+        if (btn.getAttribute('listener') !== "false") {
+            btn.setAttribute('listener', 'false');
+            btn.addEventListener("click", (e) => {
+                let policy_header = e.target.parentElement.parentElement.previousSibling;
+                let domain = policy_header.children[0].children[0].innerHTML.trim();
+    
+                let first_caset = Object.entries(json_config['ca-sets'])[0][0]
+                json_config['legacy-trust-preference'][domain].push({
+                    caSet: first_caset,
+                    level: "Standard Trust"
+                });
+    
+                importConfigFromJSON(JSON.stringify(json_config));
+    
+                let policy_body = policy_header.nextElementSibling;
+    
+                reloadPolicyBody(policy_body, domain);
+    
+                
+                //reloadSettings();
+    
+                // Keep the domain section open
+                console.log("ADFASDF")
+                console.log(policy_header.nextSibling);
+                policy_header.nextSibling.hidden = false;
             });
-
-            importConfigFromJSON(JSON.stringify(json_config));
-            reloadSettings();
-        });
+        }
+        
     });
     // Remove policy from domain
     let del_policy_buttons = document.querySelectorAll('.policy-del');
@@ -951,6 +922,63 @@ function setupUserPolicyEventListeners(json_config) {
         }
     });
     
+}
+
+
+function reloadPolicyBody(policy_body, domain_name) {
+    let json_config = JSON.parse(exportConfigToJSON(getConfig()));
+    let rules = json_config['legacy-trust-preference'][domain_name];
+
+    let domain_body = ``;
+    rules.forEach(rule => {
+        console.log(rule['caSet'] + " has level " + rule['level']);
+        // CA Set
+        domain_body += `
+            <tr>
+                <td class="user-policy-dropdown">
+                    <select class="user-policy-dropdown">`;
+
+        Object.entries(json_config['ca-sets']).forEach(entry => {
+            const [set_name, _] = entry;
+            let selected = (set_name == rule['caSet']) ? "selected" : "";
+            domain_body += `
+                <option ${selected}>${set_name}</option>`;
+        });
+
+        domain_body += `
+            </select></td>
+            <td class="user-policy-dropdown">
+                <select class="user-policy-dropdown">`;
+        // Trust Level
+        Object.entries(json_config['trust-levels']).forEach(entry => {
+            const [level_name, _] = entry;
+            let selected = (level_name == rule['level']) ? "selected" : "";
+            domain_body += `
+                <option ${selected}>${level_name}</option>`
+        });
+        // Delete Button
+        domain_body += `
+                </select></td>
+                <td class="btn policy-del" style="text-align: center;">x</td>
+            </tr>`;
+    });
+
+    domain_body += `
+        <tr>
+        <td colspan="2" class="btn policy-add" 
+            style=" font-weight: bolder; color: whitesmoke; height:30px; 
+                    background-color:#3D7F6E; font-size: larger;">
+            +
+        </td>
+        </tr>
+
+        <tr>
+        <td colspan="3" style="height: 20px; border: none;"></td>
+        </tr>`;
+
+    policy_body.innerHTML = domain_body;
+
+    setupUserPolicyEventListeners(json_config);
 }
 
 
