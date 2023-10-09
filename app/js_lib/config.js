@@ -55,10 +55,10 @@ function defaultConfig() {
     c.set("wasm-certificate-parsing", true);
     c.set("ca-sets", (()=>{
         const caSet = new Map();
-        caSet.set('All Trust-Store CAs', (()=>{
-            allSet = new Map();
-            allSet.set('description', "Alle CAs, die im Trust-Store des Browsers enthalten sind");
-            allSet.set('cas', [
+        
+        caSet.set('All Trust-Store CAs', {
+            description: "Alle CAs, die im Trust-Store des Browsers enthalten sind",
+            cas: [
                 "CN=Actalis Authentication Root CA,O=Actalis S.p.A./03358520967,L=Milan,C=IT",
                 "CN=TunTrust Root CA,O=Agence Nationale de Certification Electronique,C=TN",
                 "CN=Amazon Root CA 1,O=Amazon,C=US",
@@ -226,9 +226,8 @@ function defaultConfig() {
                 "CN=Trustwave Global ECC P256 Certification Authority,O=Trustwave Holdings\, Inc.,L=Chicago,ST=Illinois,C=US",
                 "CN=Trustwave Global ECC P384 Certification Authority,O=Trustwave Holdings\, Inc.,L=Chicago,ST=Illinois,C=US",
                 "CN=XRamp Global Certification Authority,O=XRamp Security Services Inc,OU=www.xrampsecurity.com,C=US",
-            ])
-        return allSet;
-        }));
+            ]
+        });
         /*
         // note that this is simply a subset of all US CAs for testing purposes
         caSet.set("US CA", {
@@ -286,6 +285,8 @@ function defaultConfig() {
     })());
 
     console.log("Type: " + typeof c);
+    console.log("Default Config:")
+    console.log(c);
     return c;
 }
 

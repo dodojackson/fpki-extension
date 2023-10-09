@@ -66,7 +66,9 @@ document.addEventListener('DOMContentLoaded', async () => {
                 });
             });
 
+        console.log("TEST 1");
         await requestConfig();
+        console.log("TEST 2");
         await reloadSettings();
     } catch (e) {
         console.log("config button setup: " + e);
@@ -652,18 +654,12 @@ function setupCASetBuilderEventListeners(json_config) {
  * Lädt die konfigurierten CA-Sets
  */
 function loadCASets(json_config) {
-    // Test
-    //let test = new CASets(json_config);
-    //test.test();
-
-    //test = new CASetBuilder(json_config);
-    //test.test();
-    //console.log(test.filter("Amazon"));
-    //test.add_current(json_config);
-    //let json_config = JSON.parse(exportConfigToJSON(getConfig()));
 
     // Load selectable CAs from Trust Store (-ca-set)
     let trust_store_cas = json_config['ca-sets']['All Trust-Store CAs']['cas'];
+    console.log("HEYHEY")
+    console.log(trust_store_cas);
+    console.log(json_config['ca-sets'])
     let ca_selection = `<select name="ca_selection">`;
     trust_store_cas.forEach(ca => {
         ca_selection += `<option value="${ca}">${ca}</option>`;
@@ -698,11 +694,11 @@ function loadCASets(json_config) {
             btn.children[2].addEventListener("click", (e) => {
                 let json_config = JSON.parse(exportConfigToJSON(getConfig()));
                 let set_name = btn.children[0].innerHTML;
-                console.log("HOHO: ");
-                console.log(json_config['ca-sets']['All Trust-Store CAs'])
+                //console.log("HOHO: ");
+                //console.log(json_config['ca-sets']['All Trust-Store CAs'])
                 delete json_config['ca-sets'][set_name];
-                console.log("HOHO: ");
-                console.log(json_config['ca-sets']['All Trust-Store CAs'])
+                //console.log("HOHO: ");
+                //console.log(json_config['ca-sets']['All Trust-Store CAs'])
                 importConfigFromJSON(JSON.stringify(json_config));
                 reloadSettings();
             });
