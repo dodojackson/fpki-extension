@@ -58,11 +58,26 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         });
         document
-            .querySelectorAll("span.info-icon")
+            .querySelectorAll("span.info-icon-old")
             .forEach(elem => {
                 elem.addEventListener("click", (e) => {
                     let box = e.target.parentElement.children[2];
                     toggleElement(box);
+                });
+            });
+        
+        document
+            .querySelector("span.info-icon")
+            .addEventListener("click", (e) => {
+                let info_id = e.target.getAttribute('info-id');
+                let box = document.querySelector(`div.info-box[info-id="${info_id}"]`)
+                console.log(box)
+                box.style.left = (e.pageX - 5) + "px";
+                box.style.top = (e.pageY -5) + "px";
+                box.style.display = "block";
+
+                box.addEventListener("mouseleave", (e) => {
+                    e.target.style.display = "none";
                 });
             });
 
@@ -829,18 +844,21 @@ function setupUserPolicyEventListeners(json_config) {
     // Toggle visibility of policies for specific domain
     let toggle_buttons = document.querySelectorAll('.policy-toggle');
     toggle_buttons.forEach(btn => {
-        btn.addEventListener("click", (e) => {
-            // e.target
-            let div = e.target.parentElement.parentElement.nextSibling;
-            toggleElement(div);
-            if (div.hidden) {
-                e.target.innerHTML = "<";
-            } else {
-                e.target.innerHTML = "v";
-            }
-
-            // div neu laden
-        });
+        if (!btn.hasAttribute('listener')){
+            btn.addEventListener("click", (e) => {
+                alert("Toggle visibility")
+                e.target.setAttribute('listener', 'true');
+                let div = e.target.parentElement.parentElement.nextSibling;
+                toggleElement(div);
+                if (div.hidden) {
+                    e.target.innerHTML = "<";
+                } else {
+                    e.target.innerHTML = "v";
+                }
+    
+                // div neu laden
+            });
+        }
     });
     // Add policy to domain
     let add_policy_buttons = document.querySelectorAll('.policy-add');
@@ -921,6 +939,13 @@ function setupUserPolicyEventListeners(json_config) {
 }
 
 
+/**
+ * Überschreibt die Policies für den spezifizierten Domainnamen mit der
+ * aktuellen config.
+ *
+ * @param {*} policy_body DIV, das die policies enthält
+ * @param {*} domain_name Domainbezeichnung
+ */
 function reloadPolicyBody(policy_body, domain_name) {
     let json_config = JSON.parse(exportConfigToJSON(getConfig()));
     let rules = json_config['legacy-trust-preference'][domain_name];

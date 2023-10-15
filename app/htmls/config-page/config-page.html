@@ -20,7 +20,12 @@
         href="#">F-PKI Dokumentation</a> oder das originale Paper <q><a
         href="https://netsec.ethz.ch/publications/papers/chuat2022fpki.pdf">F-PKI:
         Enabling Innovation and Trust Flexibility in the HTTPS Public-Key
-        Infrastructure</a></q>.
+        Infrastructure</a></q>.  
+        Even more info here: 
+        <span class="info-icon" info-id="test">&#9432;</span>
+        <div class="info-box" info-id="test">
+          Some more info here.
+        </div>
       </p>
       
 
@@ -29,8 +34,8 @@
       <div class="settings-section" id="user-policies-settings-section">
         <div class="settings-section-header">
           <h2 style="display: inline-block;">User Policies</h2>
-          <span class="info-icon">&#9432;</span>
-          <div class="info-box" hidden>
+          <span class="info-icon-old">&#9432;</span>
+          <div class="info-box-old" hidden>
             <p>
               User Policies ermöglichen die feinere <b>Differenzierung von
               Vertrauen</b>, das der Nutzer bestimmten CAs für bestimmte Domains
@@ -104,18 +109,7 @@
             </p>
           </div>
         </div>
-
-        <div class="todo">
-          <p>
-            1. Automatisch prüfen, dass keine doppelten Präferenzen bestehen,
-            oder sich Policies wiedersprechen oder Domain doppelt ist etc..<br>
-            2. Trust Color-Coden<br>
-            Untrusted: rot <br>
-            lower trust: orange-range <br>
-            standard: white/very light green<br>
-            higher trust: green-range <br>
-          </p>
-        </div>
+        
         
         <table id="legacy-trust-preference-table" hidden>
           <thead>
@@ -293,8 +287,8 @@
       <div class="settings-section" id="ca-sets-settings-section">
         <div class="settings-section-header">
           <h2 style="display: inline-block;">CA Sets</h2>
-          <span class="info-icon">&#9432;</span>
-          <div class="info-box" hidden>
+          <span class="info-icon-old">&#9432;</span>
+          <div class="info-box-old" hidden>
             <p>
               CA Sets sind <b>Mengen von Root CAs</b> (Certificate Authorities),
               die sich in dem <b>Trust Store</b> deines Browsers befinden.
@@ -353,11 +347,11 @@
             <legend>
               Benutzerdefinierte CAs
             </legend>
-              <textarea 
-                placeholder="Distinguished Name(s) (DN)"
-                style="width: 98%; 
-                  height: 90%;
-                  resize: none;"></textarea>
+            <textarea 
+              placeholder="Distinguished Name(s)"
+              style="width: 98%; 
+                height: 90%;
+                resize: none;"></textarea>
             
           </fieldset>
 
@@ -375,8 +369,8 @@
       <div class="settings-section pca-preferences-settings-section" style="display: none;">
         <div class="settings-section-header">
           <h2 style="display: inline-block;">User Policies (PCA)</h2>
-          <span class="info-icon">&#9432;</span>
-          <div class="info-box" hidden>
+          <span class="info-icon-old">&#9432;</span>
+          <div class="info-box-old" hidden>
             <p>
               PCAs (Policy-Certificate-Authorities) stellen <b>Zertifikate für
               Domain Policies</b> der Domainbetreiber aus. Für weitere
