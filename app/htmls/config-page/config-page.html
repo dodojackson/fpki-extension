@@ -39,6 +39,12 @@
           Default Trust-Level.
         </p>
       </div>
+
+      <div class="info-box" info-id="choose-cas">
+        <p>
+          These are the CAs from your browsers <b>trust store</b>.
+        </p>
+      </div>
       
 
 
@@ -329,7 +335,7 @@
           <thead>
               <tr>
                   <th colspan="1">Set Name</th>
-                  <th colspan="1">Beschreibung</th>
+                  <th colspan="1">Description</th>
                   <th></th>
               </tr>
           </thead>
@@ -338,8 +344,8 @@
           </tbody>
         </table>
 
-        <h3 style="margin-top: 40px;">Neues CA Set anlegen</h3>
-        <div id="ca-sets-builder" class="default-border" >
+        <!--<h3 style="margin-top: 40px;">Neues CA Set anlegen</h3>-->
+        <div id="ca-sets-builder" class="default-border" style="margin-top: 40px;">
 
           <input type="text" placeholder="Set Name" id="ca-sets-builder-name" class="full-width"/><br>
           <input type="text" placeholder="Description" id="ca-sets-builder-description" class="full-width" style="margin-top: 0;"/><br>
@@ -350,6 +356,7 @@
             height: auto; overflow-y:auto; margin-top: 10px;">
             <legend style="font-weight: 600;">
               Choose CAs
+              <span class="info-icon" info-id="choose-cas">&#9432;</span>
             </legend>
             <input class="filter-cas full-width" type="text" placeholder="Filter..." style="margin-bottom: 10px; width: 62%;"/>
             <div id="ca-sets-builder-cas" style="height:250px; overflow-y: scroll;">
@@ -362,7 +369,7 @@
           <fieldset style="
             height: 150px; overflow-y: scroll; margin-top: 20px; padding-top: 10px;">
             <legend style="font-weight: 600;">
-              Benutzerdefinierte CAs
+              Custom CAs
             </legend>
             <textarea 
               placeholder="Distinguished Name(s)"
@@ -376,8 +383,8 @@
           <button id="add-ca-set" class="btn"
             style="font-weight: bolder; color: whitesmoke; height:36px; 
             background-color:#3D7F6E; font-size: larger;
-            padding: 3pt 10pt; width: 100%">
-            CA-Set hinzufügen
+            padding: 3pt 10pt; width: 100%; margin-top: 10px;">
+            Add CA Set
           </button>
         </div>
 

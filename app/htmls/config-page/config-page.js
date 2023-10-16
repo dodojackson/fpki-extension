@@ -543,8 +543,12 @@ class CASet {
             <td>${this.description}</td>
             ${del_btn}
         </tr>
-        <tr hidden>
-            <td colspan="3">${this.set.join("<br>")}</td>
+        <tr hidden >
+            <td colspan="3">
+                <div style="max-height:300px; overflow-y:scroll;">
+                ${this.set.join("<br>")}
+                </div>
+            </td>
         </tr>`;
 
         return set_html;
