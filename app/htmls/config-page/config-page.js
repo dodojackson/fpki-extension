@@ -630,6 +630,30 @@ function setupCASetBuilderEventListeners(json_config) {
         setupCASetBuilderEventListeners();
     });
 
+    // CA Filter (OnChange)
+    let filter_input = document.querySelector("input.filter-cas");
+    //console.log(filter_input);
+    if (! filter_input.hasAttribute('listener')) {
+        filter_input.addEventListener("input", (e) => {
+            let ca_div = document.querySelector('div#ca-sets-builder-cas');
+            let filter_str = e.target.value;
+    
+            let ca_checkboxes = ``;
+            let filtered_cas = set_builder.filter(filter_str);
+            filtered_cas.forEach(ca => {
+                let checked = (set_builder.selected(ca)) ? "checked" : "";
+                ca_checkboxes += `
+                    <input type="checkbox" id="${ca}" class="ca-set-builder-checkbox" ${checked}/>
+                    <label for="${ca}">${ca}</label><br>`;
+            });
+            // console.log(filtered_cas);
+            ca_div.innerHTML = ca_checkboxes;
+            e.target.setAttribute("listener", "true");
+            setupCASetBuilderEventListeners();
+        });
+    }
+    
+
     // CA Selection
     let checkboxes = document.querySelectorAll('.ca-set-builder-checkbox');
     checkboxes.forEach(box => {

@@ -1,9 +1,13 @@
 # Notizen
 
+
 ## Bugs
 - [x] User-Policies: Domain-Tab nicht schließbar, nach hinzufügen von Policy
 
+
 ## TODO
+TODO's nach Kategorie.
+
 ### Infoseite
 - [ ] Infopage kürzen/überarbeiten
 
@@ -19,24 +23,28 @@
 - [ ] Popup bei versuch, doppelte domain hinzuzufügen
 - [ ] Info bei custom CAs: die müssen auch im browser trust-store hinzugefügt
   werden, sonst wird es nicht klappen!
-- [ ] Trust-Level muss schon `onChange` in config übernommen werden, sonst wird
-  das beim hinzufügen einer neuen preference sofort zurückgesetzt
-- [ ] Info-Icons bei Trust-Levels `Untrusted` und `Standard Trust`.
-- [ ] JSON-Config könnte wahrscheinlich mit in normale Settings (am Ende),
+- [ ] Trust-Level muss schon `onChange` in (lokale) config übernommen werden,
+  sonst wird das beim hinzufügen einer neuen preference sofort zurückgesetzt
+- [x] Info-Icons bei Trust-Levels `Untrusted` und `Standard Trust`.
+- [x] JSON-Config könnte wahrscheinlich mit in normale Settings (am Ende),
   genauso wie Trust-Levels
 - [x] Info "Popup" implementieren, damit ich mit den Info-Boxen weitermachen
   kann, wenn mir etwas einfällt 
-  - nurnoch als class statt als id machen, dann ist fertign **LETS GO**
+  - nurnoch als class statt als id machen, dann ist fertign
+- [ ] Reset/Save Changes Buttons sollten überall funktionieren
+- [ ] Was passiert, wenn man ein Trust-Level löscht, das aber in Policies
+  verwendet wird?
+- [x] CA-Set Filter on change machen
 
 ### Design
 - [ ] Delete Buttons rötlich
 - [ ] Color-coded Trust level
   - [ ] für default levels
   - [ ] dynamischer farbverlauf für selber hinzugefügte levels:  
-  Untrusted: rot  
-  lower trust: orange-range  
-  standard: white/very light green  
-  higher trust: green-range
+        Untrusted: rot  
+        lower trust: orange-range  
+        standard: white/very light green  
+        higher trust: green-range
 - [ ] Toggle button für `*` Domain muss mit `v` initialisiert werden
 - [ ] Sortierung der Domains, vllt sogar schachtelung..?  Kennzeichen:
   dunkelgrauer balken links

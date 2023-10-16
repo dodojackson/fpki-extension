@@ -193,3 +193,9 @@ div.info-box {
     cursor: pointer;
     max-width: 200px;
 }
+
+input.full-width {
+    width: calc(100% - 20px);
+    margin: 10px 0;
+    padding: 5px 10px;
+}
