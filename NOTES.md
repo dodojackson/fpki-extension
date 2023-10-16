@@ -24,7 +24,7 @@
 - [ ] Info-Icons bei Trust-Levels `Untrusted` und `Standard Trust`.
 - [ ] JSON-Config könnte wahrscheinlich mit in normale Settings (am Ende),
   genauso wie Trust-Levels
-- [ ] Info "Popup" implementieren, damit ich mit den Info-Boxen weitermachen
+- [x] Info "Popup" implementieren, damit ich mit den Info-Boxen weitermachen
   kann, wenn mir etwas einfällt 
   - nurnoch als class statt als id machen, dann ist fertign **LETS GO**
 

@@ -172,13 +172,17 @@ select.user-policy-dropdown {
 }
 
 span.info-icon {
+    color: rgb(211, 149, 23);
+    font-weight: bolder;
+    font-size: large;
     cursor: pointer;
+    margin-left: 5px;
 }
 
 div.info-box {
     border: 2px solid grey;
     border-radius: 10px;
-    background-color: rgba(104, 169, 223, 0.3);
+    background-color: rgb(173, 237, 248);
     padding: 10px;
     line-height: 1.5;
     position:absolute;
@@ -187,4 +191,5 @@ div.info-box {
     left: 100px;
     top: 200px;
     cursor: pointer;
+    max-width: 200px;
 }

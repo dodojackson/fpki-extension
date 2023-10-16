@@ -65,21 +65,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     toggleElement(box);
                 });
             });
-        
-        document
-            .querySelector("span.info-icon")
-            .addEventListener("click", (e) => {
-                let info_id = e.target.getAttribute('info-id');
-                let box = document.querySelector(`div.info-box[info-id="${info_id}"]`)
-                console.log(box)
-                box.style.left = (e.pageX - 5) + "px";
-                box.style.top = (e.pageY -5) + "px";
-                box.style.display = "block";
-
-                box.addEventListener("mouseleave", (e) => {
-                    e.target.style.display = "none";
-                });
-            });
+            
 
         console.log("TEST 1");
         await requestConfig();
@@ -456,6 +442,27 @@ async function reloadSettings() {
         json_config['wasm-certificate-parsing'] = document.querySelector("input.wasm-certificate-parsing").value;
         importConfigFromJSON(JSON.stringify(json_config));
     });
+
+
+    // TODO: Event Listeners
+    document
+            .querySelectorAll("span.info-icon")
+            .forEach(elem => {
+                elem.addEventListener("click", (e) => {
+                    let info_id = e.target.getAttribute('info-id');
+                    let box = document.querySelector(`div.info-box[info-id="${info_id}"]`)
+                    console.log(box)
+                    box.style.left = (e.pageX - 5) + "px";
+                    box.style.top = (e.pageY -5) + "px";
+                    box.style.display = "block";
+                    let screen_dim = document.querySelector('html').getBoundingClientRect();
+                    box.style['max-width'] = (screen_dim.right - e.pageX - 50) + "px";
+    
+                    box.addEventListener("mouseleave", (e) => {
+                        e.target.style.display = "none";
+                    });
+                });
+            });
 }
 
 
@@ -1014,17 +1021,28 @@ function loadTrustLevelSettings(json_config) {
 
         let rank_input = `<input type="number" min=1 max=100 value=${value} />`
         let del_btn = `<td class="btn" style="text-align: center;">x</td>`;
+        let add_info = ``;
 
         if (key === "Untrusted" || key === "Standard Trust") {
             del_btn = `<td></td>`;
         }
         if (key === "Untrusted") {
-            rank_input = ``
+            rank_input = ``;
+            add_info = `
+                <span class="info-icon" info-id="trust-level-untrusted">
+                    &#9432;
+                </span>`;
+        }
+        if (key === "Standard Trust") {
+            add_info = `
+            <span class="info-icon" info-id="trust-level-standard">
+                &#9432;
+            </span>`;
         }
 
         let table_row = `
             <tr>
-                <td>${key}</td>
+                <td>${key}${add_info}</td>
                 <td>${rank_input}</td>
                 ${del_btn}
             </tr>`
