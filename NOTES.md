@@ -36,10 +36,21 @@ TODO's nach Kategorie.
   verwendet wird?
 - [x] CA-Set Filter on change machen
 - [ ] Custom CAs in Set Builder wirklich übernehmen
-- [ ] Live übertrag in Config (onChange) von User Policies
-  - [ ] Levels: Problem ist eigentlich, dass in der config mehrere Werte zu
+- [x] Live übertrag in Config (onChange) von User Policies
+  - [x] Levels: Problem ist eigentlich, dass in der config mehrere Werte zu
     mgleichen überhaupt gespcichert werden können
+  - [x] Neue config zu ende in javascript übernehmen
+  - [x] Hinzufügen neuer policy muss eine der übrigen CA-Sets nehmen
+  - [x] Selects dürfen immer nur aktuelle value + die unconfigured casets haben
+    als optionen
+  - [x] delete klappt nicht mehr aktuell
+  - [x] add policy klappt nicht mehr bei neuen domains...
+- [x] delete domains statt ausklappen an der seite  
+  - [x] erstmal ausklappen über domainheader..
 - [ ] Predefined CA Sets
+- [ ] trust level richtig laden
+- [ ] wenn das caset beim hinzufügen leer ist, dann wird irgendwie noch eins mit
+  namen "" hinzugefügt, ausirgendwinnem grund (zmndst als erstes hinzufügen..)
 
 ### Design
 - [ ] Delete Buttons rötlich

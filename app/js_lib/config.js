@@ -253,10 +253,13 @@ function defaultConfig() {
     // CAs with higher levels take precedence over CAs with lower levels
     c.set("legacy-trust-preference", (()=>{
         const tp = new Map();
-        tp.set("*", [
+        /*tp.set("*", [
             //{caSet: "All Trust Store CAs", level: 1}
             {caSet: "All Trust-Store CAs", level: "Standard Trust"}
-        ]);
+        ]);*/
+        tp.set("*", {
+            "All Trust-Store CAs": "Standard Trust"
+        });
         return tp;
     })());
     // the default level of a root certificate is 0

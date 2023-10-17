@@ -530,11 +530,11 @@ function loadUserPolicies(json_config) {
         let domain_header = `
             <tbody>
             <tr class="text-align: center;">
-                <td colspan="2" class="policy-header btn">
+                <td colspan="2" class="policy-header btn policy-toggle">
                     ${domain}
                 </td>
-                <td class="btn policy-header policy-toggle">
-                    <
+                <td class="btn policy-header delete-domain">
+                    X
                 </td>
             </tr>
             </tbody>`
@@ -547,52 +547,10 @@ function loadUserPolicies(json_config) {
             domain_body = `<tbody hidden>`
         }
         
-        rules.forEach(rule => {
-            console.log(rule['caSet'] + " has level " + rule['level']);
-            // CA Set
-            domain_body += `
-                <tr>
-                    <td class="user-policy-dropdown">
-                        <select class="user-policy-dropdown">`;
+        let policy_body = loadPolicyBody(domain);
+        domain_body += policy_body;
 
-            Object.entries(json_config['ca-sets']).forEach(entry => {
-                const [set_name, _] = entry;
-                let selected = (set_name == rule['caSet']) ? "selected" : "";
-                domain_body += `
-                    <option ${selected}>${set_name}</option>`;
-            });
-
-            domain_body += `
-                </select></td>
-                <td class="user-policy-dropdown">
-                    <select class="user-policy-dropdown trust-level-select">`;
-            // Trust Level
-            Object.entries(json_config['trust-levels']).forEach(entry => {
-                const [level_name, _] = entry;
-                let selected = (level_name == rule['level']) ? "selected" : "";
-                domain_body += `
-                    <option ${selected}>${level_name}</option>`
-            });
-            // Delete Button
-            domain_body += `
-                    </select></td>
-                    <td class="btn policy-del" style="text-align: center;">x</td>
-                </tr>`;
-        });
-
-        domain_body += `
-            <tr>
-            <td colspan="2" class="btn policy-add" 
-                style=" font-weight: bolder; color: whitesmoke; height:30px; 
-                        background-color:#3D7F6E; font-size: larger;">
-                +
-            </td>
-            </tr>
-
-            <tr>
-            <td colspan="3" style="height: 20px; border: none;"></td>
-            </tr>
-        </tbody>`
+        domain_body += `</tbody>`
 
         table_body += domain_header + domain_body;
     });
@@ -619,11 +577,6 @@ function loadUserPolicies(json_config) {
 }
 
 
-function loadTEST() {
-
-}
-
-
 /**
  * Event Listeners for buttons in user policy table
  */
@@ -632,96 +585,89 @@ function setupUserPolicyEventListeners(json_config) {
     let toggle_buttons = document.querySelectorAll('.policy-toggle');
     toggle_buttons.forEach(btn => {
         if (!btn.hasAttribute('listener')){
+            btn.setAttribute("listener", "true");
             btn.addEventListener("click", (e) => {
-                alert("Toggle visibility")
-                e.target.setAttribute('listener', 'true');
+                //alert("Toggle visibility");
                 let div = e.target.parentElement.parentElement.nextSibling;
                 toggleElement(div);
-                if (div.hidden) {
-                    e.target.innerHTML = "<";
-                } else {
-                    e.target.innerHTML = "v";
-                }
-    
-                // div neu laden
             });
         }
     });
+
     // Add policy to domain
     let add_policy_buttons = document.querySelectorAll('.policy-add');
     add_policy_buttons.forEach(btn => {
         if (btn.getAttribute('listener') !== "false") {
             btn.setAttribute('listener', 'false');
             btn.addEventListener("click", (e) => {
+                let json_config = JSON.parse(exportConfigToJSON(getConfig()));
+
                 let policy_header = e.target.parentElement.parentElement.previousSibling;
                 let domain = policy_header.children[0].children[0].innerHTML.trim();
+                let unconfigured_casets = getUnconfiguredCASets(domain);
     
-                let first_caset = Object.entries(json_config['ca-sets'])[0][0]
-                json_config['legacy-trust-preference'][domain].push({
-                    caSet: first_caset,
-                    level: "Standard Trust"
-                });
-    
-                importConfigFromJSON(JSON.stringify(json_config));
-    
-                let policy_body = policy_header.nextElementSibling;
-    
-                reloadPolicyBody(policy_body, domain);
-    
-                
-                //reloadSettings();
-    
-                // Keep the domain section open
-                console.log("ADFASDF")
-                console.log(policy_header.nextSibling);
-                policy_header.nextSibling.hidden = false;
+                if (unconfigured_casets.length === 0) {
+                    alert("All CA Sets are configured already");
+                } else {
+                    let first_caset = unconfigured_casets[0];
+                    json_config['legacy-trust-preference'][domain][first_caset] = "Standard Trust";
+        
+                    importConfigFromJSON(JSON.stringify(json_config));
+                    let policy_body = policy_header.nextElementSibling;
+                    policy_body.innerHTML = loadPolicyBody(domain);
+                    setupUserPolicyEventListeners(json_config);
+                }
             });
         }
         
     });
+
     // Remove policy from domain
     let del_policy_buttons = document.querySelectorAll('.policy-del');
     del_policy_buttons.forEach(btn => {
-        btn.addEventListener("click", (e) => {
-            let caset = e.target.parentElement.children[0].children[0].value;
+        if (!btn.hasAttribute('listener')) {
+            btn.setAttribute("listener", "true");
+            btn.addEventListener("click", (e) => {
+                let caset = e.target.parentElement.children[0].children[0].value;
+                let policy_header = e.target.parentElement.parentElement.previousSibling;
+                let domain = policy_header.children[0].children[0].innerHTML.trim();
+    
+                delete json_config['legacy-trust-preference'][domain][caset];
 
-            let policy_header = e.target.parentElement.parentElement.previousSibling;
-            let domain = policy_header.children[0].children[0].innerHTML.trim();
-            let indices2bremoved = [];
-            json_config['legacy-trust-preference'][domain].forEach(pref => {
-                if (pref['caSet'] == caset) {
-                    let index = json_config['legacy-trust-preference'][domain].indexOf(pref);
-                    console.log("index: " + index)
-                    indices2bremoved.push(index);
-                    //json_config['legacy-trust-preference'][domain].splice(index,1);
-                }
+                importConfigFromJSON(JSON.stringify(json_config));
+                let policy_body = policy_header.nextElementSibling;
+                policy_body.innerHTML = loadPolicyBody(domain);
+                setupUserPolicyEventListeners(json_config);
             });
-            console.log(indices2bremoved);
-            // New preference array without removed
-            let prefs = [];
-            json_config['legacy-trust-preference'][domain].forEach(pref => {
-                let index = json_config['legacy-trust-preference'][domain].indexOf(pref);
-                if (!indices2bremoved.includes(index)) {
-                    prefs.push(pref);
-                }
-            });
-            console.log(prefs);
-            json_config['legacy-trust-preference'][domain] = prefs;
-
-            importConfigFromJSON(JSON.stringify(json_config));
-            reloadSettings();
-        });
+        }
+        
     });
-    // Add domain to add policies for
+
+    // Add domain
     let domain_add_btn = document.getElementById("user-policy-domain-add");
     domain_add_btn.addEventListener("click", (e) => {
         let domain = e.target.parentElement.children[0].children[0].value;
         if (!json_config['legacy-trust-preference'].hasOwnProperty(domain)) {
-            json_config['legacy-trust-preference'][domain] = [];
+            json_config['legacy-trust-preference'][domain] = {};
             importConfigFromJSON(JSON.stringify(json_config));
             reloadSettings();
         }
     });
+
+    // Remove domain
+    let domain_del_bbn = document.querySelectorAll('.policy-header.delete-domain');
+    domain_del_bbn.forEach(btn => {
+        if (!btn.hasAttribute('listener')) {
+            btn.setAttribute("listener", "true");
+            btn.addEventListener("click", (e) => {
+                let domain = e.target.previousElementSibling.innerHTML.trim();
+                delete json_config['legacy-trust-preference'][domain];
+                importConfigFromJSON(JSON.stringify(json_config));
+                reloadSettings();
+            });
+        }
+    });
+
     // Change Trust Level of Policy
     let trust_level_inputs = document.querySelectorAll('select.trust-level-select');
     trust_level_inputs.forEach(elem => {
@@ -736,10 +682,7 @@ function setupUserPolicyEventListeners(json_config) {
                 let json_config = JSON.parse(exportConfigToJSON(getConfig()));
 
                 //console.log("Changing trust level of " + caset + " to " + trust_level + " for domain " + domain);
-                let policies = json_config['legacy-trust-preference'][domain].filter(obj => obj['caSet'] === caset);
-                policies.forEach(policy => {
-                    policy['level'] = trust_level;
-                });
+                json_config['legacy-trust-preference'][domain][caset] = trust_level;
                 importConfigFromJSON(JSON.stringify(json_config));
                 reloadSettings();
             });
@@ -747,30 +690,59 @@ function setupUserPolicyEventListeners(json_config) {
     });
 }
 
+/**
+ * Returns an array of the CA Sets, that have no configured trust level yet, for
+ * the given domain.
+ */
+function getUnconfiguredCASets(domain) {
+    let json_config = JSON.parse(exportConfigToJSON(getConfig()));
+
+    let configured_casets = new Set();
+    Object.entries(json_config['legacy-trust-preference'][domain]).forEach(rule => {
+        const [caset, level] = rule;
+        configured_casets.add(caset);
+    });
+
+    let all_casets = new Set();
+    Object.entries(json_config['ca-sets']).forEach(set => {
+        const [set_name, _] = set;
+        all_casets.add(set_name);
+    });
+
+    let unconfigured_casets = [...all_casets].filter(x => !configured_casets.has(x));
+    console.log("potential casets:");
+    console.log(unconfigured_casets);
+
+    return unconfigured_casets;
+}
 
 /**
  * Überschreibt die Policies für den spezifizierten Domainnamen mit der
- * aktuellen config.
+ * aktuellen config. (gibt den neuen tbody zurück)
  *
- * @param {*} policy_body DIV, das die policies enthält
  * @param {*} domain_name Domainbezeichnung
  */
-function reloadPolicyBody(policy_body, domain_name) {
+function loadPolicyBody(domain_name) {
     let json_config = JSON.parse(exportConfigToJSON(getConfig()));
     let rules = json_config['legacy-trust-preference'][domain_name];
 
     let domain_body = ``;
-    rules.forEach(rule => {
-        console.log(rule['caSet'] + " has level " + rule['level']);
+    Object.entries(rules).forEach(rule => {
+        const [caset, level] = rule;
+
+        console.log(caset + " has level " + level);
         // CA Set
         domain_body += `
             <tr>
                 <td class="user-policy-dropdown">
                     <select class="user-policy-dropdown">`;
 
+        let available_casets = [caset, ...getUnconfiguredCASets(domain_name)];
+        /*
         Object.entries(json_config['ca-sets']).forEach(entry => {
-            const [set_name, _] = entry;
-            let selected = (set_name == rule['caSet']) ? "selected" : "";
+            const [set_name, _] = entry;*/
+        available_casets.forEach(set_name => {
+            let selected = (set_name == caset) ? "selected" : "";
             domain_body += `
                 <option ${selected}>${set_name}</option>`;
         });
@@ -782,7 +754,7 @@ function reloadPolicyBody(policy_body, domain_name) {
         // Trust Level
         Object.entries(json_config['trust-levels']).forEach(entry => {
             const [level_name, _] = entry;
-            let selected = (level_name == rule['level']) ? "selected" : "";
+            let selected = (level_name == level) ? "selected" : "";
             domain_body += `
                 <option ${selected}>${level_name}</option>`
         });
@@ -806,6 +778,7 @@ function reloadPolicyBody(policy_body, domain_name) {
         <td colspan="3" style="height: 20px; border: none;"></td>
         </tr>`;
 
+    return domain_body;
     policy_body.innerHTML = domain_body;
 
     setupUserPolicyEventListeners(json_config);
