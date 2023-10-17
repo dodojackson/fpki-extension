@@ -140,46 +140,7 @@ async function reloadSettings() {
     */
     let json_config = JSON.parse(exportConfigToJSON(getConfig()));
 
-    // Load mapservers into table
-    var mapserver_rows = "";
-    json_config.mapservers.forEach(mapserver => {
-        mapserver_rows +=  "<tr>" + 
-                                "<td>" + mapserver.identity + "</td>" +
-                                "<td>" + mapserver.domain + "</td>" +
-                                "<td>" + mapserver.querytype + "</td>" +
-                                "<td> <button class='delete btn_mapserver_delete'>Delete</button> </td>" +
-                            "</tr>";
-    });
-    mapserver_rows +=   "<tr id='row_mapserver_add'>" + 
-                            "<td><input id='input_mapserver_add_identity' type='text' placeholder='Identity' /></td>" +
-                            "<td><input id='input_mapserver_add_domain' type='text' placeholder='Domain' /></td>" +
-                            "<td><input type='text' placeholder='lfpki-http-get' disabled='disabled' /></td>" +
-                            "<td> <button id='btn_mapserver_add'>Add Mapserver</button> </td>" +
-                        "</tr>";
-    document.getElementById('mapservers-table-body').innerHTML = mapserver_rows;
-    // Add event listener to buttons to delete mapservers
-    Array.from(document.getElementsByClassName('btn_mapserver_delete')).forEach(elem => {
-        elem.addEventListener("click", function() {
-            // TODO: assumes no duplicate mapserver identities
-            let identity = this.parentElement.parentElement.cells[0].innerHTML;
-            let filtered = json_config.mapservers.filter(item => item.identity !== identity);
-            json_config.mapservers = filtered;
-            importConfigFromJSON(JSON.stringify(json_config));
-            reloadSettings();
-            return;
-        });
-    });
-    // Add event listener to button for adding a mapserver
-    document.getElementById('btn_mapserver_add').addEventListener("click", () => {
-        json_config.mapservers.push({
-            "identity": document.getElementById('input_mapserver_add_identity').value,
-            "domain": document.getElementById('input_mapserver_add_domain').value,
-            "querytype": "lfpki-http-get"
-        })
-        importConfigFromJSON(JSON.stringify(json_config));
-        reloadSettings();
-        return;
-    });
+    loadMapserverSettings();
 
     // Load legacy trust preferences
     loadUserPolicies(json_config);
@@ -1101,6 +1062,53 @@ function loadCurrentInputToLocalConfig() {
 
     importConfigFromJSON(JSON.stringify(json_config));
 }
+
+
+function loadMapserverSettings() {
+    let json_config = JSON.parse(exportConfigToJSON(getConfig()));
+
+    // Load mapservers into table
+    var mapserver_rows = "";
+    json_config.mapservers.forEach(mapserver => {
+        mapserver_rows +=  "<tr>" + 
+                                "<td>" + mapserver.identity + "</td>" +
+                                "<td>" + mapserver.domain + "</td>" +
+                                "<td>" + mapserver.querytype + "</td>" +
+                                "<td> <button class='delete btn_mapserver_delete'>Delete</button> </td>" +
+                            "</tr>";
+    });
+    mapserver_rows +=   "<tr id='row_mapserver_add'>" + 
+                            "<td><input id='input_mapserver_add_identity' type='text' placeholder='Identity' /></td>" +
+                            "<td><input id='input_mapserver_add_domain' type='text' placeholder='Domain' /></td>" +
+                            "<td><input type='text' placeholder='lfpki-http-get' disabled='disabled' /></td>" +
+                            "<td> <button id='btn_mapserver_add'>Add Mapserver</button> </td>" +
+                        "</tr>";
+    document.getElementById('mapservers-table-body').innerHTML = mapserver_rows;
+    // Add event listener to buttons to delete mapservers
+    Array.from(document.getElementsByClassName('btn_mapserver_delete')).forEach(elem => {
+        elem.addEventListener("click", function() {
+            // TODO: assumes no duplicate mapserver identities
+            let identity = this.parentElement.parentElement.cells[0].innerHTML;
+            let filtered = json_config.mapservers.filter(item => item.identity !== identity);
+            json_config.mapservers = filtered;
+            importConfigFromJSON(JSON.stringify(json_config));
+            reloadSettings();
+            return;
+        });
+    });
+    // Add event listener to button for adding a mapserver
+    document.getElementById('btn_mapserver_add').addEventListener("click", () => {
+        json_config.mapservers.push({
+            "identity": document.getElementById('input_mapserver_add_identity').value,
+            "domain": document.getElementById('input_mapserver_add_domain').value,
+            "querytype": "lfpki-http-get"
+        })
+        importConfigFromJSON(JSON.stringify(json_config));
+        reloadSettings();
+        return;
+    });
+}
+
 
 /**
  * Reset changes that have been made on the configuration page without saving.

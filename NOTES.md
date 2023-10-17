@@ -35,6 +35,8 @@ TODO's nach Kategorie.
 - [ ] Was passiert, wenn man ein Trust-Level löscht, das aber in Policies
   verwendet wird?
 - [x] CA-Set Filter on change machen
+- [ ] Custom CAs in Set Builder wirklich übernehmen
+- [ ] Live übertrag in Config (onChange) von User Policies
 
 ### Design
 - [ ] Delete Buttons rötlich
@@ -48,3 +50,6 @@ TODO's nach Kategorie.
 - [ ] Toggle button für `*` Domain muss mit `v` initialisiert werden
 - [ ] Sortierung der Domains, vllt sogar schachtelung..?  Kennzeichen:
   dunkelgrauer balken links
+- [ ] reset/save changes sollte zum anfang der section zurückscrollen
+- [ ] userpolicies domain über ganze breite und toggle einfach indem man auf die
+  domain klickt
