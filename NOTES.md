@@ -37,6 +37,7 @@ TODO's nach Kategorie.
 - [x] CA-Set Filter on change machen
 - [ ] Custom CAs in Set Builder wirklich übernehmen
 - [ ] Live übertrag in Config (onChange) von User Policies
+- [ ] Predefined CA Sets
 
 ### Design
 - [ ] Delete Buttons rötlich
