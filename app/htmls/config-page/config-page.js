@@ -565,7 +565,7 @@ function loadUserPolicies(json_config) {
             domain_body += `
                 </select></td>
                 <td class="user-policy-dropdown">
-                    <select class="user-policy-dropdown">`;
+                    <select class="user-policy-dropdown trust-level-select">`;
             // Trust Level
             Object.entries(json_config['trust-levels']).forEach(entry => {
                 const [level_name, _] = entry;
@@ -722,7 +722,29 @@ function setupUserPolicyEventListeners(json_config) {
             reloadSettings();
         }
     });
-    
+    // Change Trust Level of Policy
+    let trust_level_inputs = document.querySelectorAll('select.trust-level-select');
+    trust_level_inputs.forEach(elem => {
+        if (!elem.hasAttribute('listener')){
+            elem.setAttribute("listener", "true");
+            elem.addEventListener("change", (e) => {
+
+                // Update local config on change
+                let domain = e.target.closest('tbody').previousElementSibling.children[0].children[0].innerHTML.trim();
+                let caset = e.target.closest('tr').children[0].children[0].value;
+                let trust_level = e.target.value;
+                let json_config = JSON.parse(exportConfigToJSON(getConfig()));
+
+                //console.log("Changing trust level of " + caset + " to " + trust_level + " for domain " + domain);
+                let policies = json_config['legacy-trust-preference'][domain].filter(obj => obj['caSet'] === caset);
+                policies.forEach(policy => {
+                    policy['level'] = trust_level;
+                });
+                importConfigFromJSON(JSON.stringify(json_config));
+                reloadSettings();
+            });
+        }
+    });
 }
 
 
@@ -955,6 +977,8 @@ async function resetChanges(e) {
 /**
  * Save changes that have been made to the settings in the section of the 
  * pressed button.
+ * 
+ * TODO: only post changes to part of config, that was saved !!!
  */
 function saveChanges(e) {
 
@@ -963,10 +987,6 @@ function saveChanges(e) {
     }
 
     if (e.target.classList.contains('legacy-trust-preference')) {
-        postConfig();
-    }
-
-    if (e.target.classList.contains('policy-trust-preference')) {
         postConfig();
     }
 

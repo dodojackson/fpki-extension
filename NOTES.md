@@ -37,6 +37,8 @@ TODO's nach Kategorie.
 - [x] CA-Set Filter on change machen
 - [ ] Custom CAs in Set Builder wirklich übernehmen
 - [ ] Live übertrag in Config (onChange) von User Policies
+  - [ ] Levels: Problem ist eigentlich, dass in der config mehrere Werte zu
+    mgleichen überhaupt gespcichert werden können
 - [ ] Predefined CA Sets
 
 ### Design
