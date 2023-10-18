@@ -48,9 +48,12 @@ TODO's nach Kategorie.
 - [x] delete domains statt ausklappen an der seite  
   - [x] erstmal ausklappen über domainheader..
 - [ ] Predefined CA Sets
-- [ ] trust level richtig laden
-- [ ] wenn das caset beim hinzufügen leer ist, dann wird irgendwie noch eins mit
+- [x] trust level richtig laden
+- [x] wenn das caset beim hinzufügen leer ist, dann wird irgendwie noch eins mit
   namen "" hinzugefügt, ausirgendwinnem grund (zmndst als erstes hinzufügen..)
+  > scheint gefixt, aber erstmal weiter beobachten..
+- [x] on hcnage ca set, nicht alles schließen (wie bei change trust level
+  machen)
 
 ### Design
 - [ ] Delete Buttons rötlich

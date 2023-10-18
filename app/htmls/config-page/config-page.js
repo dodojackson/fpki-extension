@@ -420,13 +420,14 @@ function setupCASetBuilderEventListeners(json_config) {
 
     // Add CA Set
     let add_btn = document.querySelector('button#add-ca-set');
-    if (add_btn.getAttribute("listener") !== 'true') {
+    if (!add_btn.hasAttribute("listener")) {
+        add_btn.setAttribute("listener", "true");
         add_btn.addEventListener("click", (e) => {
             let json_config = JSON.parse(exportConfigToJSON(getConfig()));
 
-            let set_name = document.querySelector('input#ca-sets-builder-name').value;
+            let set_name = document.querySelector('input#ca-sets-builder-name').value.trim();
             console.log(json_config['ca-sets']);
-            let set_description = document.querySelector('input#ca-sets-builder-description').value;
+            let set_description = document.querySelector('input#ca-sets-builder-description').value.trim();
             let set_cas = [];
             set_builder.selected_cas.forEach(ca => {
                 set_cas.push(ca);
@@ -440,7 +441,6 @@ function setupCASetBuilderEventListeners(json_config) {
             document.querySelector('input#ca-sets-builder-description').value = "";
             document.querySelector('#ca-sets-settings-section').scrollIntoView();
             //alert("Set hinzugefügt")
-            e.target.setAttribute('listener', 'true');
             importConfigFromJSON(JSON.stringify(json_config));
             reloadSettings();
             
@@ -681,13 +681,43 @@ function setupUserPolicyEventListeners(json_config) {
                 let trust_level = e.target.value;
                 let json_config = JSON.parse(exportConfigToJSON(getConfig()));
 
-                //console.log("Changing trust level of " + caset + " to " + trust_level + " for domain " + domain);
+                console.log("Changing trust level of " + caset + " to " + trust_level + " for domain " + domain);
                 json_config['legacy-trust-preference'][domain][caset] = trust_level;
                 importConfigFromJSON(JSON.stringify(json_config));
-                reloadSettings();
+
+                let policy_body = e.target.closest('tbody');
+                policy_body.innerHTML = loadPolicyBody(domain);
+                setupUserPolicyEventListeners(json_config);
             });
         }
     });
+
+    // Change CA Set of Policy
+    let ca_set_inputs = document.querySelectorAll('select.caset-select');
+    ca_set_inputs.forEach(elem => {
+        if (!elem.hasAttribute('listener')) {
+            elem.setAttribute("listener", "true");
+            let previousCASet = elem.value;
+            elem.addEventListener("change", (e) => {
+                let domain = e.target.closest('tbody').previousElementSibling.children[0].children[0].innerHTML.trim();
+                let trust_level = e.target.closest('tr').children[1].children[0].value;
+                let caset = e.target.value;
+                let json_config = JSON.parse(exportConfigToJSON(getConfig()));
+
+                console.log("Changing " + previousCASet + " to " + caset);
+                delete json_config['legacy-trust-preference'][domain][previousCASet];
+                json_config['legacy-trust-preference'][domain][caset] = trust_level;
+
+                previousCASet = caset;
+
+                importConfigFromJSON(JSON.stringify(json_config));
+                let policy_body = e.target.closest('tbody');
+                policy_body.innerHTML = loadPolicyBody(domain);
+                setupUserPolicyEventListeners(json_config);
+            });
+        }
+    });
+
 }
 
 /**
@@ -735,7 +765,7 @@ function loadPolicyBody(domain_name) {
         domain_body += `
             <tr>
                 <td class="user-policy-dropdown">
-                    <select class="user-policy-dropdown">`;
+                    <select class="user-policy-dropdown caset-select">`;
 
         let available_casets = [caset, ...getUnconfiguredCASets(domain_name)];
         /*
@@ -750,7 +780,7 @@ function loadPolicyBody(domain_name) {
         domain_body += `
             </select></td>
             <td class="user-policy-dropdown">
-                <select class="user-policy-dropdown">`;
+                <select class="user-policy-dropdown trust-level-select">`;
         // Trust Level
         Object.entries(json_config['trust-levels']).forEach(entry => {
             const [level_name, _] = entry;
