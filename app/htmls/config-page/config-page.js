@@ -831,7 +831,10 @@ function loadTrustLevelSettings() {
     let json_config = JSON.parse(exportConfigToJSON(getConfig()));
 
     let table_rows = "";
-    Object.entries(json_config['trust-levels']).forEach(entry => {
+    let trust_levels = Object.entries(json_config['trust-levels']);
+    trust_levels.sort((a, b) => a[1] - b[1]);
+    console.log(trust_levels);
+    trust_levels.forEach(entry => {
         const [key, value] = entry;
         console.log(key + " is " + value);
 
@@ -1067,5 +1070,6 @@ function saveChanges(e) {
         postConfig();
     }
 
+    reloadSettings();
 
 }
