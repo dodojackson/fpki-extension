@@ -45,7 +45,16 @@
 
       <div class="info-box" info-id="choose-cas">
         <p>
-          These are the CAs from your browsers <b>trust store</b>.
+          CAs from your browsers <b>Trust Store</b>.
+        </p>
+        <p>
+          <b>Custom CAs</b> will <b>not</b> be displayed here.
+        </p>
+      </div>
+
+      <div class="info-box" info-id="custom-cas">
+        <p>
+          Remember to <b>also</b> add these CAs to your browsers <b>Trust Store</b>.
         </p>
       </div>
       
@@ -215,8 +224,6 @@
           <input type="text" placeholder="Set Name" id="ca-sets-builder-name" class="full-width"/><br>
           <input type="text" placeholder="Description" id="ca-sets-builder-description" class="full-width" style="margin-top: 0;"/><br>
 
-          
-          <button id="filter-cas" hidden>Filter CAs</button>
           <fieldset style="
             height: auto; overflow-y:auto; margin-top: 10px;">
             <legend style="font-weight: 600;">
@@ -225,26 +232,24 @@
             </legend>
             <input class="filter-cas full-width" type="text" placeholder="Filter..." style="margin-bottom: 10px; width: 62%;"/>
             <div id="ca-sets-builder-cas" style="height:250px; overflow-y: scroll;">
-              <input type="checkbox" id="ca1">
-              <label for="ca1">CA Super Geil</label>
+              <!-- Javascript-->
             </div>
-            
           </fieldset>
 
           <fieldset style="
             height: 150px; overflow-y: scroll; margin-top: 20px; padding-top: 10px;">
             <legend style="font-weight: 600;">
               Custom CAs
+              <span class="info-icon" info-id="custom-cas">&#9432;</span>
             </legend>
             <textarea 
+              id="ca-sets-builder-custom-cas"
               placeholder="Distinguished Name(s)"
               style="width: 98%; 
                 height: 90%;
                 resize: none;"></textarea>
-            
           </fieldset>
 
-          
           <button id="add-ca-set" class="btn"
             style="font-weight: bolder; color: whitesmoke; height:36px; 
             background-color:#3D7F6E; font-size: larger;

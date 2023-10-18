@@ -12,7 +12,7 @@ TODO's nach Kategorie.
 - [ ] Infopage kürzen/überarbeiten
 
 ### Konfigurationsseite
-- [ ] Keine doppelten Präferenzen zulassen, also zumindest nicht zwei
+- [x] Keine doppelten Präferenzen zulassen, also zumindest nicht zwei
   verschiedene Einträge für dasselbe CA-Set unter derselben Domain
   - [ ] Problem: Schnittmenge zwischen zwei CA-Sets. Wie löst man das?
     Warnhinweis + Default niedrigeres Level nehmen?
@@ -21,9 +21,9 @@ TODO's nach Kategorie.
   überschreiben. Das muss auch so sein, wenn die default policy standard trust
   für alle cas bei domain "*" ist..
 - [ ] Popup bei versuch, doppelte domain hinzuzufügen
-- [ ] Info bei custom CAs: die müssen auch im browser trust-store hinzugefügt
+- [x] Info bei custom CAs: die müssen auch im browser trust-store hinzugefügt
   werden, sonst wird es nicht klappen!
-- [ ] Trust-Level muss schon `onChange` in (lokale) config übernommen werden,
+- [x] Trust-Level muss schon `onChange` in (lokale) config übernommen werden,
   sonst wird das beim hinzufügen einer neuen preference sofort zurückgesetzt
 - [x] Info-Icons bei Trust-Levels `Untrusted` und `Standard Trust`.
 - [x] JSON-Config könnte wahrscheinlich mit in normale Settings (am Ende),
@@ -34,8 +34,9 @@ TODO's nach Kategorie.
 - [ ] Reset/Save Changes Buttons sollten überall funktionieren
 - [ ] Was passiert, wenn man ein Trust-Level löscht, das aber in Policies
   verwendet wird?
+- [ ] Was passiert wenn man ein CA-Set löscht, das verwendet wird?
 - [x] CA-Set Filter on change machen
-- [ ] Custom CAs in Set Builder wirklich übernehmen
+- [x] Custom CAs in Set Builder wirklich übernehmen
 - [x] Live übertrag in Config (onChange) von User Policies
   - [x] Levels: Problem ist eigentlich, dass in der config mehrere Werte zu
     mgleichen überhaupt gespcichert werden können

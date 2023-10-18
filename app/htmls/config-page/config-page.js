@@ -368,6 +368,7 @@ function loadCASetBuilder(json_config) {
 function setupCASetBuilderEventListeners(json_config) {
 
     // CA Filter
+    /*
     let filter_btn = document.querySelector('button#filter-cas');
     filter_btn.addEventListener("click", (e) => {
         let ca_div = document.querySelector('div#ca-sets-builder-cas');
@@ -384,7 +385,7 @@ function setupCASetBuilderEventListeners(json_config) {
         // console.log(filtered_cas);
         ca_div.innerHTML = ca_checkboxes;
         setupCASetBuilderEventListeners();
-    });
+    });*/
 
     // CA Filter (OnChange)
     let filter_input = document.querySelector("input.filter-cas");
@@ -432,6 +433,14 @@ function setupCASetBuilderEventListeners(json_config) {
             set_builder.selected_cas.forEach(ca => {
                 set_cas.push(ca);
             });
+            // Add custom cas from textfield
+            let custom_cas = document.querySelector('textarea#ca-sets-builder-custom-cas').value.split('\n');
+            custom_cas = custom_cas.filter(ca => ca !== "");
+            custom_cas.forEach(ca => {
+                set_cas.push(ca.trim());
+            });
+            //console.log("About to add custom cas:");
+            //console.log(custom_cas);
     
             json_config['ca-sets'][set_name] = {
                 description: set_description,
