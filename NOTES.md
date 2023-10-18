@@ -56,6 +56,8 @@ TODO's nach Kategorie.
 - [x] on hcnage ca set, nicht alles schließen (wie bei change trust level
   machen)
 
+- [ ] Trust Levels nach Rank sortieren
+
 ### Design
 - [ ] Delete Buttons rötlich
 - [ ] Color-coded Trust level

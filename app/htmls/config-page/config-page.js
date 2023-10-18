@@ -150,7 +150,7 @@ async function reloadSettings() {
     loadCASetBuilder(json_config);
 
     // Load trust levels settings
-    loadTrustLevelSettings(json_config);
+    loadTrustLevelSettings();
 
     // Load other settings
     document.querySelector("input.cache-timeout").value = json_config['cache-timeout'];
@@ -827,14 +827,16 @@ function loadPolicyBody(domain_name) {
 /**
  * Lädt die Trust Levels Tabelle
  */
-function loadTrustLevelSettings(json_config) {
+function loadTrustLevelSettings() {
+    let json_config = JSON.parse(exportConfigToJSON(getConfig()));
+
     let table_rows = "";
     Object.entries(json_config['trust-levels']).forEach(entry => {
         const [key, value] = entry;
         console.log(key + " is " + value);
 
-        let rank_input = `<input type="number" min=1 max=100 value=${value} />`
-        let del_btn = `<td class="btn" style="text-align: center;">x</td>`;
+        let rank_input = `<input type="number" min=1 max=100 value=${value} class="trust-level-rank-input"/>`
+        let del_btn = `<td class="btn trust-level-delete" style="text-align: center;">x</td>`;
         let add_info = ``;
 
         if (key === "Untrusted" || key === "Standard Trust") {
@@ -871,7 +873,51 @@ function loadTrustLevelSettings(json_config) {
                 +
             </td>
         </tr>`;
+
+    loadTrustLevelSettingsEventListeners();
 }
+
+
+function loadTrustLevelSettingsEventListeners() {
+    // OnChange rank inputs
+    let rank_inputs = document.querySelectorAll('input.trust-level-rank-input');
+    rank_inputs.forEach(elem => {
+        if (!elem.hasAttribute('listener')) {
+            elem.addEventListener("change", (e) => {
+                let json_config = JSON.parse(exportConfigToJSON(getConfig()));
+                let level_name = e.target.closest('tr').children[0].innerHTML.trim();
+                let level_rank = e.target.value;
+                if (level_rank != "") {
+                    console.log("changing to " + level_rank);
+                    json_config['trust-levels'][level_name] = parseInt(level_rank);
+                    importConfigFromJSON(JSON.stringify(json_config));
+                } else {
+                    console.log("rank nicht gültig")
+                }
+                //json_config['trust-levels'][level_name] = level_rank;
+                // TODO: check that it is a number, sonst rot umranden?
+                // TODO: oder already taken --> obwohl ist egal
+            });
+        }
+    });
+
+    // Delete Trust Level
+    let del_btns = document.querySelectorAll('td.trust-level-delete');
+    del_btns.forEach(elem => {
+        if (!elem.hasAttribute('listener')) {
+            elem.setAttribute("listener", "true");
+            elem.addEventListener("click", (e) => {
+                let json_config = JSON.parse(exportConfigToJSON(getConfig()));
+                let level_name = e.target.closest('tr').children[0].innerHTML.trim();
+
+                delete json_config['trust-levels'][level_name];
+                importConfigFromJSON(JSON.stringify(json_config));
+                loadTrustLevelSettings();
+            });
+        }
+    });
+}
+
 
 function loadCurrentInputToLocalConfig() {
     let json_config = JSON.parse(exportConfigToJSON(getConfig()));
@@ -984,6 +1030,12 @@ async function resetChanges(e) {
         importConfigFromJSON(JSON.stringify(local_config));
         reloadSettings();
     }
+
+    if (e.target.classList.contains('trust-levels')) {
+        local_config['trust-levels'] = live_config['trust-levels'];
+        importConfigFromJSON(JSON.stringify(local_config));
+        reloadSettings();
+    }
 }
 
 /**
@@ -1008,6 +1060,10 @@ function saveChanges(e) {
 
     if (e.target.classList.contains('other-settings')) {
         // loadCurrentInputToLocalConfig();
+        postConfig();
+    }
+
+    if (e.target.classList.contains('trust-levels')) {
         postConfig();
     }
 
