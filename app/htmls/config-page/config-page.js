@@ -870,7 +870,10 @@ function loadTrustLevelSettings() {
     let table_body = document.getElementById('trust-levels-table-body');
     table_body.innerHTML = table_rows += `
         <tr>
-            <td colspan="2" class="btn" 
+            <td colspan="1">
+                <input type="text" placeholder="___" class="trust-level-add"/>
+            </td>
+            <td colspan="2" class="btn trust-level-add" 
                 style=" font-weight: bolder; color: whitesmoke; height:30px; 
                         background-color:#3D7F6E; font-size: larger;">
                 +
@@ -891,8 +894,14 @@ function loadTrustLevelSettingsEventListeners() {
                 let level_name = e.target.closest('tr').children[0].innerHTML.trim();
                 let level_rank = e.target.value;
                 if (level_rank != "") {
+                    level_rank = parseInt(level_rank);
+                    // No ranks above 100
+                    if (level_rank > 100) {
+                        level_rank = 100;
+                        e.target.value = 100;
+                    }
                     console.log("changing to " + level_rank);
-                    json_config['trust-levels'][level_name] = parseInt(level_rank);
+                    json_config['trust-levels'][level_name] = level_rank;
                     importConfigFromJSON(JSON.stringify(json_config));
                 } else {
                     console.log("rank nicht gültig")
@@ -919,6 +928,21 @@ function loadTrustLevelSettingsEventListeners() {
             });
         }
     });
+
+    // Add trust level
+    let add_btn = document.querySelector('td.trust-level-add');
+    if (!add_btn.hasAttribute('listener')) {
+        add_btn.setAttribute("listener", "true");
+        add_btn.addEventListener("click", (e) => {
+            let new_level_name = document.querySelector('input.trust-level-add').value.trim();
+            let json_config = JSON.parse(exportConfigToJSON(getConfig()));
+
+            json_config['trust-levels'][new_level_name] = 100;
+            importConfigFromJSON(JSON.stringify(json_config));
+            loadTrustLevelSettings();
+            //alert(new_level_name);
+        });
+    }
 }
 
 

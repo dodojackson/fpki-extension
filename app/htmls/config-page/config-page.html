@@ -57,6 +57,12 @@
           Remember to <b>also</b> add these CAs to your browsers <b>Trust Store</b>.
         </p>
       </div>
+
+      <div class="info-box" info-id="trust-level-rank">
+        <p>
+          Trust Levels with <b>higher ranks</b>, will result in <b>higher trust</b>.
+        </p>
+      </div>
       
       <hr style="margin-top: 50px; margin-bottom: 20px; margin-left: -10%; margin-right: -10%;">
 
@@ -274,8 +280,11 @@
         <h2>Trust Levels</h2>
         <table id="trust-levels-table">
           <thead>
-            <th>Bezeichnung</th>
-            <th>Rang</th>
+            <th>Level Name</th>
+            <th>
+              Rank
+              <span class="info-icon" info-id="trust-level-rank">&#9432;</span>
+            </th>
             <th></th>
           </thead>
           <tbody id="trust-levels-table-body">

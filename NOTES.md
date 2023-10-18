@@ -32,8 +32,7 @@ TODO's nach Kategorie.
   kann, wenn mir etwas einfällt 
   - nurnoch als class statt als id machen, dann ist fertign
 - [ ] Reset/Save Changes Buttons sollten überall funktionieren
-- [ ] Was passiert, wenn man ein Trust-Level löscht, das aber in Policies
-  verwendet wird?
+
 - [ ] Was passiert wenn man ein CA-Set löscht, das verwendet wird?
 - [x] CA-Set Filter on change machen
 - [x] Custom CAs in Set Builder wirklich übernehmen
@@ -55,8 +54,11 @@ TODO's nach Kategorie.
   > scheint gefixt, aber erstmal weiter beobachten..
 - [x] on hcnage ca set, nicht alles schließen (wie bei change trust level
   machen)
-
+#### Trust Levels
 - [x] Trust Levels nach Rank sortieren
+- [ ] Was passiert, wenn man ein Trust-Level löscht, das aber in Policies
+  verwendet wird?
+- [x] Add trust level functionality
 
 ### Design
 - [ ] Delete Buttons rötlich
@@ -71,5 +73,7 @@ TODO's nach Kategorie.
 - [ ] Sortierung der Domains, vllt sogar schachtelung..?  Kennzeichen:
   dunkelgrauer balken links
 - [ ] reset/save changes sollte zum anfang der section zurückscrollen
-- [ ] userpolicies domain über ganze breite und toggle einfach indem man auf die
+- [x] userpolicies domain über ganze breite und toggle einfach indem man auf die
   domain klickt
+  > delete ist noch daneben aber ansonsten
+- [ ] user policies zu viele farben, domain einfach grau?
