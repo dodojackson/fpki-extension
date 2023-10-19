@@ -20,6 +20,9 @@ TODO's nach Kategorie.
   spezifischere Policies (example.com ist spezifischer als *.com) allgemeinere
   überschreiben. Das muss auch so sein, wenn die default policy standard trust
   für alle cas bei domain "*" ist..
+- [ ] User Policies nach Domain sortieren
+- [ ] Filter für User Policies (also für domains) könnte bei vielen Policies
+  später sinnvoll sein
 - [ ] Popup bei versuch, doppelte domain hinzuzufügen
 - [x] Info bei custom CAs: die müssen auch im browser trust-store hinzugefügt
   werden, sonst wird es nicht klappen!
@@ -34,6 +37,9 @@ TODO's nach Kategorie.
 - [ ] Reset/Save Changes Buttons sollten überall funktionieren
 
 - [ ] Was passiert wenn man ein CA-Set löscht, das verwendet wird?
+  - [ ] Verwendende Policies können eigentlich nicht in der Config bleiben, weil
+    es sonst probleme geben wird, wenn der Setname in der internen Logik
+    aufgelöst werden soll.
 - [x] CA-Set Filter on change machen
 - [x] Custom CAs in Set Builder wirklich übernehmen
 - [x] Live übertrag in Config (onChange) von User Policies
@@ -58,6 +64,7 @@ TODO's nach Kategorie.
 - [x] Trust Levels nach Rank sortieren
 - [ ] Was passiert, wenn man ein Trust-Level löscht, das aber in Policies
   verwendet wird?
+  > In Interviews fragen
 - [x] Add trust level functionality
 
 ### Design

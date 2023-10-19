@@ -272,6 +272,7 @@ class CASetBuilder {
     }
 }
 
+
 class CASet {
     constructor(name, info) {
         this.name = name;
@@ -291,7 +292,7 @@ class CASet {
         }
         let set_html = `
         <tr class="${this.name} ca-set-html">
-            <td class="btn">${this.name}</td>
+            <td class="btn" style="font-weight: 600; font-size: 16px;">${this.name}</td>
             <td>${this.description}</td>
             ${del_btn}
         </tr>
@@ -468,9 +469,9 @@ function loadCASets(json_config) {
 
     // Load selectable CAs from Trust Store (-ca-set)
     let trust_store_cas = json_config['ca-sets']['All Trust-Store CAs']['cas'];
-    console.log("HEYHEY")
-    console.log(trust_store_cas);
-    console.log(json_config['ca-sets'])
+    //console.log("HEYHEY")
+    //console.log(trust_store_cas);
+    //console.log(json_config['ca-sets'])
     let ca_selection = `<select name="ca_selection">`;
     trust_store_cas.forEach(ca => {
         ca_selection += `<option value="${ca}">${ca}</option>`;
@@ -543,7 +544,7 @@ function loadUserPolicies(json_config) {
                     ${domain}
                 </td>
                 <td class="btn policy-header delete-domain">
-                    X
+                    x
                 </td>
             </tr>
             </tbody>`
@@ -569,9 +570,9 @@ function loadUserPolicies(json_config) {
             <tr>
             <td colspan="2" style="padding:0;">
                 <input  type="text" placeholder="___" 
-                        style="background-color:#F2D995; height: 35px; text-align: center; font-weight: bolder; font-size: larger;">
+                        style="background-color:rgb(231, 231, 231); height: 35px; text-align: center; font-weight: bolder; font-size: larger;">
             </td>
-            <td id="user-policy-domain-add" class="btn" style="font-size: larger; font-weight: bolder; background-color:#F2D995;">
+            <td id="user-policy-domain-add" class="btn" style="font-size: larger; font-weight: bolder; background-color:#3D7F6E; color: whitesmoke;">
                 +
             </td>
             </tr>
@@ -581,6 +582,75 @@ function loadUserPolicies(json_config) {
 
     let table_head = document.querySelector("#user-policies-table").children[0]
     table_head.insertAdjacentHTML("afterend", table_body);
+
+    setupUserPolicyEventListeners(json_config);
+}
+
+
+/**
+ * Überschreibt die Policies für den spezifizierten Domainnamen mit der
+ * aktuellen config. (gibt den neuen tbody zurück)
+ *
+ * @param {*} domain_name Domainbezeichnung
+ */
+function loadPolicyBody(domain_name) {
+    let json_config = JSON.parse(exportConfigToJSON(getConfig()));
+    let rules = json_config['legacy-trust-preference'][domain_name];
+
+    let domain_body = ``;
+    Object.entries(rules).forEach(rule => {
+        const [caset, level] = rule;
+
+        console.log(caset + " has level " + level);
+        // CA Set
+        domain_body += `
+            <tr>
+                <td class="user-policy-dropdown">
+                    <select class="user-policy-dropdown caset-select">`;
+
+        let available_casets = [caset, ...getUnconfiguredCASets(domain_name)];
+        /*
+        Object.entries(json_config['ca-sets']).forEach(entry => {
+            const [set_name, _] = entry;*/
+        available_casets.forEach(set_name => {
+            let selected = (set_name == caset) ? "selected" : "";
+            domain_body += `
+                <option ${selected}>${set_name}</option>`;
+        });
+
+        domain_body += `
+            </select></td>
+            <td class="user-policy-dropdown">
+                <select class="user-policy-dropdown trust-level-select">`;
+        // Trust Level
+        Object.entries(json_config['trust-levels']).forEach(entry => {
+            const [level_name, _] = entry;
+            let selected = (level_name == level) ? "selected" : "";
+            domain_body += `
+                <option ${selected}>${level_name}</option>`
+        });
+        // Delete Button
+        domain_body += `
+                </select></td>
+                <td class="btn policy-del" style="text-align: center;">x</td>
+            </tr>`;
+    });
+
+    domain_body += `
+        <tr>
+        <td colspan="2" class="btn policy-add" 
+            style=" font-weight: bolder; color: whitesmoke; height:30px; 
+                    background-color:#3D7F6E; font-size: larger;">
+            +
+        </td>
+        </tr>
+
+        <tr>
+        <td colspan="3" style="height: 20px; border: none;"></td>
+        </tr>`;
+
+    return domain_body;
+    policy_body.innerHTML = domain_body;
 
     setupUserPolicyEventListeners(json_config);
 }
@@ -753,74 +823,6 @@ function getUnconfiguredCASets(domain) {
     console.log(unconfigured_casets);
 
     return unconfigured_casets;
-}
-
-/**
- * Überschreibt die Policies für den spezifizierten Domainnamen mit der
- * aktuellen config. (gibt den neuen tbody zurück)
- *
- * @param {*} domain_name Domainbezeichnung
- */
-function loadPolicyBody(domain_name) {
-    let json_config = JSON.parse(exportConfigToJSON(getConfig()));
-    let rules = json_config['legacy-trust-preference'][domain_name];
-
-    let domain_body = ``;
-    Object.entries(rules).forEach(rule => {
-        const [caset, level] = rule;
-
-        console.log(caset + " has level " + level);
-        // CA Set
-        domain_body += `
-            <tr>
-                <td class="user-policy-dropdown">
-                    <select class="user-policy-dropdown caset-select">`;
-
-        let available_casets = [caset, ...getUnconfiguredCASets(domain_name)];
-        /*
-        Object.entries(json_config['ca-sets']).forEach(entry => {
-            const [set_name, _] = entry;*/
-        available_casets.forEach(set_name => {
-            let selected = (set_name == caset) ? "selected" : "";
-            domain_body += `
-                <option ${selected}>${set_name}</option>`;
-        });
-
-        domain_body += `
-            </select></td>
-            <td class="user-policy-dropdown">
-                <select class="user-policy-dropdown trust-level-select">`;
-        // Trust Level
-        Object.entries(json_config['trust-levels']).forEach(entry => {
-            const [level_name, _] = entry;
-            let selected = (level_name == level) ? "selected" : "";
-            domain_body += `
-                <option ${selected}>${level_name}</option>`
-        });
-        // Delete Button
-        domain_body += `
-                </select></td>
-                <td class="btn policy-del" style="text-align: center;">x</td>
-            </tr>`;
-    });
-
-    domain_body += `
-        <tr>
-        <td colspan="2" class="btn policy-add" 
-            style=" font-weight: bolder; color: whitesmoke; height:30px; 
-                    background-color:#3D7F6E; font-size: larger;">
-            +
-        </td>
-        </tr>
-
-        <tr>
-        <td colspan="3" style="height: 20px; border: none;"></td>
-        </tr>`;
-
-    return domain_body;
-    policy_body.innerHTML = domain_body;
-
-    setupUserPolicyEventListeners(json_config);
 }
 
 

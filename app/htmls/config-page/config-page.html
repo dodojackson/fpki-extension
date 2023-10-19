@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" dir="ltr" lang="de-DE">
+<html xmlns="http://www.w3.org/1999/xhtml" dir="ltr" lang="en-EN">
   <head>
     <meta name="color-scheme" content="light dark" />
     <meta charset="UTF-8">
@@ -11,7 +11,7 @@
     <div id="options" style="margin-bottom: 100px;">
       <h1>F-PKI Settings</h1>
 
-      <p>
+      <!--<p>
         Sie finden <b>weiterführende Informationen</b> zu jeder der
         Einstellungen über die entsprechenden <b>Infoboxen <q>&#9432;</q></b>.
       </p>
@@ -26,6 +26,10 @@
         <div class="info-box" info-id="test">
           Some more info here.sad ljdf lkadf ökjaf ölkajsdf ökjadfö lkadf kjsödfl k
         </div>
+      </p>-->
+      <p>
+        <!-- TODO: Placement -->
+        <button id="resetConfig" class="btn import-export">Reset Config to Default</button>
       </p>
 
       <!------------------------------------------------------------------------
@@ -306,22 +310,27 @@
       <div id="output">
         <h2>JSON Config</h2>
         <p>
+          <!--
           Die gesamten Einstellungen auf dieser Seite können im JSON-Format
-          heruntergeladen, bearbeitet sowie hochgeladen werden.
+          heruntergeladen, bearbeitet sowie hochgeladen werden.-->
+          <button id="downloadConfig" class="btn import-export"> Download </button> 
+          your settings in JSON-format or
         </p>
         <p>
-          Nutzen Sie nur Settings-Dateien aus <b>vertrauenswürdigen
-          Quellen</b>!
+          <label for="file"><button id="uploadConfig" class="btn
+          import-export">Upload</button> a settings file in JSON-format:</label>
+          <input type="file" id="file" onchange="handle_files()">
+        </p>
+        <p>
+          Use only settings files from <b>trustworthy sources!</b> 
+          <!--Nutzen Sie nur Settings-Dateien aus <b>vertrauenswürdigen
+          Quellen</b>!-->
         </p>
 
         <div style="line-height: 2;">
-          <button id="printConfig">Print Config</button>
           <br/>
-          <button id="downloadConfig">Download Config</button>
-          <br/>
-          <label for="file">Upload new config:</label>
-          <input type="file" id="file" onchange="handle_files()">
-          <button id="uploadConfig">Upload</button>
+          <button id="printConfig" class="btn import-export">Print Config</button>
+          
         </div>
         <pre class="default-border" style="overflow: auto; max-height: 500px;"><code id="config-code">{ "hello": "world" }</code></pre>
       </div>
@@ -351,15 +360,15 @@
 
         <!-- Description -->
         <p>
-          Diese Einstellungen richten sich an <b>fortgeschrittene Benutzer</b>. 
+          <!--Diese Einstellungen richten sich an <b>fortgeschrittene Benutzer</b>. -->
+          These settings are designed for <b>experienced users</b>.
         </p>
         <p>
-          Bitte nimm <b>keine Änderungen</b> an den Einstellungen vor, wenn du dir
-          unsicher bist.
+          <!--Bitte nimm <b>keine Änderungen</b> an den Einstellungen vor, wenn du dir
+          unsicher bist.--> 
+          Please <b>avoid making any alterations</b> to the settings, if you are
+          in doubt.
         </p>
-
-        <!-- TODO: Placement -->
-        <button id="resetConfig">Reset Config to Default</button>
         
 
 

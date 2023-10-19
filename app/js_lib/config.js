@@ -57,7 +57,7 @@ function defaultConfig() {
         const caSet = new Map();
         
         caSet.set('All Trust-Store CAs', {
-            description: "Alle CAs, die im Trust-Store des Browsers enthalten sind",
+            description: "All CAs included in your browsers Trust-Store",
             cas: [
                 "CN=Actalis Authentication Root CA,O=Actalis S.p.A./03358520967,L=Milan,C=IT",
                 "CN=TunTrust Root CA,O=Agence Nationale de Certification Electronique,C=TN",
