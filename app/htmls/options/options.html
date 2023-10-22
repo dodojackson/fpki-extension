@@ -7,12 +7,20 @@
     <title>F-PKI Extension Details</title>
     <link rel="stylesheet" href="./style.css">
     <link rel="icon" href="./favicon.ico" type="image/x-icon">
+    <style>
+      b {
+        color: rgb(42,42,42);
+      }
+      h3 {
+        margin-top: 30px;
+      }
+    </style>
   </head>
-  <body>
+  <body style="background-color: white; font-size: 110%;">
     <main>
-      <p>
+      <!--<p>
         <a href="../config-page/config-page.html" target="_blank">Konfigurationsseite</a>
-      </p>
+      </p>-->
       <h1>F-PKI</h1>
       <p>
         <!--F-PKI (<b>Flexible</b> Public-Key-Infrastructure) bringt
@@ -21,7 +29,7 @@
         relationships</b> to the internet.
       </p>
 
-      <h2>Trust Flexibility</h2>
+      <!--<h2>Trust Flexibility</h2>-->
       <p>
         <!--Vertraust du deinem <b>besten Freund</b> mehr als einem Fremden?-->
         Do you <b>trust your best friend</b> more than a stranger?
@@ -65,9 +73,8 @@
       </p>
       <p>
         <!--Dann <b>sag es deinem Browser</b> <a href="../config-page/config-page.html">hier</a>!-->
-        Then <b>tell your browser!</b> <a href="../config-page/config-page.html" target="_blank">Here</a>.
+        Then <b>tell your browser!</b> (<a href="../config-page/config-page.html" target="_blank">Here</a>)
       </p>
-
 
 
       <div style="margin-top: 25px; display: flex; flex-direction: column; align-items: center;">
@@ -90,6 +97,45 @@
           </figcaption>
         </figure>
       </div>
+
+
+      <h3>Scenario 1 <i>CA Compromise</i>:</h3>
+      <p>
+        Let <b>security experts</b> decide, which CAs are the <b>most trustworthy</b>.
+      </p>
+      <p>
+        Install preconfigured trust packages, so that less secure <b>CAs cannot
+        override certificates</b> issued by more trusted CAs.
+      </p>
+
+
+      <h3>Scenario 2 <i>Company CA</i>:</h3>
+      <p>
+        Only your <b>internal CA</b> should be trusted for <b>internal company
+        domains</b>, right?
+      </p>
+      <p>
+        Also, what if your internal <b>CA gets hacked</b>?  
+        Do you trust your internal CA to certificate websites outside of your
+        company network?
+      </p> 
+
+
+      <h3>Scenario 3 <i>Critical Websites</i>:</h3>
+      <!--If a CA gets compromised, any traffic on the internet can be decrypted.-->   
+      <p>
+        Protect your <b>critical communications</b> by "pinning" the correct CA
+        for a certain domain, so that <b>no illegitimate CA</b> can issue a valid
+        certificate for that domain.
+      </p>
+      <p>
+        E.g. example.com uses CA xy for its SSL-Certificate.  
+        Then you should <b>only accept certificates from CA xy</b> for
+        example.com, right?  
+      </p>
+      
+
+      
 
 
       <!--<h2>Domain Policies</h2>
