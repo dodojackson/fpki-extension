@@ -109,11 +109,19 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
             console.log(`MSG RECV: ${request}`);
             resetConfig();
             return Promise.resolve({ "config": config });
+        
         default:
-            console.log(`Received unknown message: ${request}`);
-            break;
+            switch (request['type']) {
+                case "uploadConfig":
+                    console.log("setting new config value...");
+                    importConfigFromJSON(request['value']);
+                    saveConfig();
+                    return Promise.resolve({ "config": config });
+                default:
+                    console.log(`Received unknown message: ${request}`);
+                    break;
+            }
     }
-    
 });
 
 

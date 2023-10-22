@@ -26,12 +26,15 @@ document.addEventListener('DOMContentLoaded', async () => {
             console.log("posted message: resetConfig");
         });
         
-        document.getElementById('uploadConfig').addEventListener('click', function () {
+        document.getElementById('uploadConfig').addEventListener('click', async () => {
             let file = document.getElementById("file").files[0];
             let reader = new FileReader();
             
-            reader.onload = function(e){
+            reader.onload = async function(e){
                 port.postMessage({type: "uploadConfig", value: e.target.result});
+                const response = await browser.runtime.sendMessage({type: "uploadConfig", value: e.target.result});
+                setConfig(response.config);
+                location.reload(true);
             }
             reader.readAsText(file);
         });

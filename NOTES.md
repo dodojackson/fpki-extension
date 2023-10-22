@@ -94,6 +94,10 @@ Als Erinnnerung später.
   > scheint gefixt, aber erstmal weiter beobachten..
 - [x] on hcnage ca set, nicht alles schließen (wie bei change trust level
   machen)
+#### CA Sets
+- [ ] `select all` button für wenn man schon gefiltert hat
+- [ ] `modify set` option, wo das dann vielleich in den set builder nochmal
+  reingeladen wird
 #### Trust Levels
 - [x] Trust Levels nach Rank sortieren
 - [x] Add trust level functionality
