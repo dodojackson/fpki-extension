@@ -641,21 +641,16 @@ function loadPolicyBody(domain_name) {
 
     domain_body += `
         <tr>
-        <td colspan="2" class="btn policy-add" 
+        <td colspan="2" style="border: none;"></td>
+        <td colspan="1" class="btn policy-add" 
             style=" font-weight: bolder; color: whitesmoke; height:30px; 
                     background-color:#3D7F6E; font-size: larger;">
             +
         </td>
-        </tr>
-
-        <tr>
-        <td colspan="3" style="height: 20px; border: none;"></td>
         </tr>`;
 
-    return domain_body;
-    policy_body.innerHTML = domain_body;
 
-    setupUserPolicyEventListeners(json_config);
+    return domain_body;
 }
 
 
