@@ -1,4 +1,8 @@
 import {setConfig, exportConfigToJSON, getConfig, importConfigFromJSON, getJSONConfig} from "../../js_lib/config.js"
+import { getParentDomain } from "../../js_lib/domain.js";
+
+// TODO: Use getParentDomain for sorting the domains..
+
 
 /**
  * Lädt die User Policies in die Tabelle
@@ -50,7 +54,7 @@ export function loadUserPolicies(json_config) {
         <tbody>
             <tr>
             <td colspan="2" style="padding:0;">
-                <input  type="text" placeholder="___" 
+                <input  type="text" placeholder="__domain__" 
                         style="background-color:rgb(231, 231, 231); height: 35px; text-align: center; font-weight: bolder; font-size: larger;">
             </td>
             <td id="user-policy-domain-add" class="btn" style="font-size: larger; font-weight: bolder; background-color:#3D7F6E; color: whitesmoke;">
@@ -69,6 +73,35 @@ export function loadUserPolicies(json_config) {
 
 
 /**
+ * Builds a "row" representing the preference
+ */
+function loadDomainPreferences(domain) {
+    let json_config = JSON.parse(exportConfigToJSON(getConfig()));
+    const template = document.getElementById("trust-preference-row-template");
+
+    
+}
+
+function loadTest() {
+    const template = document.getElementById("trust-preference-row-template");
+    console.log("TEMPLATE:");
+    console.log(template);
+    const clone = document.importNode(template.content, true);
+    console.log("clone:");
+    console.log(clone);
+
+    const ca = clone.querySelector('div.trust-preference-ca');
+    ca.textContent = "HAHAHAH";
+
+    const level = clone.querySelector('div.trust-preference-level');
+    level.textContent = "HOHOHO";
+
+    //document.body.appendChild(clone);
+
+    return clone
+}
+
+/**
  * Überschreibt die Policies für den spezifizierten Domainnamen mit der
  * aktuellen config. (gibt den neuen tbody zurück)
  *
@@ -77,6 +110,18 @@ export function loadUserPolicies(json_config) {
 function loadPolicyBody(domain_name) {
     let json_config = JSON.parse(exportConfigToJSON(getConfig()));
     let rules = json_config['legacy-trust-preference'][domain_name];
+
+    let kleinertest = loadTest();
+    let tbody = document.createElement('tbody');
+    let preferences = document.createElement('row');
+    let data = document.createElement('td');
+    data.appendChild(kleinertest);
+    data.colSpan = 2;
+    preferences.appendChild(data);
+    tbody.appendChild(preferences);
+    console.log(tbody.innerHTML);
+    return tbody.innerHTML;
+
 
     let domain_body = ``;
     Object.entries(rules).forEach(rule => {
@@ -100,7 +145,7 @@ function loadPolicyBody(domain_name) {
         });
 
         domain_body += `
-            </select></td>
+            </select>${kleinertest}</td>
             <td class="user-policy-dropdown trust-preference-level">
                 <select class="user-policy-dropdown trust-level-select">`;
         // Trust Level

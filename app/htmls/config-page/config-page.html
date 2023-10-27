@@ -5,9 +5,21 @@
     <meta charset="UTF-8">
     <link rel="icon" id="favicon" href="../../images/F-D_dark.png" />
     <link rel="stylesheet" href="./config-page.css" />
+    <link rel="stylesheet" href="./trust-preferences.css" />
     <title>Settings F-PKI Plugin</title>
   </head>
   <body>
+    <template id="trust-preference-row-template">
+      <div class="trust-preference-row" data-caset="" data-trustlevel="">
+        <div class="trust-preference-ca">
+
+        </div>
+        <div class="trust-preference-level">
+
+        </div>
+      </div>
+    </template>
+
     <div id="options" style="margin-bottom: 100px;">
       <h1>F-PKI Settings</h1>
       <p>
@@ -172,6 +184,7 @@
           </thead>
           <tbody id="user-policies-table-body">
             <!-- Javascript generated -->
+            
           </tbody>
           <!--<tfoot>
             <tr>
@@ -451,5 +464,6 @@
     
 
     <script type="module" src="./config-page.js"></script>
+    <script type="module" src="./trust-preferences.js"></script>
   </body>
 </html>
