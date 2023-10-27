@@ -8,8 +8,15 @@
 ## TODO
 TODO's nach Kategorie.
 
+### Generell
+- [ ] Beim Laden und Speichern der Config, von/nach Format konvertieren, dass
+  von der Extension intern verwendet werden kann.  
+  > meine config muss aber auch irgendwo persistens gespeichert werden, weil
+  > sonst bleiben z.B. die description eines CA-Sets nicht erhalten.  
+  > Kann man vllt. alles irgendwie in das andere Format auch kriegen??? **!!prio!!**
+
 ### Infoseite
-- [ ] Infopage kürzen/überarbeiten **lets go**
+- [ ] Infopage verfeinern, vllt. geopolitik usecase mit einbauen
   > das ist vor dem nächsten interview wichtig
 
 ### Konfigurationsseite
@@ -39,6 +46,9 @@ TODO's nach Kategorie.
 - [ ] Predefined CA Sets
 #### Preferences
 - [ ] einzelne CAs auswählbar machen
+- [ ] sortieren, sodass subdomains nahe ihren parents zu finden sind
+  - [ ] eine art baumstruktur wäre sonst noch eine gute idee
+- [ ] `td`s mit attributen versehen, die domain, ausgewähltes ca-set bzw. trust-level angeben
 #### Trust Levels
 - [ ] Was passiert, wenn man ein Trust-Level löscht, das aber in Policies
   verwendet wird?
