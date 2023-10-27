@@ -37,11 +37,19 @@ TODO's nach Kategorie.
     es sonst probleme geben wird, wenn der Setname in der internen Logik
     aufgelöst werden soll.
 - [ ] Predefined CA Sets
-- [ ] `Trust Preferences` anstatt `User Policies`?!
+#### Preferences
+- [ ] einzelne CAs auswählbar machen
 #### Trust Levels
 - [ ] Was passiert, wenn man ein Trust-Level löscht, das aber in Policies
   verwendet wird?
-  > In Interviews fragen
+  > In Interviews fragen: ist blöd und nicht wirklich zu lösen, nicht löschbar,
+  > mit hinweis für den benutzer
+#### CA-Sets
+- [ ] Custom CAs vllt. persistent hinzufügbar machen, damit man sie dann auch
+  einfach anklicken kann
+- [ ] ca-set name verbieten, wenn er gleich einem distinguished name in dem
+  trust store ist, weil diese Setnamen im hintergrund für einzelne CAs gebraucht
+  werden, die auch in den trust preferences konfigurierbar sein sollen
 
 ### Design
 - [ ] Delete Buttons rötlich
@@ -94,6 +102,7 @@ Als Erinnnerung später.
   > scheint gefixt, aber erstmal weiter beobachten..
 - [x] on hcnage ca set, nicht alles schließen (wie bei change trust level
   machen)
+- [x] `Trust Preferences` anstatt `User Policies`?!
 #### CA Sets
 - [ ] `select all` button für wenn man schon gefiltert hat
 - [ ] `modify set` option, wo das dann vielleich in den set builder nochmal
