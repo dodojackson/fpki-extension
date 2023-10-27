@@ -146,6 +146,9 @@ async function reloadSettings() {
 
     loadMapserverSettings();
 
+    // TEST: config converter
+    toOldConfig(json_config)
+
     // Load legacy trust preferences
     trust_preferences.loadUserPolicies(json_config);
 
@@ -219,6 +222,36 @@ async function reloadSettings() {
                     });
                 });
             });
+}
+
+
+function toOldConfig(json_config) {
+    console.log("NEW CONFIG FORMAT:");
+    console.log(json_config);
+    // Convert ca-sets settings to old format
+    let ca_sets_old = {};
+    Object.entries(json_config['ca-sets']).forEach(caset => {
+        const [set_name, set_value] = caset;
+        ca_sets_old[set_name] = set_value['cas'];
+    })
+    // Convert legacy-trust-preference settings to old format
+    let lts_old = {}
+    Object.entries(json_config['legacy-trust-preference']).forEach(elem => {
+        const [domain_name, preference] = elem;
+        lts_old[domain_name] = [];
+
+        Object.entries(preference).forEach(elem => {
+            const [caset, trustlevel] = elem;
+            let new_pref = {
+                'caSet': caset,
+                'level': json_config['trust-levels'][trustlevel]
+            }
+            lts_old[domain_name].push(new_pref);
+        });
+    });
+    console.log("OLD CONFIG FORMAT:");
+    console.log(ca_sets_old);
+    console.log(lts_old);
 }
 
 
