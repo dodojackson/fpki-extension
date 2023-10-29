@@ -44,9 +44,7 @@ browser.runtime.onConnect.addListener( (port) => {
             browser.tabs.update(tabId, {url: url});
             break;
         case "uploadConfig":
-            console.log("setting new config value...");
-            importConfigFromJSON(msg.value);
-            saveConfig();
+            exit(1);
             break;
         case 'postConfig':
             try {

@@ -122,7 +122,9 @@ function setConfig(new_config) {
 export function setNewFormatConfig(new_config) {
     new_format_config = clone(new_config);
     // Synchronize old config
-    importConfigFromJSON(JSON.stringify(new_format_config));
+    importConfigFromJSON(JSON.stringify(toOldConfig(new_format_config)));
+    console.log("Synchronized old config:");
+    console.log(config);
 }
 
 
