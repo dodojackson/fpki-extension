@@ -41,3 +41,15 @@ export async function showPopup(message) {
         document.body.appendChild(modal);
     });
 }
+
+
+/**
+ * Toggle display status of an element
+ */
+export function toggleElement(box) {
+    if (box.hidden === true) {
+        box.hidden = false;
+    } else {
+        box.hidden = true;
+    }
+}

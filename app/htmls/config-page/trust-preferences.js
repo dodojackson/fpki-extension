@@ -1,6 +1,7 @@
 //import {exportConfigToJSON, getConfig, importConfigFromJSON, getJSONConfig} from "../../js_lib/config.js"
 
-import {reloadSettings, toggleElement} from "./config-page.js"
+import {reloadSettings} from "./config-page.js"
+import { toggleElement } from "./misc.js";
 
 /**
  * Lädt die User Policies in die Tabelle

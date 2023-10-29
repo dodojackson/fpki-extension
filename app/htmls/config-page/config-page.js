@@ -15,6 +15,7 @@ var port = browser.runtime.connect({
 
 let set_builder; // global ca set builder class instance
 
+
 document.addEventListener('DOMContentLoaded', async () => {
     try {
         document.getElementById('printConfig').addEventListener('click', async () => {
@@ -73,7 +74,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             .forEach(elem => {
                 elem.addEventListener("click", (e) => {
                     let box = e.target.parentElement.children[2];
-                    toggleElement(box);
+                    misc.toggleElement(box);
                 });
             });
             
@@ -88,15 +89,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 });
 
 
-export function toggleElement(box) {
-    if (box.hidden === true) {
-        box.hidden = false;
-    } else {
-        box.hidden = true;
-    }
-}
-
-
 /**
  * Prints live config object to html as JSON string
  */
@@ -105,6 +97,7 @@ async function printConfig() {
     configCodeElement.innerHTML = "config = " + JSON.stringify(json_config, undefined, 4);
     reloadSettings();
 }
+
 
 /**
  * Ask background script to reset config to default.
@@ -119,14 +112,15 @@ async function resetConfig() {
     console.log(test);
 }
 
+
 /**
  * Request live config from background script
  */
 async function requestConfig() {
     const response = await browser.runtime.sendMessage("requestConfig");
     json_config = response.config;
-    //await setConfig(response.config);
 }
+
 
 /**
  * Post configuration changes to live config in background script
@@ -134,7 +128,6 @@ async function requestConfig() {
 async function postConfig() {
    port.postMessage({ "type": "postConfig", "value": json_config });
 }
-
 
 
 /**
@@ -214,7 +207,6 @@ export async function reloadSettings() {
             });
         });
 }
-
 
 
 class CASetBuilder {
@@ -337,7 +329,7 @@ function loadCASets(json_config) {
     open_set_btns.forEach(btn => {
         btn.children[0].addEventListener("click", (e) => {
             let cas_row = e.target.parentElement.nextElementSibling;
-            toggleElement(cas_row);
+            misc.toggleElement(cas_row);
             //console.log(e.target.parentElement.nextElementSibling);
             //alert("hi");
         });
@@ -361,6 +353,9 @@ function loadCASets(json_config) {
 }
 
 
+/**
+ * 
+ */
 function loadCASetBuilder(json_config) {
     set_builder = new CASetBuilder(json_config);
 
@@ -382,6 +377,9 @@ function loadCASetBuilder(json_config) {
 }
 
 
+/**
+ * 
+ */
 function setupCASetBuilderEventListeners(json_config) {
 
     // CA Filter (OnChange)
@@ -553,6 +551,7 @@ async function resetChanges(e) {
         reloadSettings();
     }
 }
+
 
 /**
  * Save changes that have been made to the settings in the section of the 
