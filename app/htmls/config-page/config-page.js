@@ -1,4 +1,5 @@
 import * as trust_preferences from "./trust-preferences.js"
+import * as trust_levels from "./trust-levels.js"
 import { clone } from "../../js_lib/helper.js";
 
 /*
@@ -143,7 +144,7 @@ export async function reloadSettings() {
     loadCASets(json_config);
     loadCASetBuilder(json_config);
     // Load trust levels settings
-    loadTrustLevelSettings();
+    trust_levels.loadTrustLevelSettings(json_config);
     // Load mapserver settings
     loadMapserverSettings();
     // Load other settings
@@ -190,7 +191,7 @@ export async function reloadSettings() {
     });
 
 
-    // TODO: Event Listeners
+    // Event Listeners: Info-Icons
     document
         .querySelectorAll("span.info-icon")
         .forEach(elem => {
@@ -307,39 +308,6 @@ class CASet {
     }
 }
 
-/**
- * Class holds CA-Sets and makes filtering sets/manipulating config easier
- */
-class CASets {
-    constructor(json_config) {
-        this.sets = [];
-        for (const [name, info] of Object.entries(json_config['ca-sets'])) {
-            this.sets.push(new CASet(name, info));
-        }
-    }
-
-    reloadSets(json_config) {
-        this.sets = [];
-        for (const [name, info] of Object.entries(json_config['ca-sets'])) {
-            this.sets.push(new CASet(name, info));
-        }
-    }
-
-    add(ca_set, json_config) {
-        json_config['ca-sets'][ca_set.name] = {
-            description: ca_set.description,
-            cas: ca_set.set
-        }
-        this.reloadSets(json_config);
-    }
-
-    test() {
-        this.sets.forEach(set => {
-            set.test();
-        });
-    }
-}
-
 
 function loadCASetBuilder(json_config) {
     set_builder = new CASetBuilder(json_config);
@@ -362,26 +330,6 @@ function loadCASetBuilder(json_config) {
 }
 
 function setupCASetBuilderEventListeners(json_config) {
-
-    // CA Filter
-    /*
-    let filter_btn = document.querySelector('button#filter-cas');
-    filter_btn.addEventListener("click", (e) => {
-        let ca_div = document.querySelector('div#ca-sets-builder-cas');
-        let filter_str = e.target.previousElementSibling.value;
-
-        let ca_checkboxes = ``;
-        let filtered_cas = set_builder.filter(filter_str);
-        filtered_cas.forEach(ca => {
-            let checked = (set_builder.selected(ca)) ? "checked" : "";
-            ca_checkboxes += `
-                <input type="checkbox" id="${ca}" class="ca-set-builder-checkbox" ${checked}/>
-                <label for="${ca}">${ca}</label><br>`;
-        });
-        // console.log(filtered_cas);
-        ca_div.innerHTML = ca_checkboxes;
-        setupCASetBuilderEventListeners();
-    });*/
 
     // CA Filter (OnChange)
     let filter_input = document.querySelector("input.filter-cas");
@@ -406,7 +354,6 @@ function setupCASetBuilderEventListeners(json_config) {
         });
     }
     
-
     // CA Selection
     let checkboxes = document.querySelectorAll('.ca-set-builder-checkbox');
     checkboxes.forEach(box => {
@@ -434,8 +381,6 @@ function setupCASetBuilderEventListeners(json_config) {
             custom_cas.forEach(ca => {
                 set_cas.push(ca.trim());
             });
-            //console.log("About to add custom cas:");
-            //console.log(custom_cas);
     
             json_config['ca-sets'][set_name] = {
                 description: set_description,
@@ -444,12 +389,8 @@ function setupCASetBuilderEventListeners(json_config) {
             document.querySelector('input#ca-sets-builder-name').value = "";
             document.querySelector('input#ca-sets-builder-description').value = "";
             document.querySelector('#ca-sets-settings-section').scrollIntoView();
-            //alert("Set hinzugefügt")
             
             reloadSettings();
-            
-            
-            //alert(set_name + " - " + set_description);
         });
     }
     
@@ -460,19 +401,13 @@ function setupCASetBuilderEventListeners(json_config) {
  * Lädt die konfigurierten CA-Sets
  */
 function loadCASets(json_config) {
-
     // Load selectable CAs from Trust Store (-ca-set)
     let trust_store_cas = json_config['ca-sets']['All Trust-Store CAs']['cas'];
-    //console.log("HEYHEY")
-    //console.log(trust_store_cas);
-    //console.log(json_config['ca-sets'])
     let ca_selection = `<select name="ca_selection">`;
     trust_store_cas.forEach(ca => {
         ca_selection += `<option value="${ca}">${ca}</option>`;
     });
     ca_selection += `</select>`;
-
-    //console.log(ca_selection);
 
     let ca_sets_rows = "";
     for (const [name, info] of Object.entries(json_config['ca-sets'])) {
@@ -481,7 +416,6 @@ function loadCASets(json_config) {
     }
 
     document.getElementById('ca-sets-table-body').innerHTML = ca_sets_rows;
-
 
     // Event Listeners
     let open_set_btns = document.querySelectorAll('tr.ca-set-html');
@@ -511,124 +445,6 @@ function loadCASets(json_config) {
     });
 }
 
-
-
-/**
- * Lädt die Trust Levels Tabelle
- */
-function loadTrustLevelSettings() {
-
-    let table_rows = "";
-    let trust_levels = Object.entries(json_config['trust-levels']);
-    trust_levels.sort((a, b) => a[1] - b[1]);
-    console.log(trust_levels);
-    trust_levels.forEach(entry => {
-        const [key, value] = entry;
-        console.log(key + " is " + value);
-
-        let rank_input = `<input type="number" min=1 max=100 value=${value} class="trust-level-rank-input"/>`
-        let del_btn = `<td class="btn trust-level-delete" style="text-align: center;">x</td>`;
-        let add_info = ``;
-
-        if (key === "Untrusted" || key === "Standard Trust") {
-            del_btn = `<td></td>`;
-        }
-        if (key === "Untrusted") {
-            rank_input = ``;
-            add_info = `
-                <span class="info-icon" info-id="trust-level-untrusted">
-                    &#9432;
-                </span>`;
-        }
-        if (key === "Standard Trust") {
-            add_info = `
-            <span class="info-icon" info-id="trust-level-standard">
-                &#9432;
-            </span>`;
-        }
-
-        let table_row = `
-            <tr>
-                <td>${key}${add_info}</td>
-                <td>${rank_input}</td>
-                ${del_btn}
-            </tr>`
-        table_rows += table_row;
-    });
-    let table_body = document.getElementById('trust-levels-table-body');
-    table_body.innerHTML = table_rows += `
-        <tr>
-            <td colspan="1">
-                <input type="text" placeholder="___" class="trust-level-add"/>
-            </td>
-            <td colspan="2" class="btn trust-level-add" 
-                style=" font-weight: bolder; color: whitesmoke; height:30px; 
-                        background-color:#3D7F6E; font-size: larger;">
-                +
-            </td>
-        </tr>`;
-
-    loadTrustLevelSettingsEventListeners();
-}
-
-
-function loadTrustLevelSettingsEventListeners() {
-    // OnChange rank inputs
-    let rank_inputs = document.querySelectorAll('input.trust-level-rank-input');
-    rank_inputs.forEach(elem => {
-        if (!elem.hasAttribute('listener')) {
-            elem.addEventListener("change", (e) => {
-                let level_name = e.target.closest('tr').children[0].innerHTML.trim();
-                let level_rank = e.target.value;
-                if (level_rank != "") {
-                    level_rank = parseInt(level_rank);
-                    // No ranks above 100
-                    if (level_rank > 100) {
-                        level_rank = 100;
-                        e.target.value = 100;
-                    }
-                    console.log("changing to " + level_rank);
-                    json_config['trust-levels'][level_name] = level_rank;
-                    
-                } else {
-                    console.log("rank nicht gültig")
-                }
-                //json_config['trust-levels'][level_name] = level_rank;
-                // TODO: check that it is a number, sonst rot umranden?
-                // TODO: oder already taken --> obwohl ist egal
-            });
-        }
-    });
-
-    // Delete Trust Level
-    let del_btns = document.querySelectorAll('td.trust-level-delete');
-    del_btns.forEach(elem => {
-        if (!elem.hasAttribute('listener')) {
-            elem.setAttribute("listener", "true");
-            elem.addEventListener("click", (e) => {
-                let level_name = e.target.closest('tr').children[0].innerHTML.trim();
-
-                delete json_config['trust-levels'][level_name];
-                
-                loadTrustLevelSettings();
-            });
-        }
-    });
-
-    // Add trust level
-    let add_btn = document.querySelector('td.trust-level-add');
-    if (!add_btn.hasAttribute('listener')) {
-        add_btn.setAttribute("listener", "true");
-        add_btn.addEventListener("click", (e) => {
-            let new_level_name = document.querySelector('input.trust-level-add').value.trim();
-
-            json_config['trust-levels'][new_level_name] = 100;
-            
-            loadTrustLevelSettings();
-            //alert(new_level_name);
-        });
-    }
-}
 
 
 function loadCurrentInputToLocalConfig() {
