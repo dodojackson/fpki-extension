@@ -3,13 +3,14 @@
 import { getDomainNameFromURL } from "../js_lib/domain.js"
 import { FpkiRequest } from "../js_lib/fpki-request.js"
 import { printMap, cLog, mapGetList, mapGetMap, mapGetSet } from "../js_lib/helper.js"
-import { config, downloadConfig, importConfigFromJSON, getConfig, saveConfig, resetConfig, exportConfigToJSON, setConfig, getJSONConfig } from "../js_lib/config.js"
+import { config, new_format_config, downloadConfig, importConfigFromJSON, getConfig, saveConfig, resetConfig, exportConfigToJSON, setConfig, setNewFormatConfig, getJSONConfig, toOldConfig } from "../js_lib/config.js"
 import { LogEntry, getLogEntryForRequest, downloadLog, printLogEntriesToConsole, getSerializedLogEntries } from "../js_lib/log.js"
 import { FpkiError, errorTypes } from "../js_lib/errors.js"
 import { policyValidateConnection, legacyValidateConnection } from "../js_lib/validation.js"
 import { hasApplicablePolicy, getShortErrorMessages, hasFailedValidations } from "../js_lib/validation-types.js"
 import "../js_lib/wasm_exec.js"
 import { addCertificateChainToCacheIfNecessary, getCertificateEntryByHash } from "../js_lib/cache.js"
+
 
 try {
     // await initializeConfig();
@@ -48,10 +49,26 @@ browser.runtime.onConnect.addListener( (port) => {
             saveConfig();
             break;
         case 'postConfig':
-            setConfig(msg.value);
-            saveConfig();
-            console.log("Updated config saved");
-            break;
+            try {
+                /**
+                 * Save new format config and converted old format config
+                 */
+                //console.log("POSTED CONFIG:");
+                setNewFormatConfig(JSON.parse(exportConfigToJSON(msg.value)));
+                //console.log(new_format_config);
+
+                let converted_json_config = toOldConfig(new_format_config);
+                importConfigFromJSON(JSON.stringify(converted_json_config));
+
+                //console.log("SAVED CONFIG:");
+                //console.log(JSON.parse(exportConfigToJSON(config)));
+
+                saveConfig();
+                console.log("Updated config saved");
+                break;
+            } catch (e) {
+                console.log(e);
+            }
         default:
             switch (msg) {
             case 'initFinished':
@@ -101,7 +118,7 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
     switch(request) {
         case 'requestConfig':
             console.log(`MSG RECV: ${request}`);
-            return Promise.resolve({ "config": config });
+            return Promise.resolve({ "config": new_format_config });
         case 'requestJSONConfig':
             console.log(`MSG RECV: ${request}`);
             return Promise.resolve({ "config": getJSONConfig() });

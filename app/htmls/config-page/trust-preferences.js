@@ -38,7 +38,7 @@ export function loadUserPolicies(json_config) {
             domain_body = `<tbody hidden>`
         }
         
-        let policy_body = loadPolicyBody(domain);
+        let policy_body = loadPolicyBody(json_config, domain);
         domain_body += policy_body;
 
         domain_body += `</tbody>`
@@ -74,8 +74,7 @@ export function loadUserPolicies(json_config) {
  *
  * @param {*} domain_name Domainbezeichnung
  */
-function loadPolicyBody(domain_name) {
-    let json_config = JSON.parse(exportConfigToJSON(getConfig()));
+function loadPolicyBody(json_config, domain_name) {
     let rules = json_config['legacy-trust-preference'][domain_name];
 
     let domain_body = ``;
@@ -89,7 +88,7 @@ function loadPolicyBody(domain_name) {
                 <td class="user-policy-dropdown trust-preference-ca">
                     <select class="user-policy-dropdown caset-select">`;
 
-        let available_casets = [caset, ...getUnconfiguredCASets(domain_name)];
+        let available_casets = [caset, ...getUnconfiguredCASets(json_config, domain_name)];
         /*
         Object.entries(json_config['ca-sets']).forEach(entry => {
             const [set_name, _] = entry;*/
@@ -159,11 +158,10 @@ function setupUserPolicyEventListeners(json_config) {
         if (btn.getAttribute('listener') !== "false") {
             btn.setAttribute('listener', 'false');
             btn.addEventListener("click", (e) => {
-                let json_config = JSON.parse(exportConfigToJSON(getConfig()));
 
                 let policy_header = e.target.parentElement.parentElement.previousSibling;
                 let domain = policy_header.children[0].children[0].innerHTML.trim();
-                let unconfigured_casets = getUnconfiguredCASets(domain);
+                let unconfigured_casets = getUnconfiguredCASets(json_config, domain);
     
                 if (unconfigured_casets.length === 0) {
                     alert("All CA Sets are configured already");
@@ -173,7 +171,7 @@ function setupUserPolicyEventListeners(json_config) {
         
                     importConfigFromJSON(JSON.stringify(json_config));
                     let policy_body = policy_header.nextElementSibling;
-                    policy_body.innerHTML = loadPolicyBody(domain);
+                    policy_body.innerHTML = loadPolicyBody(json_config, domain);
                     setupUserPolicyEventListeners(json_config);
                 }
             });
@@ -195,7 +193,7 @@ function setupUserPolicyEventListeners(json_config) {
 
                 importConfigFromJSON(JSON.stringify(json_config));
                 let policy_body = policy_header.nextElementSibling;
-                policy_body.innerHTML = loadPolicyBody(domain);
+                policy_body.innerHTML = loadPolicyBody(json_config, domain);
                 setupUserPolicyEventListeners(json_config);
             });
         }
@@ -238,14 +236,13 @@ function setupUserPolicyEventListeners(json_config) {
                 let domain = e.target.closest('tbody').previousElementSibling.children[0].children[0].innerHTML.trim();
                 let caset = e.target.closest('tr').children[0].children[0].value;
                 let trust_level = e.target.value;
-                let json_config = JSON.parse(exportConfigToJSON(getConfig()));
 
                 console.log("Changing trust level of " + caset + " to " + trust_level + " for domain " + domain);
                 json_config['legacy-trust-preference'][domain][caset] = trust_level;
                 importConfigFromJSON(JSON.stringify(json_config));
 
                 let policy_body = e.target.closest('tbody');
-                policy_body.innerHTML = loadPolicyBody(domain);
+                policy_body.innerHTML = loadPolicyBody(json_config, domain);
                 setupUserPolicyEventListeners(json_config);
             });
         }
@@ -261,7 +258,6 @@ function setupUserPolicyEventListeners(json_config) {
                 let domain = e.target.closest('tbody').previousElementSibling.children[0].children[0].innerHTML.trim();
                 let trust_level = e.target.closest('tr').children[1].children[0].value;
                 let caset = e.target.value;
-                let json_config = JSON.parse(exportConfigToJSON(getConfig()));
 
                 console.log("Changing " + previousCASet + " to " + caset);
                 delete json_config['legacy-trust-preference'][domain][previousCASet];
@@ -271,7 +267,7 @@ function setupUserPolicyEventListeners(json_config) {
 
                 importConfigFromJSON(JSON.stringify(json_config));
                 let policy_body = e.target.closest('tbody');
-                policy_body.innerHTML = loadPolicyBody(domain);
+                policy_body.innerHTML = loadPolicyBody(json_config, domain);
                 setupUserPolicyEventListeners(json_config);
             });
         }
@@ -284,8 +280,7 @@ function setupUserPolicyEventListeners(json_config) {
  * Returns an array of the CA Sets, that have no configured trust level yet, for
  * the given domain.
  */
-function getUnconfiguredCASets(domain) {
-    let json_config = JSON.parse(exportConfigToJSON(getConfig()));
+function getUnconfiguredCASets(json_config, domain) {
 
     let configured_casets = new Set();
     Object.entries(json_config['legacy-trust-preference'][domain]).forEach(rule => {

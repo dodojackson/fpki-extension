@@ -14,6 +14,16 @@ TODO's nach Kategorie.
   > meine config muss aber auch irgendwo persistens gespeichert werden, weil
   > sonst bleiben z.B. die description eines CA-Sets nicht erhalten.  
   > Kann man vllt. alles irgendwie in das andere Format auch kriegen??? **!!prio!!**
+  - [ ] Converter geschrieben, jetzt muss das nurnoch jedes mal passieren, wenn
+    an der config was geändert und gespeichert wird.
+    1. in neuem format auch im backend speichern
+    2. jedes mal automatisch die original config updaten
+  - [ ] reset Config
+  - [ ] get config from background
+    - [ ] config-page.js ohne config.js umbauen
+  - [ ] post config to background
+  - [x] wie werden die beiden configs initialisiert?
+    - [x] scheint zu klappen, aber default muss noch angepasst werden!
 
 ### Infoseite
 - [ ] Infopage verfeinern, vllt. geopolitik usecase mit einbauen

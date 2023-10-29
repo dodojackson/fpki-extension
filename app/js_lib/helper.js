@@ -177,3 +177,11 @@ export function intToHexString(intValue, separator = "") {
     }
     return components.join(separator);
 }
+
+
+/**
+ * Deep copy of json object
+ */
+export function clone(json_object) {
+    return JSON.parse(JSON.stringify(json_object));
+}

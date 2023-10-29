@@ -1,11 +1,109 @@
-import {download} from "./helper.js"
+import {download, clone} from "./helper.js"
+import {defaultConfig} from "./default_config.js"
 
 /*
     Original Live Config Object is maintained by the background script.
     Pages can request the current state of the config via 'requestConfig' msg
 */
-// TODO: Why a Map object and not a JSON object?
-export let config = null;
+export let config = null;  // Map Object
+export let new_format_config = null;  // JSON Object
+
+/**
+ * Convert new config format to previous format for compatibility.
+ * 
+ * In and Out: JSON. Does not change the passed object.
+ */
+export function toOldConfig(pass_json_config) {
+
+    let json_config = clone(pass_json_config);
+    
+    console.log("NEW CONFIG FORMAT:");
+    console.log(pass_json_config);
+    // Convert ca-sets settings to old format
+    let ca_sets_old = {};
+    let ca_sets_descriptions = {};
+    Object.entries(json_config['ca-sets']).forEach(caset => {
+        const [set_name, set_value] = caset;
+        ca_sets_old[set_name] = set_value['cas'];
+        ca_sets_descriptions[set_name] = set_value['description'];
+    })
+    // Convert legacy-trust-preference settings to old format
+    let lts_old = {}
+    Object.entries(json_config['legacy-trust-preference']).forEach(elem => {
+        const [domain_name, preference] = elem;
+        lts_old[domain_name] = [];
+
+        Object.entries(preference).forEach(elem => {
+            const [caset, trustlevel] = elem;
+            let new_pref = {
+                'caSet': caset,
+                'level': json_config['trust-levels'][trustlevel]
+            }
+            lts_old[domain_name].push(new_pref);
+        });
+    });
+
+    // Save reversed trust level mappings for easier re-conversion
+    let trust_levels_rev = {};
+    Object.entries(json_config['trust-levels']).forEach(elem => {
+        const [level_name, level] = elem;
+        console.log(level_name + ": " + level);
+        trust_levels_rev[level] = level_name;
+    });
+
+    json_config['ca-sets'] = ca_sets_old;
+    json_config['legacy-trust-preference'] = lts_old;
+    json_config['trust-levels-rev'] = trust_levels_rev;
+    // no information loss on conversion
+    json_config['ca-sets-descriptions'] = ca_sets_descriptions;
+
+    console.log("OLD CONFIG FORMAT:");
+    console.log(json_config);
+
+    return json_config;
+}
+
+/**
+ * Convert previous config format to new format for compatibility.
+ * 
+ * In and Out: JSON
+ */
+function toNewConfig(pass_json_config) {
+    let json_config = clone(pass_json_config);
+
+    console.log("OLD CONFIG FORMAT:");
+    console.log(pass_json_config);
+
+    // Convert ca-sets settings to new format
+    let ca_sets_new = {};
+    Object.entries(json_config['ca-sets']).forEach(caset => {
+        const [set_name, ca_list] = caset;
+        ca_sets_new[set_name] = {
+            description: json_config['ca-sets-descriptions'][set_name],
+            cas: ca_list
+        }
+    });
+
+    // Convert legacy-trust-preference settings to new format
+    let lts_new = {}
+    Object.entries(json_config['legacy-trust-preference']).forEach(elem => {
+        const [domain_name, preferences] = elem;
+        lts_new[domain_name] = {};
+
+        preferences.forEach(pref => {
+            lts_new[domain_name][pref['caSet']] = json_config['trust-levels-rev'][pref['level']];
+        });
+    });
+
+    json_config['ca-sets'] = ca_sets_new;
+    json_config['legacy-trust-preference'] = lts_new;
+
+    console.log("NEW CONFIG FORMAT:");
+    console.log(json_config);
+
+    return json_config;
+}
+
 
 export function getConfig() {
     console.log("getConfig: config is " + config);
@@ -21,7 +119,15 @@ export function setConfig(new_config) {
     config = new_config;
 }
 
-function defaultConfig() {
+export function setNewFormatConfig(new_config) {
+    new_format_config = new_config;
+}
+
+
+/**
+ * old config initialization (not needed anymore?)
+ */
+function defaultConfigOLD() {
     let c = new Map();
     // TODO: remove duplicate local mapserver (only used for testing)
     // use 127.0.0.11 instead of localhost to distinguish the second test server from the first one (although it is the same instance)
@@ -293,21 +399,33 @@ function defaultConfig() {
     return c;
 }
 
+
 /**
  * Loads config from local storage (across browser sessions) OR 
  * initializes live config object with default config settings
  */
 function initializeConfig() {
-    
-    let c = localStorage.getItem("config");
-    if (c === null) {
-        console.log("initializing using default config");
-        config = defaultConfig();
-    } else {
-        console.log("initialize using stored config");
-        importConfigFromJSON(c);
+    try {
+        console.log("JUST WHY");
+        console.log(defaultConfig);
+        let c = localStorage.getItem("config");
+        if (c === null) {
+            console.log("initializing using default config");
+            new_format_config = clone(defaultConfig);
+            importConfigFromJSON(JSON.stringify(toOldConfig(new_format_config)));
+        } else {
+            console.log("initialize using stored config");
+            importConfigFromJSON(c);
+            new_format_config = toNewConfig(JSON.parse(exportConfigToJSON(c)));
+        }
+        saveConfig();
+
+        console.log("INITIALIZED:");
+        console.log(config);
+        console.log(new_format_config);
+    } catch (e) {
+        console.log(e);
     }
-    saveConfig();
 }
 
 export function saveConfig() {
@@ -317,6 +435,9 @@ export function saveConfig() {
     */
     console.log("saving config:\n" + config);
     localStorage.setItem("config", exportConfigToJSON(config));
+
+    console.log("savin new format config:\n" + new_format_config);
+    localStorage.setItem("new_format_config", new_format_config);
 }
 
 /**
@@ -372,7 +493,7 @@ export function downloadConfig() {
 
 export function resetConfig() {
     console.log("CALLED: resetConfig()\n")
-    config = defaultConfig();
+    new_format_config = JSON.parse(JSON.stringify(defaultConfig));
     // importConfigFromJSON('{ "name": true }')
     // console.log(exportConfigToJSON(config, true));
     saveConfig();

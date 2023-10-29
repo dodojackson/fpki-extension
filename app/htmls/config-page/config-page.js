@@ -5,6 +5,7 @@ import * as trust_preferences from "./trust-preferences.js"
     This script holds a working copy of the original live config object.
     Whenever the changes are saved, the original is replaced by this copy.
 */ 
+let json_config = {};
 
 var port = browser.runtime.connect({
     name: "config to background communication"
@@ -108,7 +109,7 @@ function toggleElement(box) {
  */
 async function printConfig() {
     var configCodeElement = document.getElementById("config-code");
-    configCodeElement.innerHTML = "config = " + exportConfigToJSON(getConfig(), true);
+    configCodeElement.innerHTML = "config = " + JSON.stringify(json_config, undefined, 4);
     reloadSettings();
 }
 
@@ -126,7 +127,8 @@ async function resetConfig() {
  */
 async function requestConfig() {
     const response = await browser.runtime.sendMessage("requestConfig");
-    await setConfig(response.config);
+    json_config = response.config;
+    //await setConfig(response.config);
 }
 
 /**
@@ -142,12 +144,11 @@ async function reloadSettings() {
 
         TODO: Kann vielleicht auch einfach mit in 'printConfig'
     */
-    let json_config = JSON.parse(exportConfigToJSON(getConfig()));
 
     loadMapserverSettings();
 
     // TEST: config converter
-    toOldConfig(json_config)
+    //toNewConfig(toOldConfig(json_config))
 
     // Load legacy trust preferences
     trust_preferences.loadUserPolicies(json_config);
@@ -224,35 +225,6 @@ async function reloadSettings() {
             });
 }
 
-
-function toOldConfig(json_config) {
-    console.log("NEW CONFIG FORMAT:");
-    console.log(json_config);
-    // Convert ca-sets settings to old format
-    let ca_sets_old = {};
-    Object.entries(json_config['ca-sets']).forEach(caset => {
-        const [set_name, set_value] = caset;
-        ca_sets_old[set_name] = set_value['cas'];
-    })
-    // Convert legacy-trust-preference settings to old format
-    let lts_old = {}
-    Object.entries(json_config['legacy-trust-preference']).forEach(elem => {
-        const [domain_name, preference] = elem;
-        lts_old[domain_name] = [];
-
-        Object.entries(preference).forEach(elem => {
-            const [caset, trustlevel] = elem;
-            let new_pref = {
-                'caSet': caset,
-                'level': json_config['trust-levels'][trustlevel]
-            }
-            lts_old[domain_name].push(new_pref);
-        });
-    });
-    console.log("OLD CONFIG FORMAT:");
-    console.log(ca_sets_old);
-    console.log(lts_old);
-}
 
 
 class CASetBuilder {
@@ -462,7 +434,6 @@ function setupCASetBuilderEventListeners(json_config) {
     if (!add_btn.hasAttribute("listener")) {
         add_btn.setAttribute("listener", "true");
         add_btn.addEventListener("click", (e) => {
-            let json_config = JSON.parse(exportConfigToJSON(getConfig()));
 
             let set_name = document.querySelector('input#ca-sets-builder-name').value.trim();
             console.log(json_config['ca-sets']);
@@ -541,7 +512,6 @@ function loadCASets(json_config) {
     delete_set_buttons.forEach(btn => {
         if (btn.children[0].innerHTML !== "All Trust-Store CAs") {
             btn.children[2].addEventListener("click", (e) => {
-                let json_config = JSON.parse(exportConfigToJSON(getConfig()));
                 let set_name = btn.children[0].innerHTML;
                 //console.log("HOHO: ");
                 //console.log(json_config['ca-sets']['All Trust-Store CAs'])
@@ -561,7 +531,6 @@ function loadCASets(json_config) {
  * Lädt die Trust Levels Tabelle
  */
 function loadTrustLevelSettings() {
-    let json_config = JSON.parse(exportConfigToJSON(getConfig()));
 
     let table_rows = "";
     let trust_levels = Object.entries(json_config['trust-levels']);
@@ -623,7 +592,6 @@ function loadTrustLevelSettingsEventListeners() {
     rank_inputs.forEach(elem => {
         if (!elem.hasAttribute('listener')) {
             elem.addEventListener("change", (e) => {
-                let json_config = JSON.parse(exportConfigToJSON(getConfig()));
                 let level_name = e.target.closest('tr').children[0].innerHTML.trim();
                 let level_rank = e.target.value;
                 if (level_rank != "") {
@@ -652,7 +620,6 @@ function loadTrustLevelSettingsEventListeners() {
         if (!elem.hasAttribute('listener')) {
             elem.setAttribute("listener", "true");
             elem.addEventListener("click", (e) => {
-                let json_config = JSON.parse(exportConfigToJSON(getConfig()));
                 let level_name = e.target.closest('tr').children[0].innerHTML.trim();
 
                 delete json_config['trust-levels'][level_name];
@@ -668,7 +635,6 @@ function loadTrustLevelSettingsEventListeners() {
         add_btn.setAttribute("listener", "true");
         add_btn.addEventListener("click", (e) => {
             let new_level_name = document.querySelector('input.trust-level-add').value.trim();
-            let json_config = JSON.parse(exportConfigToJSON(getConfig()));
 
             json_config['trust-levels'][new_level_name] = 100;
             importConfigFromJSON(JSON.stringify(json_config));
@@ -680,7 +646,6 @@ function loadTrustLevelSettingsEventListeners() {
 
 
 function loadCurrentInputToLocalConfig() {
-    let json_config = JSON.parse(exportConfigToJSON(getConfig()));
 
     json_config['cache-timeout'] = document.querySelector("input.cache-timeout").value;
     json_config['max-connection-setup-time'] = document.querySelector("input.max-connection-setup-time").value;
@@ -696,7 +661,6 @@ function loadCurrentInputToLocalConfig() {
 
 
 function loadMapserverSettings() {
-    let json_config = JSON.parse(exportConfigToJSON(getConfig()));
 
     // Load mapservers into table
     var mapserver_rows = "";
