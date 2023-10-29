@@ -1,7 +1,9 @@
+//import {showPopup } from "./misc";
+
 /**
  * Lädt die Trust Levels Tabelle
  */
-export function loadTrustLevelSettings(json_config) {
+export function loadTrustLevelSettings(json_config, f_showPopup) {
 
     let table_rows = "";
     let trust_levels = Object.entries(json_config['trust-levels']);
@@ -53,11 +55,11 @@ export function loadTrustLevelSettings(json_config) {
             </td>
         </tr>`;
 
-    loadTrustLevelSettingsEventListeners(json_config);
+    loadTrustLevelSettingsEventListeners(json_config, f_showPopup);
 }
 
 
-function loadTrustLevelSettingsEventListeners(json_config) {
+function loadTrustLevelSettingsEventListeners(json_config, f_showPopup) {
     // OnChange rank inputs
     let rank_inputs = document.querySelectorAll('input.trust-level-rank-input');
     rank_inputs.forEach(elem => {
@@ -92,10 +94,12 @@ function loadTrustLevelSettingsEventListeners(json_config) {
             elem.setAttribute("listener", "true");
             elem.addEventListener("click", (e) => {
                 let level_name = e.target.closest('tr').children[0].innerHTML.trim();
-
-                delete json_config['trust-levels'][level_name];
-                
-                loadTrustLevelSettings(json_config);
+                if (checkIfTrustlevelIsUsed(json_config, level_name) === true) {
+                    f_showPopup("This trust level is in use by at least one of your configured preferences. You cannot delete this level.", ['Got it.']);
+                } else {
+                    delete json_config['trust-levels'][level_name];
+                    loadTrustLevelSettings(json_config);
+                }
             });
         }
     });
@@ -112,4 +116,30 @@ function loadTrustLevelSettingsEventListeners(json_config) {
             loadTrustLevelSettings(json_config);
         });
     }
+}
+
+
+/**
+ * Check if any preference uses the specified trust level
+ */
+function checkIfTrustlevelIsUsed(json_config, level) {
+    let result = false;
+    try {
+        Object.entries(json_config['legacy-trust-preference']).forEach(elem => {
+            const [domain, preferences] = elem;
+            Object.entries(preferences).forEach(pref => {
+                const [caset, trustlevel] = pref;
+                if (trustlevel == level) {
+                    console.log(trustlevel + " is " + level);
+                    result = true;
+                } else {
+                    console.log(trustlevel + " is not " + level);
+                }
+            });
+        });
+    
+        return result;
+    } catch (e) {
+        console.log(e);
+    } 
 }

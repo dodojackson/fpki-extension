@@ -140,7 +140,7 @@ export async function reloadSettings() {
     loadCASets(json_config);
     loadCASetBuilder(json_config);
     // Load trust levels settings
-    trust_levels.loadTrustLevelSettings(json_config);
+    trust_levels.loadTrustLevelSettings(json_config, misc.showPopup);
     // Load mapserver settings
     loadMapserverSettings();
     // Load other settings
@@ -444,7 +444,6 @@ function setupCASetBuilderEventListeners(json_config) {
             reloadSettings();
         });
     }
-    
 }
 
 
