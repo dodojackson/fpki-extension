@@ -3,7 +3,7 @@
 import { getDomainNameFromURL } from "../js_lib/domain.js"
 import { FpkiRequest } from "../js_lib/fpki-request.js"
 import { printMap, cLog, mapGetList, mapGetMap, mapGetSet } from "../js_lib/helper.js"
-import { config, new_format_config, downloadConfig, importConfigFromJSON, getConfig, saveConfig, resetConfig, exportConfigToJSON, setConfig, setNewFormatConfig, getJSONConfig, toOldConfig } from "../js_lib/config.js"
+import { config, new_format_config, downloadConfig, importConfigFromJSON, getConfig, saveConfig, resetConfig, exportConfigToJSON, setNewFormatConfig, getJSONConfig, toOldConfig } from "../js_lib/config.js"
 import { LogEntry, getLogEntryForRequest, downloadLog, printLogEntriesToConsole, getSerializedLogEntries } from "../js_lib/log.js"
 import { FpkiError, errorTypes } from "../js_lib/errors.js"
 import { policyValidateConnection, legacyValidateConnection } from "../js_lib/validation.js"
@@ -54,7 +54,7 @@ browser.runtime.onConnect.addListener( (port) => {
                  * Save new format config and converted old format config
                  */
                 //console.log("POSTED CONFIG:");
-                setNewFormatConfig(JSON.parse(exportConfigToJSON(msg.value)));
+                setNewFormatConfig(msg.value);
                 //console.log(new_format_config);
 
                 let converted_json_config = toOldConfig(new_format_config);
@@ -125,15 +125,16 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
         case 'resetConfig':
             console.log(`MSG RECV: ${request}`);
             resetConfig();
-            return Promise.resolve({ "config": config });
+            return Promise.resolve({ "config": new_format_config });
         
         default:
             switch (request['type']) {
                 case "uploadConfig":
                     console.log("setting new config value...");
-                    importConfigFromJSON(request['value']);
+                    // expect new format config
+                    setNewFormatConfig(JSON.parse(request['value']));
                     saveConfig();
-                    return Promise.resolve({ "config": config });
+                    return Promise.resolve({ "config": new_format_config });
                 default:
                     console.log(`Received unknown message: ${request}`);
                     break;

@@ -115,12 +115,14 @@ export function getConfig() {
     }
 }
 
-export function setConfig(new_config) {
+function setConfig(new_config) {
     config = new_config;
 }
 
 export function setNewFormatConfig(new_config) {
-    new_format_config = new_config;
+    new_format_config = clone(new_config);
+    // Synchronize old config
+    importConfigFromJSON(JSON.stringify(new_format_config));
 }
 
 
@@ -492,9 +494,14 @@ export function downloadConfig() {
 }
 
 export function resetConfig() {
-    console.log("CALLED: resetConfig()\n")
-    new_format_config = JSON.parse(JSON.stringify(defaultConfig));
-    // importConfigFromJSON('{ "name": true }')
-    // console.log(exportConfigToJSON(config, true));
-    saveConfig();
+    try {
+        console.log("CALLED: resetConfig()\n");
+        //new_format_config = JSON.parse(JSON.stringify(defaultConfig));
+        setNewFormatConfig(clone(defaultConfig));
+        console.log(new_format_config);
+        saveConfig();
+    } catch (e) {
+        console.log(e);
+    }
+   
 }

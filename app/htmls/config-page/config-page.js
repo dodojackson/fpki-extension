@@ -1,5 +1,5 @@
-import {setConfig, exportConfigToJSON, getConfig, importConfigFromJSON, getJSONConfig} from "../../js_lib/config.js"
 import * as trust_preferences from "./trust-preferences.js"
+import { clone } from "../../js_lib/helper.js";
 
 /*
     This script holds a working copy of the original live config object.
@@ -24,6 +24,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
         document.getElementById('resetConfig').addEventListener('click', async () => {
             await resetConfig();
+            console.log("asdfji")
             reloadSettings();
             console.log("posted message: resetConfig");
         });
@@ -33,9 +34,12 @@ document.addEventListener('DOMContentLoaded', async () => {
             let reader = new FileReader();
             
             reader.onload = async function(e){
-                port.postMessage({type: "uploadConfig", value: e.target.result});
+                //port.postMessage({type: "uploadConfig", value: e.target.result});
                 const response = await browser.runtime.sendMessage({type: "uploadConfig", value: e.target.result});
-                setConfig(response.config);
+                //setConfig(response.config);
+                console.log("RESONSE:");
+                console.log(response.config);
+                json_config = clone(response.config);
                 location.reload(true);
             }
             reader.readAsText(file);
@@ -81,21 +85,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 });
 
-port.onMessage.addListener( (msg) => {
-    /*
-        communication from background script to popup
-    */
-    const {msgType, value} = msg;
-    // Receive live config object
-    if (msgType === "config") {
-        console.log("receiving config: " + value);
-        setConfig(value);
-        printConfig();
-    }
-});
 
-
-function toggleElement(box) {
+export function toggleElement(box) {
     if (box.hidden === true) {
         box.hidden = false;
     } else {
@@ -119,7 +110,11 @@ async function printConfig() {
  */
 async function resetConfig() {
     const response = await browser.runtime.sendMessage("resetConfig");
-    setConfig(response.config);
+    //setConfig(response.config);
+    json_config = response.config;
+
+    let test = clone(json_config);
+    console.log(test);
 }
 
 /**
@@ -135,31 +130,22 @@ async function requestConfig() {
  * Post configuration changes to live config in background script
  */
 async function postConfig() {
-   port.postMessage({ "type": "postConfig", "value": getConfig() });
+   port.postMessage({ "type": "postConfig", "value": json_config });
 }
 
-async function reloadSettings() {
-    /*
-        Load configuration from live config object and set html elements accordingly
-
-        TODO: Kann vielleicht auch einfach mit in 'printConfig'
-    */
-
-    loadMapserverSettings();
-
-    // TEST: config converter
-    //toNewConfig(toOldConfig(json_config))
-
+/**
+ * Load configuration from live json config object and set html elements accordingly
+ */
+export async function reloadSettings() {
     // Load legacy trust preferences
     trust_preferences.loadUserPolicies(json_config);
-
     // Load CA Sets
     loadCASets(json_config);
     loadCASetBuilder(json_config);
-
     // Load trust levels settings
     loadTrustLevelSettings();
-
+    // Load mapserver settings
+    loadMapserverSettings();
     // Load other settings
     document.querySelector("input.cache-timeout").value = json_config['cache-timeout'];
     document.querySelector("input.max-connection-setup-time").value = json_config['max-connection-setup-time'];
@@ -172,57 +158,57 @@ async function reloadSettings() {
 
     document.querySelector('input.cache-timeout').addEventListener("input", () => {
         json_config['cache-timeout'] = document.querySelector("input.cache-timeout").value;
-        importConfigFromJSON(JSON.stringify(json_config));
+        
     });
     document.querySelector('input.max-connection-setup-time').addEventListener("input", () => {
         json_config['max-connection-setup-time'] = document.querySelector("input.max-connection-setup-time").value;
-        importConfigFromJSON(JSON.stringify(json_config));
+        
     });
     document.querySelector('input.proof-fetch-timeout').addEventListener("input", () => {
         json_config['proof-fetch-timeout'] = document.querySelector("input.proof-fetch-timeout").value;
-        importConfigFromJSON(JSON.stringify(json_config));
+        
     });
     document.querySelector('input.proof-fetch-max-tries').addEventListener("input", () => {
         json_config['proof-fetch-max-tries'] = document.querySelector("input.proof-fetch-max-tries").value;
-        importConfigFromJSON(JSON.stringify(json_config));
+        
     });
     document.querySelector('input.mapserver-quorum').addEventListener("input", () => {
         json_config['mapserver-quorum'] = document.querySelector("input.mapserver-quorum").value;
-        importConfigFromJSON(JSON.stringify(json_config));
+        
     });
     document.querySelector('input.mapserver-instances-queried').addEventListener("input", () => {
         json_config['mapserver-instances-queried'] = document.querySelector("input.mapserver-instances-queried").value;
-        importConfigFromJSON(JSON.stringify(json_config));
+        
     });
     document.querySelector('input.send-log-entries-via-event').addEventListener("input", () => {
         json_config['send-log-entries-via-event'] = document.querySelector("input.send-log-entries-via-event").value;
-        importConfigFromJSON(JSON.stringify(json_config));
+        
     });
     document.querySelector('input.wasm-certificate-parsing').addEventListener("input", () => {
         json_config['wasm-certificate-parsing'] = document.querySelector("input.wasm-certificate-parsing").value;
-        importConfigFromJSON(JSON.stringify(json_config));
+        
     });
 
 
     // TODO: Event Listeners
     document
-            .querySelectorAll("span.info-icon")
-            .forEach(elem => {
-                elem.addEventListener("click", (e) => {
-                    let info_id = e.target.getAttribute('info-id');
-                    let box = document.querySelector(`div.info-box[info-id="${info_id}"]`)
-                    console.log(box)
-                    box.style.left = (e.pageX - 5) + "px";
-                    box.style.top = (e.pageY -5) + "px";
-                    box.style.display = "block";
-                    let screen_dim = document.querySelector('html').getBoundingClientRect();
-                    box.style['max-width'] = (screen_dim.right - e.pageX - 50) + "px";
-    
-                    box.addEventListener("mouseleave", (e) => {
-                        e.target.style.display = "none";
-                    });
+        .querySelectorAll("span.info-icon")
+        .forEach(elem => {
+            elem.addEventListener("click", (e) => {
+                let info_id = e.target.getAttribute('info-id');
+                let box = document.querySelector(`div.info-box[info-id="${info_id}"]`)
+                console.log(box)
+                box.style.left = (e.pageX - 5) + "px";
+                box.style.top = (e.pageY -5) + "px";
+                box.style.display = "block";
+                let screen_dim = document.querySelector('html').getBoundingClientRect();
+                box.style['max-width'] = (screen_dim.right - e.pageX - 50) + "px";
+
+                box.addEventListener("mouseleave", (e) => {
+                    e.target.style.display = "none";
                 });
             });
+        });
 }
 
 
@@ -271,7 +257,7 @@ class CASetBuilder {
             cas: this.cas
         }
 
-        importConfigFromJSON(JSON.stringify(json_config));
+        
         reloadSettings();
     }
 
@@ -459,7 +445,7 @@ function setupCASetBuilderEventListeners(json_config) {
             document.querySelector('input#ca-sets-builder-description').value = "";
             document.querySelector('#ca-sets-settings-section').scrollIntoView();
             //alert("Set hinzugefügt")
-            importConfigFromJSON(JSON.stringify(json_config));
+            
             reloadSettings();
             
             
@@ -518,7 +504,7 @@ function loadCASets(json_config) {
                 delete json_config['ca-sets'][set_name];
                 //console.log("HOHO: ");
                 //console.log(json_config['ca-sets']['All Trust-Store CAs'])
-                importConfigFromJSON(JSON.stringify(json_config));
+                
                 reloadSettings();
             });
         } 
@@ -603,7 +589,7 @@ function loadTrustLevelSettingsEventListeners() {
                     }
                     console.log("changing to " + level_rank);
                     json_config['trust-levels'][level_name] = level_rank;
-                    importConfigFromJSON(JSON.stringify(json_config));
+                    
                 } else {
                     console.log("rank nicht gültig")
                 }
@@ -623,7 +609,7 @@ function loadTrustLevelSettingsEventListeners() {
                 let level_name = e.target.closest('tr').children[0].innerHTML.trim();
 
                 delete json_config['trust-levels'][level_name];
-                importConfigFromJSON(JSON.stringify(json_config));
+                
                 loadTrustLevelSettings();
             });
         }
@@ -637,7 +623,7 @@ function loadTrustLevelSettingsEventListeners() {
             let new_level_name = document.querySelector('input.trust-level-add').value.trim();
 
             json_config['trust-levels'][new_level_name] = 100;
-            importConfigFromJSON(JSON.stringify(json_config));
+            
             loadTrustLevelSettings();
             //alert(new_level_name);
         });
@@ -656,7 +642,7 @@ function loadCurrentInputToLocalConfig() {
     json_config['send-log-entries-via-event'] = document.querySelector("input.send-log-entries-via-event").value;
     json_config['wasm-certificate-parsing'] = document.querySelector("input.wasm-certificate-parsing").value;
 
-    importConfigFromJSON(JSON.stringify(json_config));
+    
 }
 
 
@@ -686,7 +672,7 @@ function loadMapserverSettings() {
             let identity = this.parentElement.parentElement.cells[0].innerHTML;
             let filtered = json_config.mapservers.filter(item => item.identity !== identity);
             json_config.mapservers = filtered;
-            importConfigFromJSON(JSON.stringify(json_config));
+            
             reloadSettings();
             return;
         });
@@ -698,7 +684,7 @@ function loadMapserverSettings() {
             "domain": document.getElementById('input_mapserver_add_domain').value,
             "querytype": "lfpki-http-get"
         })
-        importConfigFromJSON(JSON.stringify(json_config));
+        
         reloadSettings();
         return;
     });
@@ -710,54 +696,54 @@ function loadMapserverSettings() {
  * Resets only changes made to the section of the pressed reset button.
  */
 async function resetChanges(e) {
-    const live_config = (await browser.runtime.sendMessage("requestJSONConfig")).config;
-    let local_config = getJSONConfig();
+    const live_config = (await browser.runtime.sendMessage("requestConfig")).config;
+    //let json_config = getJSONConfig();
 
     // Mapservers
     if (e.target.classList.contains('mapservers')) {
-        local_config['mapservers'] = live_config['mapservers'];
-        importConfigFromJSON(JSON.stringify(local_config));
+        json_config['mapservers'] = live_config['mapservers'];
+        //
 
         reloadSettings();
     }
     // Legacy Trust Preferences
     if (e.target.classList.contains('legacy-trust-preference')) {
-        local_config['legacy-trust-preference'] = live_config['legacy-trust-preference'];
-        importConfigFromJSON(JSON.stringify(local_config));
+        json_config['legacy-trust-preference'] = live_config['legacy-trust-preference'];
+        //
 
         reloadSettings();
     }
     // Policy Trust Preferences
     if (e.target.classList.contains('policy-trust-preference')) {
-        local_config['policy-trust-preference'] = live_config['policy-trust-preference'];
-        importConfigFromJSON(JSON.stringify(local_config));
+        json_config['policy-trust-preference'] = live_config['policy-trust-preference'];
+        //
 
         reloadSettings();
     }
     // CA Sets
     if (e.target.classList.contains('ca-sets')) {
-        local_config['ca-sets'] = live_config['ca-sets'];
-        importConfigFromJSON(JSON.stringify(local_config));
+        json_config['ca-sets'] = live_config['ca-sets'];
+        //
 
         reloadSettings();
     }
     // Other Settings
     if (e.target.classList.contains('other-settings')) {
-        local_config['cache-timeout'] = live_config['cache-timeout'];
-        local_config['max-connection-setup-time'] = live_config['max-connection-setup-time'];
-        local_config['proof-fetch-timeout'] = live_config['proof-fetch-timeout'];
-        local_config['proof-fetch-max-tries'] = live_config['proof-fetch-max-tries'];
-        local_config['mapserver-quorum'] = live_config['mapserver-quorum'];
-        local_config['mapserver-instances-queried'] = live_config['mapserver-instances-queried'];
-        local_config['send-log-entries-via-event'] = live_config['send-log-entries-via-event'];
-        local_config['wasm-certificate-parsing'] = live_config['wasm-certificate-parsing'];
-        importConfigFromJSON(JSON.stringify(local_config));
+        json_config['cache-timeout'] = live_config['cache-timeout'];
+        json_config['max-connection-setup-time'] = live_config['max-connection-setup-time'];
+        json_config['proof-fetch-timeout'] = live_config['proof-fetch-timeout'];
+        json_config['proof-fetch-max-tries'] = live_config['proof-fetch-max-tries'];
+        json_config['mapserver-quorum'] = live_config['mapserver-quorum'];
+        json_config['mapserver-instances-queried'] = live_config['mapserver-instances-queried'];
+        json_config['send-log-entries-via-event'] = live_config['send-log-entries-via-event'];
+        json_config['wasm-certificate-parsing'] = live_config['wasm-certificate-parsing'];
+        //
         reloadSettings();
     }
 
     if (e.target.classList.contains('trust-levels')) {
-        local_config['trust-levels'] = live_config['trust-levels'];
-        importConfigFromJSON(JSON.stringify(local_config));
+        json_config['trust-levels'] = live_config['trust-levels'];
+        //
         reloadSettings();
     }
 }

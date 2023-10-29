@@ -1,4 +1,6 @@
-import {setConfig, exportConfigToJSON, getConfig, importConfigFromJSON, getJSONConfig} from "../../js_lib/config.js"
+//import {exportConfigToJSON, getConfig, importConfigFromJSON, getJSONConfig} from "../../js_lib/config.js"
+
+import {reloadSettings, toggleElement} from "./config-page.js"
 
 /**
  * Lädt die User Policies in die Tabelle
@@ -169,7 +171,6 @@ function setupUserPolicyEventListeners(json_config) {
                     let first_caset = unconfigured_casets[0];
                     json_config['legacy-trust-preference'][domain][first_caset] = "Standard Trust";
         
-                    importConfigFromJSON(JSON.stringify(json_config));
                     let policy_body = policy_header.nextElementSibling;
                     policy_body.innerHTML = loadPolicyBody(json_config, domain);
                     setupUserPolicyEventListeners(json_config);
@@ -191,7 +192,6 @@ function setupUserPolicyEventListeners(json_config) {
     
                 delete json_config['legacy-trust-preference'][domain][caset];
 
-                importConfigFromJSON(JSON.stringify(json_config));
                 let policy_body = policy_header.nextElementSibling;
                 policy_body.innerHTML = loadPolicyBody(json_config, domain);
                 setupUserPolicyEventListeners(json_config);
@@ -206,7 +206,6 @@ function setupUserPolicyEventListeners(json_config) {
         let domain = e.target.parentElement.children[0].children[0].value;
         if (!json_config['legacy-trust-preference'].hasOwnProperty(domain)) {
             json_config['legacy-trust-preference'][domain] = {};
-            importConfigFromJSON(JSON.stringify(json_config));
             reloadSettings();
         }
     });
@@ -219,7 +218,6 @@ function setupUserPolicyEventListeners(json_config) {
             btn.addEventListener("click", (e) => {
                 let domain = e.target.previousElementSibling.innerHTML.trim();
                 delete json_config['legacy-trust-preference'][domain];
-                importConfigFromJSON(JSON.stringify(json_config));
                 reloadSettings();
             });
         }
@@ -239,7 +237,6 @@ function setupUserPolicyEventListeners(json_config) {
 
                 console.log("Changing trust level of " + caset + " to " + trust_level + " for domain " + domain);
                 json_config['legacy-trust-preference'][domain][caset] = trust_level;
-                importConfigFromJSON(JSON.stringify(json_config));
 
                 let policy_body = e.target.closest('tbody');
                 policy_body.innerHTML = loadPolicyBody(json_config, domain);
@@ -265,7 +262,6 @@ function setupUserPolicyEventListeners(json_config) {
 
                 previousCASet = caset;
 
-                importConfigFromJSON(JSON.stringify(json_config));
                 let policy_body = e.target.closest('tbody');
                 policy_body.innerHTML = loadPolicyBody(json_config, domain);
                 setupUserPolicyEventListeners(json_config);

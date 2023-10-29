@@ -18,10 +18,10 @@ TODO's nach Kategorie.
     an der config was geändert und gespeichert wird.
     1. in neuem format auch im backend speichern
     2. jedes mal automatisch die original config updaten
-  - [ ] reset Config
-  - [ ] get config from background
+  - [x] reset Config
+  - [x] get config from background
     - [ ] config-page.js ohne config.js umbauen
-  - [ ] post config to background
+  - [x] post config to background
   - [x] wie werden die beiden configs initialisiert?
     - [x] scheint zu klappen, aber default muss noch angepasst werden!
 
