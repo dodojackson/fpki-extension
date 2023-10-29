@@ -1,5 +1,6 @@
 import * as trust_preferences from "./trust-preferences.js"
 import * as trust_levels from "./trust-levels.js"
+import * as misc from "./misc.js"
 import { clone } from "../../js_lib/helper.js";
 
 /*
@@ -133,6 +134,8 @@ async function requestConfig() {
 async function postConfig() {
    port.postMessage({ "type": "postConfig", "value": json_config });
 }
+
+
 
 /**
  * Load configuration from live json config object and set html elements accordingly
@@ -309,6 +312,55 @@ class CASet {
 }
 
 
+/**
+ * Lädt die konfigurierten CA-Sets
+ */
+function loadCASets(json_config) {
+    // Load selectable CAs from Trust Store (-ca-set)
+    let trust_store_cas = json_config['ca-sets']['All Trust-Store CAs']['cas'];
+    let ca_selection = `<select name="ca_selection">`;
+    trust_store_cas.forEach(ca => {
+        ca_selection += `<option value="${ca}">${ca}</option>`;
+    });
+    ca_selection += `</select>`;
+
+    let ca_sets_rows = "";
+    for (const [name, info] of Object.entries(json_config['ca-sets'])) {
+        let set = new CASet(name, info);
+        ca_sets_rows += set.print();
+    }
+
+    document.getElementById('ca-sets-table-body').innerHTML = ca_sets_rows;
+
+    // Event Listeners
+    let open_set_btns = document.querySelectorAll('tr.ca-set-html');
+    open_set_btns.forEach(btn => {
+        btn.children[0].addEventListener("click", (e) => {
+            let cas_row = e.target.parentElement.nextElementSibling;
+            toggleElement(cas_row);
+            //console.log(e.target.parentElement.nextElementSibling);
+            //alert("hi");
+        });
+    });
+
+    let delete_set_buttons = document.querySelectorAll('tr.ca-set-html');
+    delete_set_buttons.forEach(btn => {
+        if (btn.children[0].innerHTML !== "All Trust-Store CAs") {
+            btn.children[2].addEventListener("click", (e) => {
+                let set_name = btn.children[0].innerHTML;
+                //console.log("HOHO: ");
+                //console.log(json_config['ca-sets']['All Trust-Store CAs'])
+                delete json_config['ca-sets'][set_name];
+                //console.log("HOHO: ");
+                //console.log(json_config['ca-sets']['All Trust-Store CAs'])
+                
+                reloadSettings();
+            });
+        } 
+    });
+}
+
+
 function loadCASetBuilder(json_config) {
     set_builder = new CASetBuilder(json_config);
 
@@ -328,6 +380,7 @@ function loadCASetBuilder(json_config) {
     // Event Listeners
     setupCASetBuilderEventListeners(json_config);
 }
+
 
 function setupCASetBuilderEventListeners(json_config) {
 
@@ -398,72 +451,9 @@ function setupCASetBuilderEventListeners(json_config) {
 
 
 /**
- * Lädt die konfigurierten CA-Sets
+ * Mapserver Settings
  */
-function loadCASets(json_config) {
-    // Load selectable CAs from Trust Store (-ca-set)
-    let trust_store_cas = json_config['ca-sets']['All Trust-Store CAs']['cas'];
-    let ca_selection = `<select name="ca_selection">`;
-    trust_store_cas.forEach(ca => {
-        ca_selection += `<option value="${ca}">${ca}</option>`;
-    });
-    ca_selection += `</select>`;
-
-    let ca_sets_rows = "";
-    for (const [name, info] of Object.entries(json_config['ca-sets'])) {
-        let set = new CASet(name, info);
-        ca_sets_rows += set.print();
-    }
-
-    document.getElementById('ca-sets-table-body').innerHTML = ca_sets_rows;
-
-    // Event Listeners
-    let open_set_btns = document.querySelectorAll('tr.ca-set-html');
-    open_set_btns.forEach(btn => {
-        btn.children[0].addEventListener("click", (e) => {
-            let cas_row = e.target.parentElement.nextElementSibling;
-            toggleElement(cas_row);
-            //console.log(e.target.parentElement.nextElementSibling);
-            //alert("hi");
-        });
-    });
-
-    let delete_set_buttons = document.querySelectorAll('tr.ca-set-html');
-    delete_set_buttons.forEach(btn => {
-        if (btn.children[0].innerHTML !== "All Trust-Store CAs") {
-            btn.children[2].addEventListener("click", (e) => {
-                let set_name = btn.children[0].innerHTML;
-                //console.log("HOHO: ");
-                //console.log(json_config['ca-sets']['All Trust-Store CAs'])
-                delete json_config['ca-sets'][set_name];
-                //console.log("HOHO: ");
-                //console.log(json_config['ca-sets']['All Trust-Store CAs'])
-                
-                reloadSettings();
-            });
-        } 
-    });
-}
-
-
-
-function loadCurrentInputToLocalConfig() {
-
-    json_config['cache-timeout'] = document.querySelector("input.cache-timeout").value;
-    json_config['max-connection-setup-time'] = document.querySelector("input.max-connection-setup-time").value;
-    json_config['proof-fetch-timeout'] = document.querySelector("input.proof-fetch-timeout").value;
-    json_config['proof-fetch-max-tries'] = document.querySelector("input.proof-fetch-max-tries").value;
-    json_config['mapserver-quorum'] = document.querySelector("input.mapserver-quorum").value;
-    json_config['mapserver-instances-queried'] = document.querySelector("input.mapserver-instances-queried").value;
-    json_config['send-log-entries-via-event'] = document.querySelector("input.send-log-entries-via-event").value;
-    json_config['wasm-certificate-parsing'] = document.querySelector("input.wasm-certificate-parsing").value;
-
-    
-}
-
-
 function loadMapserverSettings() {
-
     // Load mapservers into table
     var mapserver_rows = "";
     json_config.mapservers.forEach(mapserver => {
@@ -568,7 +558,6 @@ async function resetChanges(e) {
  * Save changes that have been made to the settings in the section of the 
  * pressed button.
  * 
- * TODO: only post changes to part of config, that was saved !!!
  */
 function saveChanges(e) {
 
@@ -594,5 +583,4 @@ function saveChanges(e) {
     }
 
     reloadSettings();
-
 }

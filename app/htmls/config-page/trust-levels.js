@@ -6,10 +6,10 @@ export function loadTrustLevelSettings(json_config) {
     let table_rows = "";
     let trust_levels = Object.entries(json_config['trust-levels']);
     trust_levels.sort((a, b) => a[1] - b[1]);
-    console.log(trust_levels);
+    //console.log(trust_levels);
     trust_levels.forEach(entry => {
         const [key, value] = entry;
-        console.log(key + " is " + value);
+        //console.log(key + " is " + value);
 
         let rank_input = `<input type="number" min=1 max=100 value=${value} class="trust-level-rank-input"/>`
         let del_btn = `<td class="btn trust-level-delete" style="text-align: center;">x</td>`;
