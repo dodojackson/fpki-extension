@@ -420,7 +420,7 @@ function initializeConfig() {
         } else {
             console.log("initialize using stored config");
             importConfigFromJSON(c);
-            new_format_config = toNewConfig(JSON.parse(exportConfigToJSON(c)));
+            new_format_config = toNewConfig(JSON.parse(exportConfigToJSON(config)));
         }
         saveConfig();
 
@@ -440,8 +440,8 @@ export function saveConfig() {
     console.log("saving config:\n" + config);
     localStorage.setItem("config", exportConfigToJSON(config));
 
-    console.log("savin new format config:\n" + new_format_config);
-    localStorage.setItem("new_format_config", new_format_config);
+    //console.log("savin new format config:\n" + new_format_config);
+    //localStorage.setItem("new_format_config", new_format_config);  // save as string
 }
 
 /**
