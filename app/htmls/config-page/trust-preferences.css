@@ -1,0 +1,12 @@
+div.trust-preference-row {
+    display: flex;
+    flex-direction: row;
+}
+
+div.trust-preference-ca {
+    flex-grow: 1;
+}
+
+div.trust-preference-level {
+    flex-grow: 1;
+}
