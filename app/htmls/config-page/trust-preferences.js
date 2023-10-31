@@ -85,6 +85,11 @@ function make_pref_row(domain, caset, level) {
     //console.log("clone:");
     //console.log(clone);
 
+    const row_div = clone.querySelector('div.trust-preference-row');
+    row_div.setAttribute('data-domain', domain);
+    row_div.setAttribute('data-caset', caset);
+    row_div.setAttribute('data-trustlevel', level);
+
     const ca_div = clone.querySelector('div.trust-preference-ca');
     ca_div.textContent = caset;
 
