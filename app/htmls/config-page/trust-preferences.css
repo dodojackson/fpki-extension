@@ -1,12 +1,26 @@
+table#user-policies-table {
+    border: none;
+}
+
+tr.trust-preference-row {
+    border: none;
+}
+
+td.trust-preference-row {
+    padding: 0;
+    border: none;
+}
+
 div.trust-preference-row {
     display: flex;
     flex-direction: row;
+    margin-left: 40px;
 }
 
 div.trust-preference-ca {
-    flex-grow: 1;
+    width: 50%;
 }
 
 div.trust-preference-level {
-    flex-grow: 1;
+    width: 50%;
 }

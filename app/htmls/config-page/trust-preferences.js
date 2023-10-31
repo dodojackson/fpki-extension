@@ -71,30 +71,61 @@ export function loadUserPolicies(json_config) {
     table_head.insertAdjacentHTML("afterend", table_body);
 
     setupUserPolicyEventListeners(json_config);
+    loadEventListeners(json_config);
 }
 
 
 /**
  * Builds a "row" representing the preference
  */
-function make_pref_row(domain, caset, level) {
+function make_pref_row(json_config, domain, caset, level) {
+    // load preference row template
     const template = document.getElementById("trust-preference-row-template");
-    //console.log("TEMPLATE:");
-    //console.log(template);
     const clone = document.importNode(template.content, true);
-    //console.log("clone:");
-    //console.log(clone);
 
+    // set data-attributes for WAY easier querying later
     const row_div = clone.querySelector('div.trust-preference-row');
     row_div.setAttribute('data-domain', domain);
     row_div.setAttribute('data-caset', caset);
     row_div.setAttribute('data-trustlevel', level);
 
+    // ca set selection
     const ca_div = clone.querySelector('div.trust-preference-ca');
-    ca_div.textContent = caset;
+    const caset_select = document.createElement('select');
+    caset_select.classList.add('trust-preference-caset');
+    caset_select.setAttribute('data-domain', domain);
+    caset_select.setAttribute('data-caset', caset);
+    caset_select.setAttribute('data-trustlevel', level);
+    const available_casets = [caset, ...getUnconfiguredCASets(json_config, domain)];
+    available_casets.forEach(set => {
+        const caset_option = document.createElement('option');
+        caset_option.textContent = set;
+        // preselect current ca set
+        if (set == caset) {
+            caset_option.defaultSelected = true;
+        }
+        caset_select.appendChild(caset_option);
+    });
+    ca_div.appendChild(caset_select);
 
+    // trust level selection
     const level_div = clone.querySelector('div.trust-preference-level');
-    level_div.textContent = level;
+    const trustlevel_select = document.createElement('select');
+    trustlevel_select.classList.add('trust-preference-level')
+    trustlevel_select.setAttribute('data-domain', domain);
+    trustlevel_select.setAttribute('data-caset', caset);
+    trustlevel_select.setAttribute('data-trustlevel', level);
+    Object.entries(json_config['trust-levels']).forEach(elem => {
+        const [level_name, _] = elem;
+        const level_option = document.createElement('option');
+        level_option.textContent = level_name;
+        // preselect current trust level
+        if (level_name == level) {
+            level_option.defaultSelected = true;
+        }
+        trustlevel_select.appendChild(level_option);
+    });
+    level_div.appendChild(trustlevel_select);
 
     return clone
 }
@@ -114,37 +145,117 @@ function loadDomainPreferences(json_config, domain) {
             const [caset, level] = preference;
 
             let pref_row = document.createElement('tr');
+            pref_row.classList.add('trust-preference-row');
             let pref_data = document.createElement('td');
+            pref_data.classList.add('trust-preference-row');
             pref_data.colSpan = 2;
-            pref_data.appendChild(make_pref_row(domain, caset, level));
-            //pref_data.appendChild(loadTest());
+            pref_data.appendChild(make_pref_row(json_config, domain, caset, level));
             pref_row.appendChild(pref_data);
             tbody.appendChild(pref_row);
-
-            console.log("tbody:");
-            console.log(tbody.outerHTML);
         }); 
+    
+        let pref_row = document.createElement('tr');
+        pref_row.classList.add('trust-preference-row');
+        let pref_data = document.createElement('td');
+        pref_data.classList.add('trust-preference-row');
+        pref_data.colSpan = 2;
+        pref_data.appendChild(make_pref_row(json_config, domain, "--select--", "--select--"));
+        pref_row.appendChild(pref_data);
+        tbody.appendChild(pref_row);
 
     return tbody;
 }
 
-function loadTest() {
-    const template = document.getElementById("trust-preference-row-template");
-    //console.log("TEMPLATE:");
-    //console.log(template);
-    const clone = document.importNode(template.content, true);
-    //console.log("clone:");
-    //console.log(clone);
 
-    const ca = clone.querySelector('div.trust-preference-ca');
-    ca.textContent = "HAHAHAH";
+/**
+ * 
+ */
+function loadEventListeners(json_config) {
+    /*
+        Change trust level
+    */
+    const trustlevel_selects = document
+        .querySelectorAll('select.trust-preference-level');
+    
+    trustlevel_selects.forEach(elem => {
+        if (!elem.hasAttribute('listener')) {
+            elem.setAttribute('listener', 'true');
+            elem.addEventListener('change', (e) => {
+                // update data-attr
+                update_data_attr(
+                    elem.getAttribute('data-domain'),
+                    elem.getAttribute('data-caset'),
+                    elem.getAttribute('data-trustlevel'),
+                    null,
+                    elem.value
+                );
+                // update json config
+                json_config['legacy-trust-preference']
+                    [elem.getAttribute('data-domain')]
+                    [elem.getAttribute('data-caset')] = elem.value;
+                
+                /*console.log("Changing trust level of " + 
+                    elem.getAttribute('data-caset') + " to " +
+                    elem.getAttribute('data-trustlevel') + " for domain " +
+                    elem.getAttribute('data-domain')
+                );*/
+            });
+        }
+    });
+    /*
+        Change ca set
+    */
+    const caset_selects = document
+        .querySelectorAll('select.trust-preference-caset');
+    
+    caset_selects.forEach(elem => {
+        if (!elem.hasAttribute('listener')) {
+            elem.setAttribute('listener', 'true');
+            elem.addEventListener('change', (e) => {
+                // backup previous caset name
+                const prev_caset = elem.getAttribute('data-caset');
+                // update data-attr
+                update_data_attr(
+                    elem.getAttribute('data-domain'),
+                    elem.getAttribute('data-caset'),
+                    elem.getAttribute('data-trustlevel'),
+                    elem.value,
+                    null
+                );
+                // update json config
+                delete json_config['legacy-trust-preference'][elem.getAttribute('data-domain')][prev_caset];
+                json_config['legacy-trust-preference']
+                    [elem.getAttribute('data-domain')]
+                    [elem.getAttribute('data-caset')] = elem.getAttribute('data-level');
+                
+                /*console.log("Changing trust level of " + 
+                    elem.getAttribute('data-caset') + " to " +
+                    elem.getAttribute('data-trustlevel') + " for domain " +
+                    elem.getAttribute('data-domain')
+                );*/
+            });
+        }
+    });
+}
 
-    const level = clone.querySelector('div.trust-preference-level');
-    level.textContent = "HOHOHO";
 
-    //document.body.appendChild(clone);
+/**
+ * Synchronize data-attr. they are set at multiple elements
+ */
+function update_data_attr(domain, caset, level, new_caset=null, new_level=null) {
+    const elements = document
+        .querySelectorAll(`[data-domain="${domain}"][data-caset="${caset}"][data-trustlevel="${level}"]`);
 
-    return clone
+    elements.forEach(elem => {
+        console.log("Changing element...");
+
+        if (new_caset != null) {
+            elem.setAttribute('data-caset', new_caset);
+        }
+        if (new_level != null) {
+            elem.setAttribute('data-trustlevel', new_level);
+        }
+    });
 }
 
 
@@ -159,62 +270,6 @@ function loadPolicyBody(json_config, domain_name) {
 
     let tbody = loadDomainPreferences(json_config, domain_name);
     return tbody.innerHTML;
-
-    let domain_body = ``;
-    Object.entries(rules).forEach(rule => {
-        const [caset, level] = rule;
-
-        console.log(caset + " has level " + level);
-        // CA Set
-        domain_body += `
-            <tr>
-                <td class="user-policy-dropdown trust-preference-ca">
-                    <select class="user-policy-dropdown caset-select">`;
-
-        let available_casets = [caset, ...getUnconfiguredCASets(json_config, domain_name)];
-        /*
-        Object.entries(json_config['ca-sets']).forEach(entry => {
-            const [set_name, _] = entry;*/
-        available_casets.forEach(set_name => {
-            let selected = (set_name == caset) ? "selected" : "";
-            domain_body += `
-                <option ${selected}>${set_name}</option>`;
-        });
-
-        domain_body += `
-            </select></td>
-            <td class="user-policy-dropdown trust-preference-level">
-                <select class="user-policy-dropdown trust-level-select">`;
-        // Trust Level
-        Object.entries(json_config['trust-levels']).forEach(entry => {
-            const [level_name, _] = entry;
-            let selected = (level_name == level) ? "selected" : "";
-            domain_body += `
-                <option ${selected}>${level_name}</option>`
-            // set data-attribute
-            if (selected) {
-                
-            }
-        });
-        // Delete Button
-        domain_body += `
-                </select></td>
-                <td class="btn policy-del" style="text-align: center;">x</td>
-            </tr>`;
-    });
-
-    domain_body += `
-        <tr>
-        <td colspan="2" style="border: none;"></td>
-        <td colspan="1" class="btn policy-add" 
-            style=" font-weight: bolder; color: whitesmoke; height:30px; 
-                    background-color:#3D7F6E; font-size: larger;">
-            +
-        </td>
-        </tr>`;
-
-
-    return domain_body;
 }
 
 
