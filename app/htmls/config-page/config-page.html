@@ -9,6 +9,31 @@
     <title>Settings F-PKI Plugin</title>
   </head>
   <body>
+    <!-- template for domains trust preferences -->
+    <template id="trust-preference-domain-template">
+      <div class="trust-preference-domain" data-domain="">
+        <div class="trust-preference-domain-header">
+          <select class="trust-preference-domain-header btn" data-domain="">
+
+          </select>
+        </div>
+        <div class="trust-preference-domain-content" data-domain="" hidden>
+          <h3>Inherited Preferences</h3>
+          <div class="trust-preference-domain-inherited-preferences">
+            
+          </div>
+          <h3>Domain Preferences</h3>
+          <div class="trust-preference-domain-preferences">
+            
+          </div>
+        </div>
+        <div class="">
+
+        </div>
+      </div>
+    </template>
+
+    <!-- template for one trust preference -->
     <template id="trust-preference-row-template">
       <div class="trust-preference-row" data-domain="" data-caset="" data-trustlevel="">
         <div class="trust-preference-ca">
@@ -16,6 +41,9 @@
         </div>
         <div class="trust-preference-level">
 
+        </div>
+        <div class="trust-preference-delete" data-domain="" data-caset="">
+          -
         </div>
       </div>
     </template>
@@ -169,6 +197,14 @@
           </div>
         </div>
         
+
+        <!-- Trust Preferences -->
+        <div id="trust-preferences">
+          <h2>Trust Preferences</h2>
+          <div id="trust-preference-domains">
+
+          </div>
+        </div>
 
         <!-- TABLE -->
         <table id="user-policies-table">

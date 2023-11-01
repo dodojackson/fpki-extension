@@ -2,11 +2,32 @@ table#user-policies-table {
     border: none;
 }
 
+/*
+    domain level
+*/
+div.trust-preference-domain {
+    background-color: whitesmoke
+}
+select.trust-preference-domain-header {
+    width: 100%;
+}
+
+div.trust-preference-domain-content {
+    padding: 20px;
+    margin-bottom: 10px;
+    border: 1px solid grey;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+
+/*
+    preference level
+*/
 tr.trust-preference-row {
     border: none;
 }
 
-td.trust-preference-row {
+td.trust-preference-row, td.add-trust-preference-row{
     padding: 0;
     border: none;
 }
@@ -14,13 +35,30 @@ td.trust-preference-row {
 div.trust-preference-row {
     display: flex;
     flex-direction: row;
-    margin-left: 40px;
+    width: 100%;
+    margin-bottom: 5px;
 }
 
-div.trust-preference-ca {
-    width: 50%;
+div.add-trust-preference-row {
+    margin-top: 20px;
+    margin-bottom: 10px;
 }
 
-div.trust-preference-level {
+div.trust-preference-ca, div.trust-preference-level {
     width: 50%;
+
+    select {
+        width: 100%;
+    }
+}
+
+div.trust-preference-delete {
+    background-color: rgba(255, 0, 0, 0.627);
+    cursor: pointer;
+    min-width: 25px;
+    text-align: center;
+    border-radius: 3px;
+}
+div.trust-preference-delete:hover {
+    background-image: linear-gradient(rgb(0 0 0/30%) 0 0);
 }
