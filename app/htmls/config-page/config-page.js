@@ -580,5 +580,9 @@ function saveChanges(e) {
         postConfig();
     }
 
-    reloadSettings();
+    //reloadSettings();
+    misc.showPopup(
+        "Changes have been saved!",
+        ["Nice."]
+    );
 }
