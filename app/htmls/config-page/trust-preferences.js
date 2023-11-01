@@ -9,7 +9,7 @@ import { getParentDomain } from "../../js_lib/domain.js";
  * Loads all trust preferences for all domains into the correct DOM-container.  
  * Should only be used on full reload.
  */
-export function loadTrustPreferences(json_config) {
+export function initTrustPreferences(json_config) {
     const main_div = document.querySelector('div#trust-preference-domains');
     main_div.innerHTML = "";
 
@@ -40,7 +40,18 @@ export function loadTrustPreferences(json_config) {
         // load domain preferences into now existing divs
         loadDomainPreferences(json_config, domain_name);
     });
+}
 
+
+/**
+ * Only updated the preferences. Doesnt reset expanded status of divs.
+ */
+export function updateTrustPreferences(json_config) {
+    Object.entries(json_config['legacy-trust-preference']).forEach(elem => {
+        const [domain_name, _] = elem;
+        // load domain preferences into now existing divs
+        loadDomainPreferences(json_config, domain_name);
+    });
 }
 
 
@@ -91,7 +102,7 @@ function loadDomainPreferences(json_config, domain) {
 export function loadUserPolicies(json_config) {
     console.log(json_config['legacy-trust-preference']);
 
-    loadTrustPreferences(json_config);
+    initTrustPreferences(json_config);
     loadEventListeners(json_config);
     return
 

@@ -135,7 +135,8 @@ async function postConfig() {
  */
 export async function reloadSettings() {
     // Load legacy trust preferences
-    trust_preferences.loadUserPolicies(json_config);
+    //trust_preferences.loadUserPolicies(json_config);
+    trust_preferences.initTrustPreferences(json_config);
     // Load CA Sets
     loadCASets(json_config);
     loadCASetBuilder(json_config);
@@ -499,6 +500,15 @@ function loadMapserverSettings() {
  * Resets only changes made to the section of the pressed reset button.
  */
 async function resetChanges(e) {
+    // Get affirmation from user
+    const answer = await misc.showPopup(
+        "Reset changes?",
+        ["No", "Yes!"]
+    );
+    if (answer == "No") {
+        return;
+    }
+
     const live_config = (await browser.runtime.sendMessage("requestConfig")).config;
     //let json_config = getJSONConfig();
 
@@ -513,8 +523,8 @@ async function resetChanges(e) {
     if (e.target.classList.contains('legacy-trust-preference')) {
         json_config['legacy-trust-preference'] = live_config['legacy-trust-preference'];
         //
-
-        reloadSettings();
+        trust_preferences.updateTrustPreferences(json_config);
+        //reloadSettings();
     }
     // Policy Trust Preferences
     if (e.target.classList.contains('policy-trust-preference')) {
