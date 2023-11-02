@@ -83,14 +83,13 @@ export function updateTrustPreferences(json_config) {
 
 /**
  * (TODO Sort preferences by domain + ) per domain sort alphabetically
+ *
+ * Sorts domains own and inherited preferences
  */
 function sortDomainPreferences(domain_name) {
-    const domain_div = document.querySelector(
-        `div.trust-preference-domain[data-domain="${domain_name}"]`
-    );
-
-    let pref_rows = domain_div.querySelectorAll(
-        `div.trust-preference-row`
+    // own preferences
+    let pref_rows = document.querySelectorAll(
+        `div.trust-preference-row[data-domain="${domain_name}"]`
     );
     // sort preferences by caset-name alphabetically
     pref_rows = Array.from(pref_rows);
@@ -137,6 +136,8 @@ function loadDomainContent(json_config, domain_name) {
     loadDomainPreferences(json_config, domain_name);
     loadDomainInheritedPreferences(json_config, domain_name);
 
+    sortDomainPreferences(domain_name);
+
     loadEventListeners(json_config);
 }
 
@@ -164,8 +165,6 @@ function loadDomainPreferences(json_config, domain) {
     ).appendChild(
         make_pref_add_row(json_config, domain, "--select--", "--select--")
     );
-
-    sortDomainPreferences(domain);
 }
 
 
@@ -251,15 +250,15 @@ function loadDomainInheritedPreferences(json_config, domain) {
     );
     // reset
     inherited_prefs_div.innerHTML = "";
-    
+    // load inherited prefs
     Object.entries(inherited_prefs).forEach(elem => {
         const [domain_name, pref_data] = elem;
         // label
-        inherited_prefs_div.appendChild((() => {
+        /*inherited_prefs_div.appendChild((() => {
             const label = document.createElement('p');
             label.textContent = `Inherited from ${domain_name}:`;
             return label;
-        })());
+        })());*/
         // prefs
         Object.entries(pref_data).forEach(pref => {
             const [caset, level] = pref;
@@ -267,21 +266,48 @@ function loadDomainInheritedPreferences(json_config, domain) {
             const pref_row = document.importNode(
                 document.getElementById(
                     "trust-preference-inherited-row-template"
-                ).content, 
+                ).content,
                 true
             );
+            // caset
             const caset_option = pref_row.querySelector(
                 'option.trust-preference-inherited-caset'
             );
             caset_option.textContent = caset;
+            // level
             const level_option = pref_row.querySelector(
                 'option.trust-preference-inherited-trustlevel'
             );
             level_option.textContent = level;
+            // info box
+            const info_box = pref_row.querySelector(
+                `div.trust-preference-inherited-info-box`
+            );
+            info_box.appendChild((() => {
+                const text = document.createElement('p');
+                text.innerHTML = `Inherited from <b>${domain_name}</b>`;
+                return text;
+            })());
+            // info-id attribute and info-icon
+            info_box.setAttribute('info-id', `${domain}-${caset}`);
+            const info_icon = pref_row.querySelector(
+                `span.trust-preference-inherited-info-icon`
+            );
+            info_icon.setAttribute('info-id', `${domain}-${caset}`);
 
             inherited_prefs_div.appendChild(pref_row);
         });
     });
+    // hide if no inherited prefs
+    if (inherited_prefs_div.innerHTML == "") {
+        document.querySelector(
+            `h3.trust-preference-domain-inherited-preferences[data-domain="${domain}"]`
+        ).hidden = true;
+    } else {
+        document.querySelector(
+            `h3.trust-preference-domain-inherited-preferences[data-domain="${domain}"]`
+        ).hidden = false;
+    }
 }
 
 
@@ -555,6 +581,32 @@ function loadEventListeners(json_config) {
                     elem.getAttribute('data-domain'),
                     elem.getAttribute('data-caset')
                 );
+            });
+        }
+    });
+    /*
+        Show inherited pref info
+    */
+    const inherited_pref_info_icons = document.querySelectorAll(
+        `span.trust-preference-inherited-info-icon`
+    );
+    inherited_pref_info_icons.forEach(icon => {
+        if (!icon.hasAttribute('listener')) {
+            icon.setAttribute('listener', "true");
+            icon.addEventListener('click', (e) => {
+                let info_box = document.querySelector(
+                    `div.info-box[info-id="${icon.getAttribute('info-id')}"]`
+                );
+                console.log(info_box);
+                info_box.style.left = (e.pageX - 5) + "px";
+                info_box.style.top = (e.pageY -5) + "px";
+                info_box.style.display = "block";
+                let screen_dim = document.querySelector('html').getBoundingClientRect();
+                info_box.style['max-width'] = (screen_dim.right - e.pageX - 50) + "px";
+
+                info_box.addEventListener("mouseleave", () => {
+                    info_box.style.display = "none";
+                });
             });
         }
     });

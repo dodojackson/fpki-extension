@@ -8,6 +8,7 @@ table#user-policies-table {
 */
 div.trust-preference-domain {
     margin-bottom: 10px;
+    box-sizing: border-box;
 }
 select.trust-preference-domain-header {
     width: 100%;
@@ -51,7 +52,8 @@ div.trust-preference-inherited-row {
     display: flex;
     flex-direction: row;
     width: 100%;
-    margin-bottom: 5px;
+    margin-bottom: 0px;
+    box-sizing: border-box;
 }
 
 div.add-trust-preference-row {
@@ -69,6 +71,10 @@ div.add-trust-preference-caset, div.add-trust-preference-level,
 div.trust-preference-inherited-caset, div.trust-preference-inherited-trustlevel
 {
     width: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
 
     select {
         width: 100%;
@@ -88,7 +94,18 @@ div.trust-preference-delete:hover {
     background-image: linear-gradient(rgb(0 0 0/30%) 0 0);
 }
 
-div.trust-preference-inherited-delete,
+div.trust-preference-inherited-info,
 div.add-trust-preference-spacer {
-    width: 25px;
+    min-width: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+span.trust-preference-inherited-info-icon {
+    cursor: pointer;
+    display: inline-block;
+    box-sizing: border-box;
+    margin: 0;
+    height: 100%;
 }
