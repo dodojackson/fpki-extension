@@ -1,7 +1,8 @@
 import {reloadSettings} from "./config-page.js"
-import { toggleElement } from "./misc.js";
+import { showPopup, toggleElement } from "./misc.js";
 
 import { getParentDomain } from "../../js_lib/domain.js";
+import { loadTrustLevelSettings } from "./trust-levels.js";
 // TODO: Use getParentDomain for sorting the domains..
 
 
@@ -14,54 +15,109 @@ export function initTrustPreferences(json_config) {
     main_div.innerHTML = "";
 
     Object.entries(json_config['legacy-trust-preference']).forEach(elem => {
-        const [domain_name, pref_data] = elem;
-        // domain template
-        const domain_div = document.importNode(
-            document.getElementById("trust-preference-domain-template").content, 
-            true
-        );
-        // init domain header
-        domain_div 
-            .querySelector('select.trust-preference-domain-header')
-            .setAttribute('data-domain', domain_name);
-        domain_div
-            .querySelector('select.trust-preference-domain-header')
-            .appendChild((() => {
-                const el = document.createElement('option');
-                el.textContent = domain_name;
-                return el;
-            })());
-        // init domain content div
-        domain_div
-            .querySelector('div.trust-preference-domain-content')
-            .setAttribute('data-domain', domain_name);
-        // load domain div into DOM
-        main_div.appendChild(domain_div);
+        const [domain_name, _] = elem;
+        
+        buildDomainPreferencesDiv(domain_name);
         // load domain preferences into now existing divs
-        loadDomainPreferences(json_config, domain_name);
+        //loadDomainPreferences(json_config, domain_name);
+        // load domains inherited preferences
+        //loadDomainInheritedPreferences(json_config, domain_name);
+        loadDomainContent(json_config, domain_name);
     });
+
+    loadEventListeners(json_config);
 }
 
 
 /**
- * Only updated the preferences. Doesnt reset expanded status of divs.
+ * Create div for domain preferences and add to trust-preferences div
+ */
+function buildDomainPreferencesDiv(domain_name) {
+    const main_div = document.querySelector('div#trust-preference-domains');
+    // load domain template
+    const domain_div = document.importNode(
+        document.getElementById("trust-preference-domain-template").content, 
+        true
+    );
+    // init domain header
+    domain_div
+        .querySelector('select.trust-preference-domain-header')
+        .appendChild((() => {
+            const el = document.createElement('option');
+            el.textContent = domain_name;
+            return el;
+        })());
+    // init all childrens `data-domain`
+    domain_div
+        .querySelectorAll('[data-domain]')
+        .forEach (elem => {
+            elem.setAttribute('data-domain', domain_name);
+        });
+    // load domain div into DOM
+    main_div.appendChild(domain_div);
+}
+
+
+/**
+ * Only updated the preferences. Doesnt reset expanded status of divs.  
+ * If a domain had been deleted, full reload. will reset expanded status.
  */
 export function updateTrustPreferences(json_config) {
     Object.entries(json_config['legacy-trust-preference']).forEach(elem => {
         const [domain_name, _] = elem;
-        // load domain preferences into now existing divs
-        loadDomainPreferences(json_config, domain_name);
+
+        if (document.querySelector(
+            `div.trust-preference-domain[data-domain="${domain_name}"]`
+        )) {
+            // load domain preferences into now existing divs
+            loadDomainContent(json_config, domain_name);
+        } else {
+            console.log("No div for domain " + domain_name);
+            buildDomainPreferencesDiv(domain_name);
+            loadDomainContent(json_config, domain_name);
+        }
+        
     });
 }
 
 
 /**
- * Loads the preferences for the given domain into the right DOM-containers
+ * (TODO Sort preferences by domain + ) per domain sort alphabetically
  */
-function loadDomainPreferences(json_config, domain) {
+function sortDomainPreferences(domain_name) {
+    const domain_div = document.querySelector(
+        `div.trust-preference-domain[data-domain="${domain_name}"]`
+    );
+
+    let pref_rows = domain_div.querySelectorAll(
+        `div.trust-preference-row`
+    );
+    // sort preferences by caset-name alphabetically
+    pref_rows = Array.from(pref_rows);
+    pref_rows.sort((a, b) => {
+        return (
+            a.getAttribute('data-caset')
+                .localeCompare(b.getAttribute('data-caset'))
+        );
+    });
+    const sorted_pref_rows = document.createDocumentFragment();
+    pref_rows.forEach(row => {sorted_pref_rows.appendChild(row)});
+    
+    const domain_prefs_div = document.querySelector(
+        `div.trust-preference-domain-preferences[data-domain="${domain_name}"]`
+    );
+    domain_prefs_div.innerHTML = "";
+    domain_prefs_div.appendChild(sorted_pref_rows);
+}
+
+
+/**
+ * (Re)loads the domains trust preference content-div
+ */
+function loadDomainContent(json_config, domain_name) {
     // get the domains div
     const domain_div = document
-        .querySelector(`div.trust-preference-domain-content[data-domain="${domain}"]`);
+        .querySelector(`div.trust-preference-domain-content[data-domain="${domain_name}"]`);
     const preference_div = domain_div.querySelector(
         'div.trust-preference-domain-preferences'
     );
@@ -77,6 +133,22 @@ function loadDomainPreferences(json_config, domain) {
             'div.add-trust-preference-row'
         ).remove();
     } catch (e) {}
+
+    loadDomainPreferences(json_config, domain_name);
+    loadDomainInheritedPreferences(json_config, domain_name);
+
+    loadEventListeners(json_config);
+}
+
+
+/**
+ * Loads the preferences for the given domain into the right DOM-containers
+ */
+function loadDomainPreferences(json_config, domain) {
+    const preference_div = document.querySelector(
+        `div.trust-preference-domain-preferences[data-domain="${domain}"]`
+    );
+    preference_div.innerHTML = "";
     // load preferences from config
     Object
         .entries(json_config['legacy-trust-preference'][domain])
@@ -86,86 +158,130 @@ function loadDomainPreferences(json_config, domain) {
                 make_pref_row(json_config, domain, caset, level)
             );
         });
-    // input row to add preference
-    domain_div.appendChild(
+    
+    document.querySelector(
+        `div.trust-preference-domain-add-preference[data-domain="${domain}"]`
+    ).appendChild(
         make_pref_add_row(json_config, domain, "--select--", "--select--")
     );
 
-    //return domain_div;
-    loadEventListeners(json_config);
+    sortDomainPreferences(domain);
 }
 
 
 /**
- * Lädt die User Policies in die Tabelle
+ * Loads preferences, that are implicitly inherited from parent domains
  */
-export function loadUserPolicies(json_config) {
-    console.log(json_config['legacy-trust-preference']);
+function loadDomainInheritedPreferences(json_config, domain) {
+    const domain_prefs = json_config['legacy-trust-preference'][domain];
+    let inherited_prefs = {
+        // domain: {caset: level}
+    }
 
-    initTrustPreferences(json_config);
-    loadEventListeners(json_config);
-    return
+    /** (local)
+     * Check if `inherited_prefs` has pref for `caset` under any domain.
+     */
+    function hasInheritedPref(caset) {
+        const has_pref = false;
+        Object.entries(inherited_prefs).forEach(entry => {
+            const [domain_name, prefs] = entry;
+            Object.entries(prefs).forEach(pref => {
+                const [caset_name, _] = pref;
+                if (caset_name == caset) {
+                    console.log(`${domain_name} has pref for ${caset_name}`);
+                    has_pref = true;
+                }
+            });
+        });
+        return has_pref;
+    }
 
-    // Remove current table content
-    let tbl_bodies = document.querySelectorAll('#user-policies-table tbody');
-    tbl_bodies.forEach(elem => {
-        elem.remove();
-    })
-
-    let table_body = ``;
-
-    Object.entries(json_config['legacy-trust-preference']).forEach(entry => {
-        const [domain, rules] = entry;
-        console.log(domain + ":");
-
-        let domain_header = `
-            <tbody>
-            <tr class="text-align: center;">
-                <td colspan="2" class="policy-header btn policy-toggle">
-                    ${domain}
-                </td>
-                <td class="btn policy-header delete-domain">
-                    x
-                </td>
-            </tr>
-            </tbody>`
-
-        let domain_body;
-        if (domain === "*") {
-            domain_body = `<tbody>`
+    /** (local)
+     * Adds prefs that are inherited from `domain_name` if any.
+     */
+    function addInheritedPrefs(domain_name) {
+        if (!json_config['legacy-trust-preference'].hasOwnProperty(domain_name)) {
+            return;
         }
-        else {
-            domain_body = `<tbody hidden>`
+        Object.entries (
+            json_config['legacy-trust-preference'][domain_name]
+        ).forEach (elem => {
+            const [caset, level] = elem;
+            //console.log("checking " + caset + " of domain " + domain_name);
+            // inherits, if not already defined
+            if (
+                (!domain_prefs.hasOwnProperty(caset)) &&
+                (!hasInheritedPref(caset))
+            ) {
+                //console.log("Adding " + caset + " to inherited");
+                if (!inherited_prefs.hasOwnProperty(domain_name)) {
+                    inherited_prefs[domain_name] = {}
+                }
+                inherited_prefs[domain_name][caset] = level;
+            }
+        });
+    }
+
+    try {  // TODO: try catch wieder weg
+        let parent_domain;
+        if (domain.startsWith('*.')) {
+            parent_domain = domain;
+        } else {
+            parent_domain = `*.${domain}`;
         }
-        
-        let policy_body = loadPolicyBody(json_config, domain);
-        domain_body += policy_body;
 
-        domain_body += `</tbody>`
+        while (parent_domain != `*.${getParentDomain(getParentDomain(parent_domain))}`) {
+            //console.log("parent domain of " + parent_domain);
+            parent_domain = `*.${getParentDomain(getParentDomain(parent_domain))}`;
+            //console.log("is " + parent_domain);
 
-        table_body += domain_header + domain_body;
+            addInheritedPrefs(parent_domain);
+        }
+    } catch (e) {
+        console.log(e)
+    }
+    // von '*' erben. alle außer `*`.
+    if (domain != "*") {
+        addInheritedPrefs("*");
+    }
+
+    // load DIV
+    const inherited_prefs_div = document.querySelector(
+        `div.trust-preference-domain-inherited-preferences[data-domain="${domain}"]`
+    );
+    // reset
+    inherited_prefs_div.innerHTML = "";
+    
+    Object.entries(inherited_prefs).forEach(elem => {
+        const [domain_name, pref_data] = elem;
+        // label
+        inherited_prefs_div.appendChild((() => {
+            const label = document.createElement('p');
+            label.textContent = `Inherited from ${domain_name}:`;
+            return label;
+        })());
+        // prefs
+        Object.entries(pref_data).forEach(pref => {
+            const [caset, level] = pref;
+            
+            const pref_row = document.importNode(
+                document.getElementById(
+                    "trust-preference-inherited-row-template"
+                ).content, 
+                true
+            );
+            const caset_option = pref_row.querySelector(
+                'option.trust-preference-inherited-caset'
+            );
+            caset_option.textContent = caset;
+            const level_option = pref_row.querySelector(
+                'option.trust-preference-inherited-trustlevel'
+            );
+            level_option.textContent = level;
+
+            inherited_prefs_div.appendChild(pref_row);
+        });
     });
-
-    table_body += `
-        <tbody>
-            <tr>
-            <td colspan="2" style="padding:0;">
-                <input  type="text" placeholder="__domain__" 
-                        style="background-color:rgb(231, 231, 231); height: 35px; text-align: center; font-weight: bolder; font-size: larger;">
-            </td>
-            <td id="user-policy-domain-add" class="btn" style="font-size: larger; font-weight: bolder; background-color:#3D7F6E; color: whitesmoke;">
-                +
-            </td>
-            </tr>
-        </tbody>`;
-
-    // console.log(table_body);
-
-    let table_head = document.querySelector("#user-policies-table").children[0]
-    table_head.insertAdjacentHTML("afterend", table_body);
-
-    setupUserPolicyEventListeners(json_config);
-    loadEventListeners(json_config);
 }
 
 
@@ -174,22 +290,13 @@ export function loadUserPolicies(json_config) {
  */
 function make_pref_row(json_config, domain, caset, level) {
     // load preference row template
-    const template = document.getElementById("trust-preference-row-template");
-    const clone = document.importNode(template.content, true);
-
-    // set data-attributes for WAY easier querying later
-    const row_div = clone.querySelector('div.trust-preference-row');
-    row_div.setAttribute('data-domain', domain);
-    row_div.setAttribute('data-caset', caset);
-    row_div.setAttribute('data-trustlevel', level);
+    const clone = document.importNode(
+        document.getElementById("trust-preference-row-template").content, 
+        true
+    );
 
     // ca set selection
-    const ca_div = clone.querySelector('div.trust-preference-ca');
-    const caset_select = document.createElement('select');
-    caset_select.classList.add('trust-preference-caset');
-    caset_select.setAttribute('data-domain', domain);
-    caset_select.setAttribute('data-caset', caset);
-    caset_select.setAttribute('data-trustlevel', level);
+    const caset_select = clone.querySelector('select.trust-preference-caset');
     const available_casets = [caset, ...getUnconfiguredCASets(json_config, domain)];
     available_casets.forEach(set => {
         const caset_option = document.createElement('option');
@@ -200,15 +307,9 @@ function make_pref_row(json_config, domain, caset, level) {
         }
         caset_select.appendChild(caset_option);
     });
-    ca_div.appendChild(caset_select);
 
     // trust level selection
-    const level_div = clone.querySelector('div.trust-preference-level');
-    const trustlevel_select = document.createElement('select');
-    trustlevel_select.classList.add('trust-preference-level')
-    trustlevel_select.setAttribute('data-domain', domain);
-    trustlevel_select.setAttribute('data-caset', caset);
-    trustlevel_select.setAttribute('data-trustlevel', level);
+    const trustlevel_select = clone.querySelector('select.trust-preference-level');
     Object.entries(json_config['trust-levels']).forEach(elem => {
         const [level_name, _] = elem;
         const level_option = document.createElement('option');
@@ -219,13 +320,15 @@ function make_pref_row(json_config, domain, caset, level) {
         }
         trustlevel_select.appendChild(level_option);
     });
-    level_div.appendChild(trustlevel_select);
 
-    // delete button
-    const delete_btn = clone.querySelector('div.trust-preference-delete');
-    delete_btn.setAttribute('data-domain', domain);
-    delete_btn.setAttribute('data-caset', caset);
-    delete_btn.setAttribute('data-trustlevel', level);
+    // init every element with `data-attr`
+    clone.querySelectorAll(
+        `[data-domain][data-caset][data-trustlevel]`
+    ).forEach(elem => {
+        elem.setAttribute('data-domain', domain);
+        elem.setAttribute('data-caset', caset);
+        elem.setAttribute('data-trustlevel', level);
+    });
 
     return clone
 }
@@ -234,25 +337,16 @@ function make_pref_row(json_config, domain, caset, level) {
 /**
  * Builds a "row" for adding a preference
  */
-function make_pref_add_row(json_config, domain, caset, level) {
-    // load preference row template
-    const template = document.getElementById("trust-preference-row-template");
-    const clone = document.importNode(template.content, true);
-
-    // set data-attributes for WAY easier querying later
-    const row_div = clone.querySelector('div.trust-preference-row');
-    row_div.classList.add('add-trust-preference-row');
-    row_div.setAttribute('data-domain', domain);
-    /*row_div.setAttribute('data-caset', caset);
-    row_div.setAttribute('data-trustlevel', level);*/
+function make_pref_add_row(json_config, domain) {
+    // load add preference row template
+    const clone = document.importNode(
+        document.getElementById("add-trust-preference-row-template").content, 
+        true
+    );
 
     // ca set selection
-    const ca_div = clone.querySelector('div.trust-preference-ca');
-    const caset_select = document.createElement('select');
-    caset_select.classList.add('add-trust-preference-caset');
+    const caset_select = clone.querySelector('select.add-trust-preference-caset');
     caset_select.setAttribute('data-domain', domain);
-    /*caset_select.setAttribute('data-caset', caset);
-    caset_select.setAttribute('data-trustlevel', level);*/
     const available_casets = ["--select--", ...getUnconfiguredCASets(json_config, domain)];
     available_casets.forEach(set => {
         const caset_option = document.createElement('option');
@@ -264,15 +358,10 @@ function make_pref_add_row(json_config, domain, caset, level) {
         }
         caset_select.appendChild(caset_option);
     });
-    ca_div.appendChild(caset_select);
 
     // trust level selection
-    const level_div = clone.querySelector('div.trust-preference-level');
-    const trustlevel_select = document.createElement('select');
-    trustlevel_select.classList.add('add-trust-preference-level')
+    const trustlevel_select = clone.querySelector('select.add-trust-preference-level');
     trustlevel_select.setAttribute('data-domain', domain);
-    /*trustlevel_select.setAttribute('data-caset', caset);
-    trustlevel_select.setAttribute('data-trustlevel', level);*/
     // --select-- extrawurst
     const select_option = document.createElement('option');
     select_option.textContent = "--select--";
@@ -286,13 +375,6 @@ function make_pref_add_row(json_config, domain, caset, level) {
         level_option.textContent = level_name;
         trustlevel_select.appendChild(level_option);
     });
-    level_div.appendChild(trustlevel_select);
-
-    // remove delete button
-    const del_btn = clone.querySelector('div.trust-preference-delete');
-    del_btn.classList = "";
-    del_btn.textContent = "";
-    del_btn.style.width = "25px";
 
     return clone
 }
@@ -325,6 +407,28 @@ function loadEventListeners(json_config) {
         }
     });
     /*
+        Delete Domain
+    */
+    document.querySelectorAll(
+        'button.trust-preference-domain-delete'
+    ).forEach(btn => {
+        if (!btn.hasAttribute('listener')) {
+            btn.setAttribute('listener', "true");
+            btn.addEventListener('click', async () => {
+                let answer = await showPopup(
+                    "Delete all domain preferences?",
+                    ["No", "Yes"]
+                );
+                if (answer == "Yes") {
+                    delete json_config['legacy-trust-preference'][btn.getAttribute('data-domain')];
+                    document.querySelector(
+                        `div.trust-preference-domain[data-domain="${btn.getAttribute('data-domain')}"]`
+                    ).remove();
+                }
+            });
+        }
+    });
+    /*
         Change trust level
     */
     const trustlevel_selects = document
@@ -333,7 +437,7 @@ function loadEventListeners(json_config) {
     trustlevel_selects.forEach(elem => {
         if (!elem.hasAttribute('listener')) {
             elem.setAttribute('listener', 'true');
-            elem.addEventListener('change', (e) => {
+            elem.addEventListener('change', () => {
                 // update data-attr
                 update_data_attr(
                     elem.getAttribute('data-domain'),
@@ -357,7 +461,6 @@ function loadEventListeners(json_config) {
     });
     /*
         Change ca set
-        TODO: dann muss auch der delete button upgedated werden
     */
     const caset_selects = document
         .querySelectorAll('select.trust-preference-caset');
@@ -380,8 +483,10 @@ function loadEventListeners(json_config) {
                 delete json_config['legacy-trust-preference'][elem.getAttribute('data-domain')][prev_caset];
                 json_config['legacy-trust-preference']
                     [elem.getAttribute('data-domain')]
-                    [elem.getAttribute('data-caset')] = elem.getAttribute('data-level');
-                
+                    [elem.getAttribute('data-caset')] = elem.getAttribute('data-trustlevel');
+                // reload, because this has impilcations for the selectable 
+                // options of other prefs + new pref
+                loadDomainContent(json_config, elem.getAttribute('data-domain'));
                 /*console.log("Changing trust level of " + 
                     elem.getAttribute('data-caset') + " to " +
                     elem.getAttribute('data-trustlevel') + " for domain " +
@@ -403,7 +508,13 @@ function loadEventListeners(json_config) {
                     `select.add-trust-preference-level[data-domain="${elem.getAttribute('data-domain')}"]`
                 );
                 if (trustlevel_select.value != "--select--") {
-                    alert(`adding ${elem.value} - ${trustlevel_select.value}`);
+                    //alert(`adding ${elem.value} - ${trustlevel_select.value}`);
+                    addPreference(
+                        json_config,
+                        elem.getAttribute('data-domain'),
+                        elem.value,
+                        trustlevel_select.value
+                    );
                 }
             });
         }
@@ -457,7 +568,7 @@ function addPreference(json_config, domain, caset, level) {
     json_config['legacy-trust-preference'][domain][caset] = level;
     // TODO: nur den entsprechenden bereich neu laden. sollte mit neuer template
     // etc herangehensweise einfach werden
-    loadDomainPreferences(json_config, domain);
+    loadDomainContent(json_config, domain);
     //loadUserPolicies(json_config);
 }
 
@@ -467,7 +578,7 @@ function addPreference(json_config, domain, caset, level) {
  */
 function delPreference(json_config, domain, caset) {
     delete json_config['legacy-trust-preference'][domain][caset];
-    loadDomainPreferences(json_config, domain);
+    loadDomainContent(json_config, domain);
 }
 
 
@@ -492,155 +603,6 @@ function update_data_attr(domain, caset, level, new_caset=null, new_level=null) 
 
 
 /**
- * Überschreibt die Policies für den spezifizierten Domainnamen mit der
- * aktuellen config. (gibt den neuen tbody zurück)
- *
- * @param {*} domain_name Domainbezeichnung
- */
-function loadPolicyBody(json_config, domain_name) {
-    let rules = json_config['legacy-trust-preference'][domain_name];
-
-    let tbody = loadDomainPreferences(json_config, domain_name);
-    return tbody.innerHTML;
-}
-
-
-/**
- * Event Listeners for buttons in user policy table
- */
-function setupUserPolicyEventListeners(json_config) {
-    // Toggle visibility of policies for specific domain
-    let toggle_buttons = document.querySelectorAll('.policy-toggle');
-    toggle_buttons.forEach(btn => {
-        if (!btn.hasAttribute('listener')){
-            btn.setAttribute("listener", "true");
-            btn.addEventListener("click", (e) => {
-                //alert("Toggle visibility");
-                let div = e.target.parentElement.parentElement.nextSibling;
-                toggleElement(div);
-            });
-        }
-    });
-
-    // Add policy to domain
-    let add_policy_buttons = document.querySelectorAll('.policy-add');
-    add_policy_buttons.forEach(btn => {
-        if (btn.getAttribute('listener') !== "false") {
-            btn.setAttribute('listener', 'false');
-            btn.addEventListener("click", (e) => {
-
-                let policy_header = e.target.parentElement.parentElement.previousSibling;
-                let domain = policy_header.children[0].children[0].innerHTML.trim();
-                let unconfigured_casets = getUnconfiguredCASets(json_config, domain);
-    
-                if (unconfigured_casets.length === 0) {
-                    alert("All CA Sets are configured already");
-                } else {
-                    let first_caset = unconfigured_casets[0];
-                    json_config['legacy-trust-preference'][domain][first_caset] = "Standard Trust";
-        
-                    let policy_body = policy_header.nextElementSibling;
-                    policy_body.innerHTML = loadPolicyBody(json_config, domain);
-                    setupUserPolicyEventListeners(json_config);
-                }
-            });
-        }
-        
-    });
-
-    // Remove policy from domain
-    let del_policy_buttons = document.querySelectorAll('.policy-del');
-    del_policy_buttons.forEach(btn => {
-        if (!btn.hasAttribute('listener')) {
-            btn.setAttribute("listener", "true");
-            btn.addEventListener("click", (e) => {
-                let caset = e.target.parentElement.children[0].children[0].value;
-                let policy_header = e.target.parentElement.parentElement.previousSibling;
-                let domain = policy_header.children[0].children[0].innerHTML.trim();
-    
-                delete json_config['legacy-trust-preference'][domain][caset];
-
-                let policy_body = policy_header.nextElementSibling;
-                policy_body.innerHTML = loadPolicyBody(json_config, domain);
-                setupUserPolicyEventListeners(json_config);
-            });
-        }
-        
-    });
-
-    // Add domain
-    let domain_add_btn = document.getElementById("user-policy-domain-add");
-    domain_add_btn.addEventListener("click", (e) => {
-        let domain = e.target.parentElement.children[0].children[0].value;
-        if (!json_config['legacy-trust-preference'].hasOwnProperty(domain)) {
-            json_config['legacy-trust-preference'][domain] = {};
-            reloadSettings();
-        }
-    });
-
-    // Remove domain
-    let domain_del_bbn = document.querySelectorAll('.policy-header.delete-domain');
-    domain_del_bbn.forEach(btn => {
-        if (!btn.hasAttribute('listener')) {
-            btn.setAttribute("listener", "true");
-            btn.addEventListener("click", (e) => {
-                let domain = e.target.previousElementSibling.innerHTML.trim();
-                delete json_config['legacy-trust-preference'][domain];
-                reloadSettings();
-            });
-        }
-    });
-
-    // Change Trust Level of Policy
-    let trust_level_inputs = document.querySelectorAll('select.trust-level-select');
-    trust_level_inputs.forEach(elem => {
-        if (!elem.hasAttribute('listener')){
-            elem.setAttribute("listener", "true");
-            elem.addEventListener("change", (e) => {
-
-                // Update local config on change
-                let domain = e.target.closest('tbody').previousElementSibling.children[0].children[0].innerHTML.trim();
-                let caset = e.target.closest('tr').children[0].children[0].value;
-                let trust_level = e.target.value;
-
-                console.log("Changing trust level of " + caset + " to " + trust_level + " for domain " + domain);
-                json_config['legacy-trust-preference'][domain][caset] = trust_level;
-
-                let policy_body = e.target.closest('tbody');
-                policy_body.innerHTML = loadPolicyBody(json_config, domain);
-                setupUserPolicyEventListeners(json_config);
-            });
-        }
-    });
-
-    // Change CA Set of Policy
-    let ca_set_inputs = document.querySelectorAll('select.caset-select');
-    ca_set_inputs.forEach(elem => {
-        if (!elem.hasAttribute('listener')) {
-            elem.setAttribute("listener", "true");
-            let previousCASet = elem.value;
-            elem.addEventListener("change", (e) => {
-                let domain = e.target.closest('tbody').previousElementSibling.children[0].children[0].innerHTML.trim();
-                let trust_level = e.target.closest('tr').children[1].children[0].value;
-                let caset = e.target.value;
-
-                console.log("Changing " + previousCASet + " to " + caset);
-                delete json_config['legacy-trust-preference'][domain][previousCASet];
-                json_config['legacy-trust-preference'][domain][caset] = trust_level;
-
-                previousCASet = caset;
-
-                let policy_body = e.target.closest('tbody');
-                policy_body.innerHTML = loadPolicyBody(json_config, domain);
-                setupUserPolicyEventListeners(json_config);
-            });
-        }
-    });
-
-}
-
-
-/**
  * Returns an array of the CA Sets, that have no configured trust level yet, for
  * the given domain.
  */
@@ -659,8 +621,8 @@ function getUnconfiguredCASets(json_config, domain) {
     });
 
     let unconfigured_casets = [...all_casets].filter(x => !configured_casets.has(x));
-    console.log("potential casets:");
-    console.log(unconfigured_casets);
+    //console.log("potential casets:");
+    //console.log(unconfigured_casets);
 
     return unconfigured_casets;
 }

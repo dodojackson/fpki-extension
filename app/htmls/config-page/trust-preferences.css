@@ -22,20 +22,32 @@ div.trust-preference-domain-content {
     border-bottom-right-radius: 10px;
 }
 
+div.trust-preference-domain-more {
+    padding-top: 30px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+button.trust-preference-domain-delete {
+    padding: 6px 10px;
+    font-size: large;
+    background-color: #8b0000c0;
+    cursor: pointer;
+    border-radius: 5px;
+    color: whitesmoke;
+    font-weight: bold;
+}
+
 
 /*
     preference level
 */
-tr.trust-preference-row {
-    border: none;
-}
 
-td.trust-preference-row, td.add-trust-preference-row{
-    padding: 0;
-    border: none;
-}
-
-div.trust-preference-row {
+div.trust-preference-row, 
+div.add-trust-preference-row,
+div.trust-preference-inherited-row {
     display: flex;
     flex-direction: row;
     width: 100%;
@@ -47,7 +59,15 @@ div.add-trust-preference-row {
     margin-bottom: 10px;
 }
 
-div.trust-preference-ca, div.trust-preference-level {
+select.add-trust-preference-caset, select.add-trust-preference-level {
+    font-weight: bolder;
+}
+
+/* TODO: Benennung ist völlig durcheinander.. */
+div.trust-preference-ca, div.trust-preference-level, 
+div.add-trust-preference-caset, div.add-trust-preference-level,
+div.trust-preference-inherited-caset, div.trust-preference-inherited-trustlevel
+{
     width: 50%;
 
     select {
@@ -56,12 +76,19 @@ div.trust-preference-ca, div.trust-preference-level {
 }
 
 div.trust-preference-delete {
-    background-color: rgba(255, 0, 0, 0.627);
+    background-color: #8b0000c0;
     cursor: pointer;
     min-width: 25px;
     text-align: center;
     border-radius: 3px;
+    color: whitesmoke;
+    font-weight:900;
 }
 div.trust-preference-delete:hover {
     background-image: linear-gradient(rgb(0 0 0/30%) 0 0);
+}
+
+div.trust-preference-inherited-delete,
+div.add-trust-preference-spacer {
+    width: 25px;
 }

@@ -12,23 +12,28 @@
     <!-- template for domains trust preferences -->
     <template id="trust-preference-domain-template">
       <div class="trust-preference-domain" data-domain="">
-        <div class="trust-preference-domain-header">
+        <div class="trust-preference-domain-header" data-domain="">
           <select class="trust-preference-domain-header btn" data-domain="">
 
           </select>
         </div>
         <div class="trust-preference-domain-content" data-domain="" hidden>
           <h3>Inherited Preferences</h3>
-          <div class="trust-preference-domain-inherited-preferences">
+          <div class="trust-preference-domain-inherited-preferences" data-domain="">
             
           </div>
           <h3>Domain Preferences</h3>
-          <div class="trust-preference-domain-preferences">
+          <div class="trust-preference-domain-preferences" data-domain="">
             
           </div>
-        </div>
-        <div class="">
-
+          <div class="trust-preference-domain-add-preference" data-domain="">
+            
+          </div>
+          <div class="trust-preference-domain-more">
+            <button class="trust-preference-domain-delete" data-domain="">
+              Delete domain preferences.
+            </button>
+          </div>
         </div>
       </div>
     </template>
@@ -36,17 +41,61 @@
     <!-- template for one trust preference -->
     <template id="trust-preference-row-template">
       <div class="trust-preference-row" data-domain="" data-caset="" data-trustlevel="">
-        <div class="trust-preference-ca">
+        <!-- TODO: caset nennen -->
+        <div class="trust-preference-ca" data-domain="" data-caset="" data-trustlevel="">
+          <select class="trust-preference-caset" data-domain="" data-caset="" data-trustlevel="">
 
+          </select>
         </div>
-        <div class="trust-preference-level">
+        <div class="trust-preference-level" data-domain="" data-caset="" data-trustlevel="">
+          <select class="trust-preference-level" data-domain="" data-caset="" data-trustlevel="">
 
+          </select>
         </div>
-        <div class="trust-preference-delete" data-domain="" data-caset="">
+        <div class="trust-preference-delete" data-domain="" data-caset="" data-trustlevel="">
           -
         </div>
       </div>
     </template>
+
+    <!-- template for one *inherited* trust preference -->
+    <template id="trust-preference-inherited-row-template">
+      <div class="trust-preference-inherited-row">
+        <div class="trust-preference-inherited-caset">
+          <select disabled>
+            <option class="trust-preference-inherited-caset"></option>
+          </select>
+        </div>
+        <div class="trust-preference-inherited-trustlevel">
+          <select disabled>
+            <option class="trust-preference-inherited-trustlevel"></option>
+          </select>
+        </div>
+        <div class="trust-preference-inherited-delete">
+          
+        </div>
+      </div>
+    </template>
+
+    <!-- template for add trust preference row-->
+    <template id="add-trust-preference-row-template">
+      <div class="add-trust-preference-row">
+        <div class="add-trust-preference-caset">
+          <select class="add-trust-preference-caset" data-domain="">
+
+          </select>
+        </div>
+        <div class="add-trust-preference-level">
+          <select class="add-trust-preference-level" data-domain="">
+
+          </select>
+        </div>
+        <div class="add-trust-preference-spacer">
+          
+        </div>
+      </div>
+    </template>
+
 
     <div id="options" style="margin-bottom: 100px;">
       <h1>F-PKI Settings</h1>
@@ -200,7 +249,6 @@
 
         <!-- Trust Preferences -->
         <div id="trust-preferences">
-          <h2>Trust Preferences</h2>
           <div id="trust-preference-domains">
 
           </div>
