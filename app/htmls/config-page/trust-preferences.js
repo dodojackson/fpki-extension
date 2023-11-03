@@ -111,6 +111,36 @@ function sortDomainPreferences(domain_name) {
 
 
 /**
+ * Sort domains inherited preferences
+ */
+function sortDomainInheritedPreferences(domain_name) {
+    const inherited_prefs_div = document.querySelector(
+        `div.trust-preference-domain-inherited-preferences[data-domain="${domain_name}"]`
+    );
+    // own preferences
+    let pref_rows = inherited_prefs_div.querySelectorAll(
+        `div.trust-preference-inherited-row`
+    );
+    // sort preferences by caset-name alphabetically
+    pref_rows = Array.from(pref_rows);
+    pref_rows.sort((a, b) => {
+        return (
+            a.getAttribute('data-caset')
+                .localeCompare(b.getAttribute('data-caset'))
+        );
+    });
+    const sorted_pref_rows = document.createDocumentFragment();
+    pref_rows.forEach(row => {sorted_pref_rows.appendChild(row)});
+    
+    const domain_inherited_prefs_div = document.querySelector(
+        `div.trust-preference-domain-inherited-preferences[data-domain="${domain_name}"]`
+    );
+    domain_inherited_prefs_div.innerHTML = "";
+    domain_inherited_prefs_div.appendChild(sorted_pref_rows);
+}
+
+
+/**
  * (Re)loads the domains trust preference content-div
  */
 function loadDomainContent(json_config, domain_name) {
@@ -137,6 +167,7 @@ function loadDomainContent(json_config, domain_name) {
     loadDomainInheritedPreferences(json_config, domain_name);
 
     sortDomainPreferences(domain_name);
+    sortDomainInheritedPreferences(domain_name);
 
     loadEventListeners(json_config);
 }
@@ -294,6 +325,11 @@ function loadDomainInheritedPreferences(json_config, domain) {
                 `span.trust-preference-inherited-info-icon`
             );
             info_icon.setAttribute('info-id', `${domain}-${caset}`);
+            // add `data-attr` to inherited pref row aswell (TESTING)
+            const row_div = pref_row.querySelector('div.trust-preference-inherited-row');
+            row_div.setAttribute('data-domain', domain_name);
+            row_div.setAttribute('data-caset', caset);
+            row_div.setAttribute('data-trustlevel', level);
 
             inherited_prefs_div.appendChild(pref_row);
         });
@@ -458,6 +494,34 @@ function loadEventListeners(json_config) {
             });
         }
     });
+    /*
+        Add domain
+    */
+    const domain_add_input = document.querySelector(
+        'input.trust-preference-add-domain'
+    );
+    if (!domain_add_input.hasAttribute('listener')) {
+        domain_add_input.setAttribute('listener', "true");
+        domain_add_input.addEventListener("keydown", async (e) => {
+            if (e.key == 'Enter') {
+                const domain_name = domain_add_input.value;
+                // no empty domain name
+                if (domain_name == ""){
+                    await showPopup("No empty domain allowed.", ["Ok."]);
+                    return;
+                }
+                // no duplicate domains
+                if (json_config['legacy-trust-preference'].hasOwnProperty(domain_name)) {
+                    await showPopup("Domain already exists.", ["Ok."]);
+                    return;
+                }
+                // otherwise .. add domain to config
+                json_config['legacy-trust-preference'][domain_name] = {};
+                updateTrustPreferences(json_config);
+                domain_add_input.value = "";
+            }
+        });
+    }
     /*
         Change trust level
     */

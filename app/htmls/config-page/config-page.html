@@ -60,7 +60,7 @@
 
     <!-- template for one *inherited* trust preference -->
     <template id="trust-preference-inherited-row-template">
-      <div class="trust-preference-inherited-row">
+      <div class="trust-preference-inherited-row" data-domain="" data-caset="" data-trustlevel="">
         <div class="trust-preference-inherited-caset">
           <select disabled>
             <option class="trust-preference-inherited-caset"></option>
@@ -254,6 +254,13 @@
         <div id="trust-preferences">
           <div id="trust-preference-domains">
 
+          </div>
+          <div class="trust-preference-add-domain">
+            <input 
+              type="text" 
+              placeholder="__add_domain__"
+              class="trust-preference-add-domain" 
+            />
           </div>
         </div>
 
