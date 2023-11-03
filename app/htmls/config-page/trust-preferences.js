@@ -181,7 +181,7 @@ function loadDomainInheritedPreferences(json_config, domain) {
      * Check if `inherited_prefs` has pref for `caset` under any domain.
      */
     function hasInheritedPref(caset) {
-        const has_pref = false;
+        let has_pref = false;
         Object.entries(inherited_prefs).forEach(entry => {
             const [domain_name, prefs] = entry;
             Object.entries(prefs).forEach(pref => {
@@ -451,6 +451,10 @@ function loadEventListeners(json_config) {
                         `div.trust-preference-domain[data-domain="${btn.getAttribute('data-domain')}"]`
                     ).remove();
                 }
+
+                // reload all domain contents, because inherited preferences
+                // might be affected
+                updateTrustPreferences(json_config);
             });
         }
     });
@@ -476,6 +480,9 @@ function loadEventListeners(json_config) {
                 json_config['legacy-trust-preference']
                     [elem.getAttribute('data-domain')]
                     [elem.getAttribute('data-caset')] = elem.value;
+                // reload all domain contents, because inherited preferences
+                // might be affected
+                updateTrustPreferences(json_config);
                 
                 /*console.log("Changing trust level of " + 
                     elem.getAttribute('data-caset') + " to " +
@@ -512,7 +519,11 @@ function loadEventListeners(json_config) {
                     [elem.getAttribute('data-caset')] = elem.getAttribute('data-trustlevel');
                 // reload, because this has impilcations for the selectable 
                 // options of other prefs + new pref
-                loadDomainContent(json_config, elem.getAttribute('data-domain'));
+                //loadDomainContent(json_config, elem.getAttribute('data-domain'));
+                // reload all domain contents, because inherited preferences
+                // might be affected
+                updateTrustPreferences(json_config);
+
                 /*console.log("Changing trust level of " + 
                     elem.getAttribute('data-caset') + " to " +
                     elem.getAttribute('data-trustlevel') + " for domain " +
@@ -541,6 +552,9 @@ function loadEventListeners(json_config) {
                         elem.value,
                         trustlevel_select.value
                     );
+                    // reload all domain contents, because inherited preferences
+                    // might be affected
+                    updateTrustPreferences(json_config);
                 }
             });
         }
@@ -562,6 +576,9 @@ function loadEventListeners(json_config) {
                         caset_select.value,
                         elem.value
                     );
+                    // reload all domain contents, because inherited preferences
+                    // might be affected
+                    updateTrustPreferences(json_config);
                 }
             });
         }
@@ -581,6 +598,9 @@ function loadEventListeners(json_config) {
                     elem.getAttribute('data-domain'),
                     elem.getAttribute('data-caset')
                 );
+                // reload all domain contents, because inherited preferences
+                // might be affected
+                updateTrustPreferences(json_config);
             });
         }
     });
