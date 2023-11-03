@@ -104,12 +104,16 @@ async function printConfig() {
  * Background script in turn will respond with the reset config.
  */
 async function resetConfig() {
-    const response = await browser.runtime.sendMessage("resetConfig");
-    //setConfig(response.config);
-    json_config = response.config;
-
-    let test = clone(json_config);
-    console.log(test);
+    const answer = await misc.showPopup(
+        "Do you really want to reset all settings?",
+        ["No", "Yes"]
+    );
+    if (answer == "Yes") {
+        const response = await browser.runtime.sendMessage("resetConfig");
+        json_config = response.config;
+        /*let test = clone(json_config);
+        console.log(test);*/
+    }
 }
 
 

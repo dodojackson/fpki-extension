@@ -3,17 +3,18 @@
 
 ## Bugs
 - [x] User-Policies: Domain-Tab nicht schließbar, nach hinzufügen von Policy
+- [ ] Warum wird keine neue row hinzugefügt sondern nur neue `td` **do it**
 
 
 ## TODO
 TODO's nach Kategorie.
 
 ### Generell
-- [ ] Beim Laden und Speichern der Config, von/nach Format konvertieren, dass
+- [x] Beim Laden und Speichern der Config, von/nach Format konvertieren, dass
   von der Extension intern verwendet werden kann.  
   > meine config muss aber auch irgendwo persistens gespeichert werden, weil
   > sonst bleiben z.B. die description eines CA-Sets nicht erhalten.  
-  > Kann man vllt. alles irgendwie in das andere Format auch kriegen??? **!!prio!!**
+  > Kann man vllt. alles irgendwie in das andere Format auch kriegen???
   - [X] Converter geschrieben, jetzt muss das nurnoch jedes mal passieren, wenn
     an der config was geändert und gespeichert wird.
     1. in neuem format auch im backend speichern
@@ -24,6 +25,9 @@ TODO's nach Kategorie.
   - [x] post config to background
   - [x] wie werden die beiden configs initialisiert?
     - [x] scheint zu klappen, aber default muss noch angepasst werden!
+- [ ] div-class machen, wo unten ein pfeil angezeigt wird und wenn man drauf
+  klickt, expanded sich das div. für lange listen, damit die inicht immer per
+  default komplett angezeigt werden müssen
 
 ### Infoseite
 - [ ] Infopage verfeinern, vllt. geopolitik usecase mit einbauen
@@ -32,33 +36,79 @@ TODO's nach Kategorie.
 ### Konfigurationsseite
 - [ ] Problem: Schnittmenge zwischen zwei CA-Sets. Wie löst man das?
   Warnhinweis + Default niedrigeres Level nehmen?
+  > per default wird das höhste level genommen.  
+  > für mich würde es erstmal reichen, einfach einen hinweis anzuzeigen, wenn es
+  > solche einstellungen gibt, die möglicherweise nicht den gewünschten effekt
+  > haben.  
+  > hier ist dann auch das problem mit low trust, das kann ja garnicht
+  > funktionieren bisher. allerdings, einfach mit low trust anfangen überall,
+  > bringt auch nichts, weil den fall, dass man ein paar cas ausschließen will
+  > von einem anderen höheren trust level, wird es wohl immer irgendwie geben.  
+  > oder könnte es was bringen, nicht mit einem deafult trust level zu arbeiten?  
+  - [ ] Mail an Cyrill geschrieben. Antwort steht aus.
 - [ ] Widersprechende Policies gibt es glaube ich nicht, generell sollten
   spezifischere Policies (example.com ist spezifischer als *.com) allgemeinere
   überschreiben. Das muss auch so sein, wenn die default policy standard trust
   für alle cas bei domain "*" ist..
+  > hängt mit punkt ein drüber zusammen.. mal schauen.
 - [ ] User Policies nach Domain sortieren
 - [ ] Filter für User Policies (also für domains) könnte bei vielen Policies
   später sinnvoll sein
+  > aber erstmal nicht so wichtig. ich soll scheinbar im kleinen rahmen denken
 - [ ] Suchoption für Policies, wo man mit wildcards suchen kann und einem dann
   nurnoch die Policies angezeigt werden, die für diese suche angewandt werden
   (*.de --> amazon.de und google.de und * .. oder so)
   - [ ] Das könnte eine Interviewaufgabe werden. Bei unübersichtlicher
     Policy-Lage, eine änderung durchführen
-- [ ] Die Policies für eine Domain könnten eigentlich direkt mit den Policies
+    > oder einfach erkennen, was konfiguriert wird durch die policies. wär zB
+    > für die oben interessant zu wissen, wie benutzer das erwarten würden.  
+    > das geht allerdings schon langsam in ne richtung wo man ne richtige
+    > umfrage machen könnte zu.
+- [x] Die Policies für eine Domain könnten eigentlich direkt mit den Policies
   der darüberliegenden Domain initialisiert werden. Das ändert nichts, aber
   macht die Funktionsweise expliziter
-- [ ] Popup bei versuch, doppelte domain hinzuzufügen
+  > ja irgendwie sowas, vllt. auch ausgegraut oder so, solange man nichts dran
+  > ändert (mit hinweis von welcher domain die kommen jeweils)
 - [ ] Reset/Save Changes Buttons sollten überall funktionieren
-- [ ] Was passiert wenn man ein CA-Set löscht, das verwendet wird?
-  - [ ] Verwendende Policies können eigentlich nicht in der Config bleiben, weil
-    es sonst probleme geben wird, wenn der Setname in der internen Logik
-    aufgelöst werden soll.
+  - [ ] ..und ein feedback (z.B. popup) geben.
 - [ ] Predefined CA Sets
+  > eher weniger wichtig für mich denke ich. aber future work.
+- [x] Reset config button mit popup vorher 
 #### Preferences
+- [x] Wenn eine preference geändert wird, müssen eigentlich alle domain-contents
+  neu geladen werden, weil vllt erbt einer davon, dann wäre das nicht mehr
+  aktuell!!
+  > am geilsten wär ne datenstruktur im hintergrund und immer wenn daran was
+  > geändert wird, werden automatisch die relevanten teile des DOMs geupdated
 - [ ] einzelne CAs auswählbar machen
 - [ ] sortieren, sodass subdomains nahe ihren parents zu finden sind
   - [ ] eine art baumstruktur wäre sonst noch eine gute idee
-- [ ] `td`s mit attributen versehen, die domain, ausgewähltes ca-set bzw. trust-level angeben
+  > das ist nicht ganz so einfach glaube ich, low prio
+- [ ] löschen von prefs vllt. auch nochmal bestätigen, aber wenn dann
+  unproblematisch, indem zB die row rot hinter/überlegt ist und man dann nochmal
+  auf den gleichen button klicken muss, wo diesmal ein haken ist. oder so etwas
+- [ ] Den ganzen Info-Text kürzen und auf englisch machen 
+- [x] mal testen wie es aussieht, wenn man die domains erstmal nur nach alphabet
+  sortiert
+  > erstmal auch ganz gut
+- [x] sortieren der prefs innerhalb einer domain
+- [x] sotieren auch der inherited prefs
+- [x] info icon für inherited prefs (woher kommen die?)
+- [x] `td`s mit attributen versehen, die domain, ausgewähltes ca-set bzw.
+  trust-level angeben
+- [x] Popup bei versuch, doppelte domain hinzuzufügen
+- [x] Delete domain
+- [x] Add domain!
+- [x] beim saven etc. nicht die öffnungsstruktur des baumes zurücksetzen
+- [x] bei speichern und andern etc. auch die data-attr. ändern
+- [x] select row am ende jeder domain preferences anzeigen zum hinzufügen
+  - [x] onchange wird gespeichert und dann gibt es eine neue select row darunter
+    > muss schon sowohl caset als auch level gesetzt sein.
+- [x] inherited preferences erstmal kurzübersicht zeigen und ausklappbar dann
+  auch die zugegörigkeit zu den domains
+  > nimmt sonst zu viel platz weg und braucht man vllt auch nicht immer, wenn
+  > man nicht gerade was daran ändern will und wissen muss wo es herkommt.  
+  > kann man jetzt per info icon machen
 #### Trust Levels
 - [ ] Was passiert, wenn man ein Trust-Level löscht, das aber in Policies
   verwendet wird?
@@ -70,7 +120,18 @@ TODO's nach Kategorie.
 - [ ] ca-set name verbieten, wenn er gleich einem distinguished name in dem
   trust store ist, weil diese Setnamen im hintergrund für einzelne CAs gebraucht
   werden, die auch in den trust preferences konfigurierbar sein sollen
-
+- [ ] Was passiert wenn man ein CA-Set löscht, das verwendet wird?
+  - [ ] Verwendende Policies können eigentlich nicht in der Config bleiben, weil
+    es sonst probleme geben wird, wenn der Setname in der internen Logik
+    aufgelöst werden soll.
+  > ich glaube interview 2 hat gesagt, dass er erwarten würde, dass die entspr.
+  > policies einfach gelöscht werden
+  - [ ] popup, dass die policies gelöscht werden würden. bestätigung fordern
+    oder abbrechen lassen.
+#### Import/Export
+- [ ] Fragen, ob settings überschrieben werden sollten, oder versucht werden
+  soll, die settings automatisch zusammenzuführen (für einfachen fall, wo es
+  keine konflikte gibt, könnte ich das schon machen..)
 ### Design
 - [ ] Delete Buttons rötlich
 - [ ] Color-coded Trust level
