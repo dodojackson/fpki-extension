@@ -4,6 +4,7 @@ html {
 
 body {
     width: 62%;
+    max-width: 800px;
     margin: auto;
     background-color:whitesmoke;
 }
