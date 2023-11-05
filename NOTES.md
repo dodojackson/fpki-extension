@@ -165,6 +165,7 @@ Als Erinnnerung später.
 ### Konfigurationsseite
 - [x] Keine doppelten Präferenzen zulassen, also zumindest nicht zwei
   verschiedene Einträge für dasselbe CA-Set unter derselben Domain
+  > ab wann ist das umgesetzt?? nachgucken!
 - [x] Info bei custom CAs: die müssen auch im browser trust-store hinzugefügt
   werden, sonst wird es nicht klappen!
 - [x] Trust-Level muss schon `onChange` in (lokale) config übernommen werden,
