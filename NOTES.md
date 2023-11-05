@@ -71,8 +71,6 @@ TODO's nach Kategorie.
   > ändert (mit hinweis von welcher domain die kommen jeweils)
 - [ ] Reset/Save Changes Buttons sollten überall funktionieren
   - [x] ..und ein feedback (z.B. popup) geben.
-- [ ] Predefined CA Sets
-  > eher weniger wichtig für mich denke ich. aber future work.
 - [x] Reset config button mit popup vorher 
 #### Preferences
 - [x] Wenn eine preference geändert wird, müssen eigentlich alle domain-contents
@@ -88,28 +86,6 @@ TODO's nach Kategorie.
   unproblematisch, indem zB die row rot hinter/überlegt ist und man dann nochmal
   auf den gleichen button klicken muss, wo diesmal ein haken ist. oder so etwas
 - [ ] Den ganzen Info-Text kürzen und auf englisch machen 
-- [ ] delete domain button schmaler machen, der sticht viel zu sehr heraus.
-- [x] mal testen wie es aussieht, wenn man die domains erstmal nur nach alphabet
-  sortiert
-  > erstmal auch ganz gut
-- [x] sortieren der prefs innerhalb einer domain
-- [x] sotieren auch der inherited prefs
-- [x] info icon für inherited prefs (woher kommen die?)
-- [x] `td`s mit attributen versehen, die domain, ausgewähltes ca-set bzw.
-  trust-level angeben
-- [x] Popup bei versuch, doppelte domain hinzuzufügen
-- [x] Delete domain
-- [x] Add domain!
-- [x] beim saven etc. nicht die öffnungsstruktur des baumes zurücksetzen
-- [x] bei speichern und andern etc. auch die data-attr. ändern
-- [x] select row am ende jeder domain preferences anzeigen zum hinzufügen
-  - [x] onchange wird gespeichert und dann gibt es eine neue select row darunter
-    > muss schon sowohl caset als auch level gesetzt sein.
-- [x] inherited preferences erstmal kurzübersicht zeigen und ausklappbar dann
-  auch die zugegörigkeit zu den domains
-  > nimmt sonst zu viel platz weg und braucht man vllt auch nicht immer, wenn
-  > man nicht gerade was daran ändern will und wissen muss wo es herkommt.  
-  > kann man jetzt per info icon machen
 #### Trust Levels
 - [ ] Was passiert, wenn man ein Trust-Level löscht, das aber in Policies
   verwendet wird?
@@ -138,6 +114,14 @@ TODO's nach Kategorie.
   > Die Frage ist auch, ob man (falls ich es so mache, dass manuell hinzugefügte
   > CAs bald auch in der Liste erscheinen) den Benutzer selber aliase für seine
   > manuell hinzugefügten CAs erstellen lässt.
+- [ ] kann ich es so coden, dass ich den teil zum auswählen von CAs einfach
+  wiederverwenden kann, um in preferences einzelne cas auszuwählen?
+  > das macht auch nur sinn, wenn manuell hinzugefügte cas hier angezeigt
+  > werden, sonst muss man die beim hinzufügen einer preference angeben (gut
+  > wäre auch eine option..)
+- [ ] Liste von existiereneden ca set vllt genauso machen wie die liste
+  existierender domains, zum ausklappen und dann stehen da die informationen,
+  description und ca liste etc??
 #### Import/Export
 - [ ] Fragen, ob settings überschrieben werden sollten, oder versucht werden
   soll, die settings automatisch zusammenzuführen (für einfachen fall, wo es
@@ -157,6 +141,7 @@ TODO's nach Kategorie.
 - [ ] reset/save changes sollte zum anfang der section zurückscrollen
 - [ ] user policies zu viele farben, domain einfach grau?
 
+---
 
 ## DONE
 Als Erinnnerung später.
@@ -198,8 +183,33 @@ Als Erinnnerung später.
 - [x] on hcnage ca set, nicht alles schließen (wie bei change trust level
   machen)
 - [x] `Trust Preferences` anstatt `User Policies`?!
+#### Trust Preferences
+- [x] mal testen wie es aussieht, wenn man die domains erstmal nur nach alphabet
+  sortiert
+  > erstmal auch ganz gut
+- [x] sortieren der prefs innerhalb einer domain
+- [x] sotieren auch der inherited prefs
+- [x] info icon für inherited prefs (woher kommen die?)
+- [x] `td`s mit attributen versehen, die domain, ausgewähltes ca-set bzw.
+  trust-level angeben
+- [x] Popup bei versuch, doppelte domain hinzuzufügen
+- [x] Delete domain
+- [x] Add domain!
+- [x] beim saven etc. nicht die öffnungsstruktur des baumes zurücksetzen
+- [x] bei speichern und andern etc. auch die data-attr. ändern
+- [x] select row am ende jeder domain preferences anzeigen zum hinzufügen
+  - [x] onchange wird gespeichert und dann gibt es eine neue select row darunter
+    > muss schon sowohl caset als auch level gesetzt sein.
+- [x] inherited preferences erstmal kurzübersicht zeigen und ausklappbar dann
+  auch die zugegörigkeit zu den domains
+  > nimmt sonst zu viel platz weg und braucht man vllt auch nicht immer, wenn
+  > man nicht gerade was daran ändern will und wissen muss wo es herkommt.  
+  > kann man jetzt per info icon machen
+- [x] delete domain button schmaler machen, der sticht viel zu sehr heraus.
 #### CA Sets
-
+- [ ] Predefined CA Sets
+  > eher weniger wichtig für mich denke ich. aber future work.  
+  > in latex file übernommen
 #### Trust Levels
 - [x] Trust Levels nach Rank sortieren
 - [x] Add trust level functionality

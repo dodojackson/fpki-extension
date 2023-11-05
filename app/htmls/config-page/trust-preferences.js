@@ -508,7 +508,7 @@ function loadEventListeners(json_config) {
             btn.setAttribute('listener', "true");
             btn.addEventListener('click', async () => {
                 let answer = await showPopup(
-                    "Delete all domain preferences?",
+                    `Delete all domain preferences for domain ${btn.getAttribute('data-domain')} ?`,
                     ["No", "Yes"]
                 );
                 if (answer == "Yes") {
