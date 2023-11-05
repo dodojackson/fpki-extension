@@ -51,7 +51,8 @@ TODO's nach Kategorie.
   überschreiben. Das muss auch so sein, wenn die default policy standard trust
   für alle cas bei domain "*" ist..
   > hängt mit punkt ein drüber zusammen.. mal schauen.
-- [ ] User Policies nach Domain sortieren
+- [x] User Policies nach Domain sortieren
+  > alphabatisch sortiert erstmal
 - [ ] Filter für User Policies (also für domains) könnte bei vielen Policies
   später sinnvoll sein
   > aber erstmal nicht so wichtig. ich soll scheinbar im kleinen rahmen denken
@@ -70,7 +71,7 @@ TODO's nach Kategorie.
   > ja irgendwie sowas, vllt. auch ausgegraut oder so, solange man nichts dran
   > ändert (mit hinweis von welcher domain die kommen jeweils)
 - [ ] Reset/Save Changes Buttons sollten überall funktionieren
-  - [ ] ..und ein feedback (z.B. popup) geben.
+  - [x] ..und ein feedback (z.B. popup) geben.
 - [ ] Predefined CA Sets
   > eher weniger wichtig für mich denke ich. aber future work.
 - [x] Reset config button mit popup vorher 
@@ -128,6 +129,15 @@ TODO's nach Kategorie.
   > policies einfach gelöscht werden
   - [ ] popup, dass die policies gelöscht werden würden. bestätigung fordern
     oder abbrechen lassen.
+- [ ] `select all` button für wenn man schon gefiltert hat
+- [ ] `modify set` option, wo das dann vielleich in den set builder nochmal
+  reingeladen wird
+- [ ] Suche nach bestimmten CAs erleichtern, indem man in Filtern auch Aliase
+  berücksichtigt. Die müssten dann wahrscheinlich irgendwo in ner entsprechenden
+  Datei gepflegt werden.  
+  > Die Frage ist auch, ob man (falls ich es so mache, dass manuell hinzugefügte
+  > CAs bald auch in der Liste erscheinen) den Benutzer selber aliase für seine
+  > manuell hinzugefügten CAs erstellen lässt.
 #### Import/Export
 - [ ] Fragen, ob settings überschrieben werden sollten, oder versucht werden
   soll, die settings automatisch zusammenzuführen (für einfachen fall, wo es
@@ -185,9 +195,7 @@ Als Erinnnerung später.
   machen)
 - [x] `Trust Preferences` anstatt `User Policies`?!
 #### CA Sets
-- [ ] `select all` button für wenn man schon gefiltert hat
-- [ ] `modify set` option, wo das dann vielleich in den set builder nochmal
-  reingeladen wird
+
 #### Trust Levels
 - [x] Trust Levels nach Rank sortieren
 - [x] Add trust level functionality
