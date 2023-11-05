@@ -165,7 +165,10 @@ Als Erinnnerung später.
 ### Konfigurationsseite
 - [x] Keine doppelten Präferenzen zulassen, also zumindest nicht zwei
   verschiedene Einträge für dasselbe CA-Set unter derselben Domain
-  > ab wann ist das umgesetzt?? nachgucken!
+  > ab wann ist das umgesetzt?? nachgucken!  
+  > bei version 1 noch nicht, aber dann in version 2  
+  > `all truststore cas` übrigens in version 2 noch kein explizites ca-set, also
+  > auch nicht bearbeitbar gewesen, aber schon löschbar..
 - [x] Info bei custom CAs: die müssen auch im browser trust-store hinzugefügt
   werden, sonst wird es nicht klappen!
 - [x] Trust-Level muss schon `onChange` in (lokale) config übernommen werden,
