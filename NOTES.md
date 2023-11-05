@@ -89,6 +89,7 @@ TODO's nach Kategorie.
   unproblematisch, indem zB die row rot hinter/überlegt ist und man dann nochmal
   auf den gleichen button klicken muss, wo diesmal ein haken ist. oder so etwas
 - [ ] Den ganzen Info-Text kürzen und auf englisch machen 
+- [ ] delete domain button schmaler machen, der sticht viel zu sehr heraus.
 - [x] mal testen wie es aussieht, wenn man die domains erstmal nur nach alphabet
   sortiert
   > erstmal auch ganz gut
