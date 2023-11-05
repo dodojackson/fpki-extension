@@ -3,7 +3,6 @@
 
 ## Bugs
 - [x] User-Policies: Domain-Tab nicht schließbar, nach hinzufügen von Policy
-- [ ] Warum wird keine neue row hinzugefügt sondern nur neue `td` **do it**
 
 
 ## TODO
