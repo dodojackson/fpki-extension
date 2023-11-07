@@ -122,6 +122,11 @@ TODO's nach Kategorie.
 - [ ] Liste von existiereneden ca set vllt genauso machen wie die liste
   existierender domains, zum ausklappen und dann stehen da die informationen,
   description und ca liste etc??
+- [ ] irgendwie ne funktion implementieren, die prüfen, welche überschneidungen
+  es bei einer liste von ca-sets gibt (also welche ca-sets überschneidungen mit
+  welchen anderen haben)
+  - [ ] Hinweis, dass eine preference nicht für alle cas übernommen wird immer
+    bei der preference und nicht etwa da wo die higher-prio preference ist
 #### Import/Export
 - [ ] Fragen, ob settings überschrieben werden sollten, oder versucht werden
   soll, die settings automatisch zusammenzuführen (für einfachen fall, wo es
