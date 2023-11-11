@@ -86,11 +86,26 @@ TODO's nach Kategorie.
   unproblematisch, indem zB die row rot hinter/überlegt ist und man dann nochmal
   auf den gleichen button klicken muss, wo diesmal ein haken ist. oder so etwas
 - [ ] Den ganzen Info-Text kürzen und auf englisch machen 
+- [ ] Eingabefeld `Notizen` bei jeder Domain, optional, damit man sich selber 
+  erinnern kann an begründungen für bestimmte einstellungsmöglichkeiten
+- [ ] `I2-?`: Manuelles verschieben/sortieren der Preferences möglich machen und
+  dadurch die Priorität von Rules selber festlegen (First-match wie bei
+  firewall)
 #### Trust Levels
 - [ ] Was passiert, wenn man ein Trust-Level löscht, das aber in Policies
   verwendet wird?
   > In Interviews fragen: ist blöd und nicht wirklich zu lösen, nicht löschbar,
   > mit hinweis für den benutzer
+- [ ] (Idee durch `I2-466`): Standard-Use-Cases über Actions abbilden, mit denen
+  man z.B. `CA-Pinning` leichter machen kann, indem man einfach die CAs, die für
+  eine bestimmte Domain in Frage kommen, angibt
+  - [ ] mal für `CA-Pinning` umsetzten und in Interview abfragen, wie das
+    ankommt und ob das für noch mehr UseCases nice wäre.
+- [ ] `I2-499`: User zwingen sich mit der Reihenfolge/Priorisiertung von
+  Preferences auseinanderzusetzen, indem man die liste sortierbar (per drag and
+  drop am besten) macht. (auch `I2-533` und ddazwischen)
+  - [ ] Regeln, die garnicht erreicht werden können am ende der liste, könnte
+    man dann am besten ausgrauen oder so..
 #### CA-Sets
 - [ ] Custom CAs vllt. persistent hinzufügbar machen, damit man sie dann auch
   einfach anklicken kann
@@ -127,10 +142,28 @@ TODO's nach Kategorie.
   welchen anderen haben)
   - [ ] Hinweis, dass eine preference nicht für alle cas übernommen wird immer
     bei der preference und nicht etwa da wo die higher-prio preference ist
+- [ ] `I2-391`: Custom-CAs wäre konsistenter, wenn man die irgendwo hinzufügen
+  könnte, sodass die dann immer mit in der Liste zum filtern mit drin sind
+  - [ ] das ist auch direkt der erste sinnvolle standard-filter: "custom-cas"
+- [ ] `I2-371`: Klarer machen, in welchem Format die Custom-CAs hinzuzufügen
+  sind und wenn das eingagebelf so bleibt, dass man eine pro zeile angibt
+- [ ] `I2-559`: Buttons zm aufklappen solten so aussehen, wie auch bei trust
+  preferences.
+- [ ] `I2-564`: Löschen von CA-Sets. Hinweis, wenn dadurch preferences entfernt
+  werden, aber dann ist das auch ok.
+  - [ ] Preferences entfernen dann auch!
+- [ ] `I2-610`: Text von Custom-CA Set leeren nach hinzufügen eines sets
+- [ ] `I2-618`: Scrolleffekt nach hinzufügen expliziter und evtl hervorheben der
+  hinzugfefüten set durch dicken border kurz..
+- [ ] `I2-625`: Leere Set-Namen verbieten
 #### Import/Export
 - [ ] Fragen, ob settings überschrieben werden sollten, oder versucht werden
   soll, die settings automatisch zusammenzuführen (für einfachen fall, wo es
   keine konflikte gibt, könnte ich das schon machen..)
+- [ ] `I2-265`: Möglichkeit (für Firmen etc.) Settings von Mitarbeitern über URL
+  oder so miteinander zu synchonisieren. (In Firmen müssen die Settings dann 
+  ja ggf. auch bei vielen nciht technik affinen menschen eingestellt werden. am 
+  besten nicht von denen selber.) 
 ### Design
 - [ ] Delete Buttons rötlich
 - [ ] Color-coded Trust level
@@ -202,7 +235,8 @@ Als Erinnnerung später.
 - [x] Add domain!
 - [x] beim saven etc. nicht die öffnungsstruktur des baumes zurücksetzen
 - [x] bei speichern und andern etc. auch die data-attr. ändern
-- [x] select row am ende jeder domain preferences anzeigen zum hinzufügen
+- [x] select row am ende jeder domain preferences anzeigen zum hinzufügen  
+  (`I2-441` zB): unklar, wie man preferences hinzufügt.
   - [x] onchange wird gespeichert und dann gibt es eine neue select row darunter
     > muss schon sowohl caset als auch level gesetzt sein.
 - [x] inherited preferences erstmal kurzübersicht zeigen und ausklappbar dann
