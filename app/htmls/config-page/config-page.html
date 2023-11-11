@@ -23,6 +23,14 @@
             
           </div>
           <h3>Domain Preferences</h3>
+          <!--<div class="trust-preference-domain-preferences-legend">
+            <div class="trust-preference-domain-preferences-legend-caset">
+              <span>CA Set</span>
+            </div>
+            <div class="trust-preference-domain-preferences-legend-trustlevel">
+              <span>Trust Level</span>
+            </div>
+          </div>-->
           <div class="trust-preference-domain-preferences" data-domain="">
             
           </div>
@@ -101,7 +109,7 @@
 
 
     <div id="options" style="margin-bottom: 100px;">
-      <h1>F-PKI Settings</h1>
+      <h1>F<span style="font-weight: lighter;">(lexible)</span>-PKI Settings</h1>
       <p>
         There will be no changes introduced by the F-PKI extension, unless you
         modify these settings.
@@ -163,7 +171,7 @@
         </p>
       </div>
       
-      <hr style="margin-top: 50px; margin-bottom: 20px; margin-left: -10%; margin-right: -10%;">
+      <hr style="margin-top: 50px; margin-bottom: 20px; margin-left: -10%; margin-right: -10%; color: whitesmoke; border: none;">
 
 
       <!------------------------------------------------------------------------
@@ -175,6 +183,11 @@
           <h2 style="display: inline-block;">Trust Preferences</h2>
           <span class="info-icon-old">&#9432;</span>
           <div class="info-box-old" hidden>
+            <!--
+              F-PKI (Flexbrings trust relationships to the internet.
+
+
+            -->
             <p>
               User Policies ermöglichen die feinere <b>Differenzierung von
               Vertrauen</b>, das der Nutzer bestimmten CAs für bestimmte Domains
@@ -249,55 +262,56 @@
           </div>
         </div>
         
+        <!--<div class="settings-section-content">-->
+          <!-- Trust Preferences -->
+          <p>Set different <b>Trust Levels</b> for different <b>CAs.</b></p>
+          <h3>Domains:</h3>
+          <div id="trust-preferences">
+            <div id="trust-preference-domains">
 
-        <!-- Trust Preferences -->
-        <p>Here some settings can be done: Lorem ipsum.</p>
-        <h3>Domains:</h3>
-        <div id="trust-preferences">
-          <div id="trust-preference-domains">
-
+            </div>
+            <div class="trust-preference-add-domain">
+              <input 
+                type="text" 
+                placeholder="__add_domain__"
+                class="trust-preference-add-domain" 
+              />
+            </div>
           </div>
-          <div class="trust-preference-add-domain">
-            <input 
-              type="text" 
-              placeholder="__add_domain__"
-              class="trust-preference-add-domain" 
-            />
-          </div>
-        </div>
 
-        <!-- TABLE -->
-        <table id="user-policies-table">
-          <thead></thead>
-          <!--
-          <thead>
-            <tr>
-              <th colspan="2" style="font-size: larger;">Domain</th>
-              <th rowspan="2"></th>
-            </tr>
-            <tr>
-              <th style="width: 50%;">CA Set</th>
-              <th>Trust Level</th>
-            </tr>
-          </thead>-->
-          <tbody id="user-policies-table-body">
-            <!-- Javascript generated -->
-          </tbody>
-          <!--<tfoot>
-            <tr>
-              <td colspan="3">
-                <span style="visibility: hidden;">hi</span>
-              </td>
-            </tr>
-          </tfoot>-->
-        </table>
+          <!-- TABLE -->
+          <table id="user-policies-table">
+            <thead></thead>
+            <!--
+            <thead>
+              <tr>
+                <th colspan="2" style="font-size: larger;">Domain</th>
+                <th rowspan="2"></th>
+              </tr>
+              <tr>
+                <th style="width: 50%;">CA Set</th>
+                <th>Trust Level</th>
+              </tr>
+            </thead>-->
+            <tbody id="user-policies-table-body">
+              <!-- Javascript generated -->
+            </tbody>
+            <!--<tfoot>
+              <tr>
+                <td colspan="3">
+                  <span style="visibility: hidden;">hi</span>
+                </td>
+              </tr>
+            </tfoot>-->
+          </table>
 
-        <button class="reset-changes legacy-trust-preference">
-                Reset Changes
-        </button>
-        <button class="save-changes legacy-trust-preference">
-                Save Changes
-        </button>
+          <button class="reset-changes legacy-trust-preference">
+                  Reset Changes
+          </button>
+          <button class="save-changes legacy-trust-preference">
+                  Save Changes
+          </button>
+        <!--</div>-->
       </div>
 
 
@@ -367,7 +381,8 @@
             </legend>
             <textarea 
               id="ca-sets-builder-custom-cas"
-              placeholder="Distinguished Name(s)"
+              placeholder="CN=Custom CA 1,O=Internal,C=DE 
+CN=Custom CA 2,O=Internal,L=Milan,C=IT"
               style="width: 98%; 
                 height: 90%;
                 resize: none;"></textarea>

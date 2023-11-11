@@ -44,7 +44,8 @@ div.trust-preference-domain-more {
     justify-content: center;
 }
 
-button.trust-preference-domain-delete {
+button.trust-preference-domain-delete,
+button#resetConfig {
     padding: 3px 10px;
     font-size:medium ;
     background-color: #8b0000c0;
@@ -52,6 +53,15 @@ button.trust-preference-domain-delete {
     border-radius: 5px;
     color: whitesmoke;
     font-weight: bold;
+}
+
+div.trust-preference-domain-preferences-legend {
+    display: flex;
+    flex-direction: row;
+
+    div {
+        width: 50%
+    }
 }
 
 
@@ -64,6 +74,7 @@ div.add-trust-preference-row,
 div.trust-preference-inherited-row {
     display: flex;
     flex-direction: row;
+    gap: 5px;
     width: 100%;
     margin-bottom: 5px;
     box-sizing: border-box;

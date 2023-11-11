@@ -1,5 +1,6 @@
 html {
     font-size: 1rem;
+    font-family: sans-serif;
 }
 
 body {
@@ -60,6 +61,13 @@ div.settings-section > button {
 
 div.settings-section-header {
     display: block;
+}
+
+div.settings-section-content {
+    padding-left: 40px;
+    display: flex;
+    flex-direction: column;
+    width: auto;
 }
 
 span.info-icon-old {

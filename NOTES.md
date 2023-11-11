@@ -91,11 +91,7 @@ TODO's nach Kategorie.
 - [ ] `I2-?`: Manuelles verschieben/sortieren der Preferences möglich machen und
   dadurch die Priorität von Rules selber festlegen (First-match wie bei
   firewall)
-#### Trust Levels
-- [ ] Was passiert, wenn man ein Trust-Level löscht, das aber in Policies
-  verwendet wird?
-  > In Interviews fragen: ist blöd und nicht wirklich zu lösen, nicht löschbar,
-  > mit hinweis für den benutzer
+- [ ] configuration-helper" für standard use-cases, v.a. 
 - [ ] (Idee durch `I2-466`): Standard-Use-Cases über Actions abbilden, mit denen
   man z.B. `CA-Pinning` leichter machen kann, indem man einfach die CAs, die für
   eine bestimmte Domain in Frage kommen, angibt
@@ -106,6 +102,11 @@ TODO's nach Kategorie.
   drop am besten) macht. (auch `I2-533` und ddazwischen)
   - [ ] Regeln, die garnicht erreicht werden können am ende der liste, könnte
     man dann am besten ausgrauen oder so..
+#### Trust Levels
+- [ ] Was passiert, wenn man ein Trust-Level löscht, das aber in Policies
+  verwendet wird?
+  > In Interviews fragen: ist blöd und nicht wirklich zu lösen, nicht löschbar,
+  > mit hinweis für den benutzer
 #### CA-Sets
 - [ ] Custom CAs vllt. persistent hinzufügbar machen, damit man sie dann auch
   einfach anklicken kann
