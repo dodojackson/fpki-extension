@@ -367,11 +367,11 @@ function loadDomainInheritedPreferences(json_config, domain) {
     // hide if no inherited prefs
     if (inherited_prefs_div.innerHTML == "") {
         document.querySelector(
-            `h3.trust-preference-domain-inherited-preferences[data-domain="${domain}"]`
+            `h4.trust-preference-domain-inherited-preferences[data-domain="${domain}"]`
         ).hidden = true;
     } else {
         document.querySelector(
-            `h3.trust-preference-domain-inherited-preferences[data-domain="${domain}"]`
+            `h4.trust-preference-domain-inherited-preferences[data-domain="${domain}"]`
         ).hidden = false;
     }
 }

@@ -18,11 +18,7 @@
           </select>
         </div>
         <div class="trust-preference-domain-content" data-domain="" hidden>
-          <h3 class="trust-preference-domain-inherited-preferences" data-domain="">Inherited Preferences</h3>
-          <div class="trust-preference-domain-inherited-preferences" data-domain="">
-            
-          </div>
-          <h3>Domain Preferences</h3>
+          <h4>Domain Preferences</h4>
           <!--<div class="trust-preference-domain-preferences-legend">
             <div class="trust-preference-domain-preferences-legend-caset">
               <span>CA Set</span>
@@ -36,6 +32,10 @@
           </div>
           <div class="trust-preference-domain-add-preference" data-domain="">
 
+          </div>
+          <h4 class="trust-preference-domain-inherited-preferences" data-domain="">Inherited Preferences</h4>
+          <div class="trust-preference-domain-inherited-preferences" data-domain="">
+            
           </div>
           <div class="trust-preference-domain-more">
             <button class="trust-preference-domain-delete" data-domain="">
@@ -181,7 +181,7 @@
       <div class="settings-section" id="user-policies-settings-section">
         <div class="settings-section-header">
           <h2 style="display: inline-block;">Trust Preferences</h2>
-          <span class="info-icon-old">&#9432;</span>
+          
           <div class="info-box-old" hidden>
             <!--
               F-PKI (Flexbrings trust relationships to the internet.
@@ -264,7 +264,10 @@
         
         <!--<div class="settings-section-content">-->
           <!-- Trust Preferences -->
-          <p>Set different <b>Trust Levels</b> for different <b>CAs.</b></p>
+          <p style="margin-top: 0;">
+            Set different <b>Trust Levels</b> for different <b>CAs.</b>
+            <span class="info-icon-old">&#9432;</span>
+          </p>
           <h3>Domains:</h3>
           <div id="trust-preferences">
             <div id="trust-preference-domains">
