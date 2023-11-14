@@ -102,6 +102,9 @@ TODO's nach Kategorie.
   drop am besten) macht. (auch `I2-533` und ddazwischen)
   - [ ] Regeln, die garnicht erreicht werden können am ende der liste, könnte
     man dann am besten ausgrauen oder so..
+  - [ ] Inherited Preferences am ende darstellen und richtig sorieren
+    - [ ] sortierung nach parent domains drin, fehlt noch sortierung von
+      innerhalb der einzelnen domains zu übernehmen **go**
 #### Trust Levels
 - [ ] Was passiert, wenn man ein Trust-Level löscht, das aber in Policies
   verwendet wird?

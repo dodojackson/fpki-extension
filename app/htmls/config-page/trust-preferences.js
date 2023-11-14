@@ -144,7 +144,7 @@ function sortDomainPreferences(domain_name) {
  * Sort domains inherited preferences
  */
 function sortDomainInheritedPreferences(domain_name) {
-    const inherited_prefs_div = document.querySelector(
+    /*const inherited_prefs_div = document.querySelector(
         `div.trust-preference-domain-inherited-preferences[data-domain="${domain_name}"]`
     );
     // own preferences
@@ -166,7 +166,7 @@ function sortDomainInheritedPreferences(domain_name) {
         `div.trust-preference-domain-inherited-preferences[data-domain="${domain_name}"]`
     );
     domain_inherited_prefs_div.innerHTML = "";
-    domain_inherited_prefs_div.appendChild(sorted_pref_rows);
+    domain_inherited_prefs_div.appendChild(sorted_pref_rows);*/
 }
 
 
@@ -238,8 +238,10 @@ function loadDomainInheritedPreferences(json_config, domain) {
         // domain: {caset: level}
     }
 
-    /** (local)
-     * Check if `inherited_prefs` has pref for `caset` under any domain.
+    /** (local)  
+     * Check if `inherited_prefs` (above) has pref for `caset` under any domain.
+     * This is to check if the preference of some parent domain should be used
+     * or not.
      */
     function hasInheritedPref(caset) {
         let has_pref = false;
@@ -256,7 +258,7 @@ function loadDomainInheritedPreferences(json_config, domain) {
         return has_pref;
     }
 
-    /** (local)
+    /** (local)  
      * Adds prefs that are inherited from `domain_name` if any.
      */
     function addInheritedPrefs(domain_name) {
@@ -282,6 +284,20 @@ function loadDomainInheritedPreferences(json_config, domain) {
         });
     }
 
+    /** (local)  
+     * Sort inherited prefs so that they are displayed in order of priority.  
+     * I.e. parent domains --> child domains, and, for every domain the same
+     * order that is specified in their domain preferences.  
+     * 
+     * `inherited_prefs` is a real Map() after this.
+     */
+    function sortInheritedPrefs() {
+        console.log(inherited_prefs);
+        inherited_prefs = new Map([...Object.entries(inherited_prefs)].sort((a,b) => b[0].length - a[0].length));
+        console.log(inherited_prefs)
+    }
+
+
     try {  // TODO: try catch wieder weg
         let parent_domain;
         if (domain.startsWith('*.')) {
@@ -300,7 +316,9 @@ function loadDomainInheritedPreferences(json_config, domain) {
     } catch (e) {
         console.log(e)
     }
-    // von '*' erben. alle außer `*`.
+
+    // von '*' erben. alle außer `*`. "*" wird durch die Schleife oben nicht
+    // abgedeckt.
     if (domain != "*") {
         addInheritedPrefs("*");
     }
@@ -311,9 +329,12 @@ function loadDomainInheritedPreferences(json_config, domain) {
     );
     // reset
     inherited_prefs_div.innerHTML = "";
+    // sort inherited prefs
+    sortInheritedPrefs();
     // load inherited prefs
-    Object.entries(inherited_prefs).forEach(elem => {
-        const [domain_name, pref_data] = elem;
+    inherited_prefs.forEach((pref_data, domain_name) => {
+        //const [domain_name, pref_data] = elem;
+        console.log(`${domain_name}: ${pref_data}`)
         // label
         /*inherited_prefs_div.appendChild((() => {
             const label = document.createElement('p');
