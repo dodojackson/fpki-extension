@@ -180,8 +180,18 @@ export function intToHexString(intValue, separator = "") {
 
 
 /**
- * Deep copy of json object
+ * Deep copy of new_format_config
  */
 export function clone(json_object) {
-    return JSON.parse(JSON.stringify(json_object));
+    const cloned_config = JSON.parse(JSON.stringify(json_object));
+
+    Object.entries(cloned_config['legacy-trust-preference']).forEach(elem => {
+        const [domain_name, _] = elem;
+        cloned_config['legacy-trust-preference'][domain_name] = new Map(
+            // trying to deep copy maps
+            JSON.parse(JSON.stringify(Array.from(json_object['legacy-trust-preference'][domain_name])))
+        );
+    });
+
+    return cloned_config;
 }

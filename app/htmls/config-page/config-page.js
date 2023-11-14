@@ -2,6 +2,7 @@ import * as trust_preferences from "./trust-preferences.js"
 import * as trust_levels from "./trust-levels.js"
 import * as misc from "./misc.js"
 import { clone } from "../../js_lib/helper.js";
+import { toOldConfig, toNewConfig } from "../../js_lib/config.js";
 
 /*
     This script holds a working copy of the original live config object.
@@ -27,9 +28,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
         document.getElementById('resetConfig').addEventListener('click', async () => {
             await resetConfig();
-            console.log("asdfji")
+            //console.log("asdfji")
             reloadSettings();
-            console.log("posted message: resetConfig");
+            //console.log("posted message: resetConfig");
         });
         
         document.getElementById('uploadConfig').addEventListener('click', async () => {
@@ -110,9 +111,9 @@ async function resetConfig() {
     );
     if (answer == "Yes") {
         const response = await browser.runtime.sendMessage("resetConfig");
-        json_config = response.config;
-        /*let test = clone(json_config);
-        console.log(test);*/
+        json_config = toNewConfig(response.config);
+        console.log("CONFIG RESET.");
+        //console.log(json_config);
     }
 }
 
@@ -130,7 +131,7 @@ async function requestConfig() {
  * Post configuration changes to live config in background script
  */
 async function postConfig() {
-   port.postMessage({ "type": "postConfig", "value": json_config });
+   port.postMessage({ "type": "postConfig", "value": toOldConfig(json_config) });
 }
 
 

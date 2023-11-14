@@ -114,7 +114,9 @@ function sortDomains() {
 /**
  * (TODO Sort preferences by domain + ) per domain sort alphabetically
  *
- * Sorts domains own and inherited preferences
+ * Sorts domains own preferences
+ * 
+ * TODO: Das sollte bald hinfällig sein!!
  */
 function sortDomainPreferences(domain_name) {
     // own preferences
@@ -207,19 +209,26 @@ function loadDomainContent(json_config, domain_name) {
  * Loads the preferences for the given domain into the right DOM-containers
  */
 function loadDomainPreferences(json_config, domain) {
+    //console.log("LOADING domain preferences..")
     const preference_div = document.querySelector(
         `div.trust-preference-domain-preferences[data-domain="${domain}"]`
     );
     preference_div.innerHTML = "";
     // load preferences from config
-    Object
+    json_config['legacy-trust-preference'][domain].forEach((level, caset) => {
+        //console.log(caset + ": " + level);
+        preference_div.appendChild(
+            make_pref_row(json_config, domain, caset, level)
+        );
+    });
+    /*Object
         .entries(json_config['legacy-trust-preference'][domain])
         .forEach(preference => {
             const [caset, level] = preference;
             preference_div.appendChild(
                 make_pref_row(json_config, domain, caset, level)
             );
-        });
+        });*/
     
     document.querySelector(
         `div.trust-preference-domain-add-preference[data-domain="${domain}"]`
@@ -265,10 +274,8 @@ function loadDomainInheritedPreferences(json_config, domain) {
         if (!json_config['legacy-trust-preference'].hasOwnProperty(domain_name)) {
             return;
         }
-        Object.entries (
-            json_config['legacy-trust-preference'][domain_name]
-        ).forEach (elem => {
-            const [caset, level] = elem;
+        
+        json_config['legacy-trust-preference'][domain_name].forEach ((level, caset) => {
             //console.log("checking " + caset + " of domain " + domain_name);
             // inherits, if not already defined
             if (
@@ -292,9 +299,9 @@ function loadDomainInheritedPreferences(json_config, domain) {
      * `inherited_prefs` is a real Map() after this.
      */
     function sortInheritedPrefs() {
-        console.log(inherited_prefs);
+        //console.log(inherited_prefs);
         inherited_prefs = new Map([...Object.entries(inherited_prefs)].sort((a,b) => b[0].length - a[0].length));
-        console.log(inherited_prefs)
+        //console.log(inherited_prefs)
     }
 
 
@@ -567,7 +574,7 @@ function loadEventListeners(json_config) {
                     return;
                 }
                 // otherwise .. add domain to config
-                json_config['legacy-trust-preference'][domain_name] = {};
+                json_config['legacy-trust-preference'][domain_name] = new Map();
                 updateTrustPreferences(json_config);
                 domain_add_input.value = "";
             }
@@ -594,7 +601,7 @@ function loadEventListeners(json_config) {
                 // update json config
                 json_config['legacy-trust-preference']
                     [elem.getAttribute('data-domain')]
-                    [elem.getAttribute('data-caset')] = elem.value;
+                    .set(elem.getAttribute('data-caset'), elem.value)
                 // reload all domain contents, because inherited preferences
                 // might be affected
                 updateTrustPreferences(json_config);
@@ -628,10 +635,12 @@ function loadEventListeners(json_config) {
                     null
                 );
                 // update json config
-                delete json_config['legacy-trust-preference'][elem.getAttribute('data-domain')][prev_caset];
+                json_config['legacy-trust-preference'][elem.getAttribute('data-domain')].delete(prev_caset);
                 json_config['legacy-trust-preference']
                     [elem.getAttribute('data-domain')]
-                    [elem.getAttribute('data-caset')] = elem.getAttribute('data-trustlevel');
+                    .set(elem.getAttribute('data-caset'), elem.getAttribute('data-trustlevel'));
+                    // TODO: sortierung durcheinander hierdurch (später)
+
                 // reload, because this has impilcations for the selectable 
                 // options of other prefs + new pref
                 //loadDomainContent(json_config, elem.getAttribute('data-domain'));
@@ -752,7 +761,7 @@ function loadEventListeners(json_config) {
  * Adds specified preference (caset, level) to specified domain.
  */
 function addPreference(json_config, domain, caset, level) {
-    json_config['legacy-trust-preference'][domain][caset] = level;
+    json_config['legacy-trust-preference'][domain].set(caset, level);
     // TODO: nur den entsprechenden bereich neu laden. sollte mit neuer template
     // etc herangehensweise einfach werden
     loadDomainContent(json_config, domain);
@@ -761,10 +770,10 @@ function addPreference(json_config, domain, caset, level) {
 
 
 /**
- * Deletes specified preference (caset) to specified domain
+ * Deletes specified preference (caset) from specified domain
  */
 function delPreference(json_config, domain, caset) {
-    delete json_config['legacy-trust-preference'][domain][caset];
+    json_config['legacy-trust-preference'][domain].delete(caset);
     loadDomainContent(json_config, domain);
 }
 
@@ -796,8 +805,7 @@ function update_data_attr(domain, caset, level, new_caset=null, new_level=null) 
 function getUnconfiguredCASets(json_config, domain) {
 
     let configured_casets = new Set();
-    Object.entries(json_config['legacy-trust-preference'][domain]).forEach(rule => {
-        const [caset, level] = rule;
+    json_config['legacy-trust-preference'][domain].forEach((level, caset) => {
         configured_casets.add(caset);
     });
 

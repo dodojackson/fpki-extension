@@ -82,6 +82,7 @@ browser.runtime.onConnect.addListener( (port) => {
                 downloadConfig()
                 break;
             case 'resetConfig':
+                exit(1);
                 console.log("MSG RECV: resetConfig");
                 resetConfig()
                 break;
@@ -123,13 +124,14 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
         case 'resetConfig':
             console.log(`MSG RECV: ${request}`);
             resetConfig();
-            return Promise.resolve({ "config": new_format_config });
+            return Promise.resolve({ "config": config });
         
         default:
             switch (request['type']) {
                 case "uploadConfig":
                     console.log("setting new config value...");
                     // expect new format config
+                    console.log(JSON.parse(request['value']))
                     setNewFormatConfig(JSON.parse(request['value']));
                     saveConfig();
                     return Promise.resolve({ "config": new_format_config });
