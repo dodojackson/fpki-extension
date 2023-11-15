@@ -3,7 +3,7 @@
 import { getDomainNameFromURL } from "../js_lib/domain.js"
 import { FpkiRequest } from "../js_lib/fpki-request.js"
 import { printMap, cLog, mapGetList, mapGetMap, mapGetSet } from "../js_lib/helper.js"
-import { config, new_format_config, downloadConfig, importConfigFromJSON, getConfig, saveConfig, resetConfig, exportConfigToJSON, setNewFormatConfig, getJSONConfig, toOldConfig } from "../js_lib/config.js"
+import { config, downloadConfig, importConfigFromJSON, getConfig, saveConfig, resetConfig, exportConfigToJSON, getJSONConfig, toOldConfig } from "../js_lib/config.js"
 import { LogEntry, getLogEntryForRequest, downloadLog, printLogEntriesToConsole, getSerializedLogEntries } from "../js_lib/log.js"
 import { FpkiError, errorTypes } from "../js_lib/errors.js"
 import { policyValidateConnection, legacyValidateConnection } from "../js_lib/validation.js"
@@ -43,20 +43,19 @@ browser.runtime.onConnect.addListener( (port) => {
             trustedCertificates.set(domain, mapGetSet(trustedCertificates, domain).add(certificateFingerprint));
             browser.tabs.update(tabId, {url: url});
             break;
-        case "uploadConfig":
-            exit(1);
-            break;
         case 'postConfig':
             try {
                 /**
                  * Save new format config and converted old format config
                  */
-                //console.log("POSTED CONFIG:");
-                setNewFormatConfig(msg.value);
-                //console.log(new_format_config);
+                console.log("POSTED CONFIG:");
+                //setNewFormatConfig(msg.value);
+                console.log(msg.value);
 
-                let converted_json_config = toOldConfig(new_format_config);
-                importConfigFromJSON(JSON.stringify(converted_json_config));
+                //let converted_json_config = toOldConfig(new_format_config);
+
+                // deep copy
+                importConfigFromJSON(exportConfigToJSON(msg.value));
 
                 //console.log("SAVED CONFIG:");
                 //console.log(JSON.parse(exportConfigToJSON(config)));
@@ -131,10 +130,11 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
                 case "uploadConfig":
                     console.log("setting new config value...");
                     // expect new format config
-                    console.log(JSON.parse(request['value']))
-                    setNewFormatConfig(JSON.parse(request['value']));
+                    console.log(request['value']);
+                    //setNewFormatConfig(JSON.parse(request['value']));
+                    importConfigFromJSON(exportConfigToJSON(request['value']));
                     saveConfig();
-                    return Promise.resolve({ "config": new_format_config });
+                    return Promise.resolve({ "config": config });
                 default:
                     console.log(`Received unknown message: ${request}`);
                     break;

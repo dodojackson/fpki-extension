@@ -2,7 +2,7 @@ import * as trust_preferences from "./trust-preferences.js"
 import * as trust_levels from "./trust-levels.js"
 import * as misc from "./misc.js"
 import { clone } from "../../js_lib/helper.js";
-import { toOldConfig, toNewConfig } from "../../js_lib/config.js";
+import { toOldConfig, toNewConfig, convertJSONConfigToMap} from "../../js_lib/config.js";
 
 /*
     This script holds a working copy of the original live config object.
@@ -39,11 +39,12 @@ document.addEventListener('DOMContentLoaded', async () => {
             
             reader.onload = async function(e){
                 //port.postMessage({type: "uploadConfig", value: e.target.result});
-                const response = await browser.runtime.sendMessage({type: "uploadConfig", value: e.target.result});
+                const response = await browser.runtime.sendMessage({type: "uploadConfig", value: convertJSONConfigToMap(e.target.result)});
                 //setConfig(response.config);
                 console.log("RESONSE:");
                 console.log(response.config);
-                json_config = clone(response.config);
+                json_config = toNewConfig(response.config);  // TODO: ich kriege die config im alten format!
+                console.log(json_config);
                 location.reload(true);
             }
             reader.readAsText(file);

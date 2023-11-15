@@ -6,14 +6,20 @@ import {defaultConfig} from "./default_config.js"
     Pages can request the current state of the config via 'requestConfig' msg
 */
 export let config = null;  // Map Object
-export let new_format_config = null;  // JSON Object (with map values for preferences)
+//export let new_format_config = null;  // JSON Object (with map values for preferences)
+
+/*
+    Config Formats:
+
+    1. Old Config (Map)
+    2. New Config (JSON + Map for preferences), used by config_page.js
+*/
 
 /**
  * Convert new config format to previous format for compatibility.
  * 
  * In: new format config json+maps  
- * Out: old format map config.  
- * Does not change the passed object.
+ * Out: old format map config.
  */
 export function toOldConfig(pass_json_config) {
 
@@ -134,7 +140,7 @@ function setConfig(new_config) {
     config = new_config;
 }
 
-export function setNewFormatConfig(new_config) {
+function setNewFormatConfig(new_config) {
     new_format_config = clone(new_config);
     // 
 
@@ -432,19 +438,15 @@ function initializeConfig() {
         let c = localStorage.getItem("config");
         if (c === null) {
             console.log("initializing using default config");
-            initDefaultConfig();
-            // synchronize old config format
-            importConfigFromJSON(JSON.stringify(toOldConfig(new_format_config)));
+            importConfigFromJSON(JSON.stringify(defaultConfig));
         } else {
             console.log("initialize using stored config");
             importConfigFromJSON(c);
-            new_format_config = toNewConfig(JSON.parse(exportConfigToJSON(config)));
         }
         saveConfig();
 
         console.log("INITIALIZED:");
         console.log(config);
-        console.log(new_format_config);
     } catch (e) {
         console.log(e);
     }
@@ -481,7 +483,8 @@ export function saveConfig() {
         Makes live config object persistent across browser sessions using the 
         local storage of the browser
     */
-    console.log("saving config:\n" + config);
+    console.log("saving config: ");
+    console.log(config);
     localStorage.setItem("config", exportConfigToJSON(config));
 
     //console.log("savin new format config:\n" + new_format_config);
@@ -538,8 +541,11 @@ export function importConfigFromJSON(jsonConfig) {
 
 /**
  * importConfigFromJSON, but returns instead of setting the config.
+ * 
+ * In: JSON string  
+ * Out: Old Config Map Object
  */
-function convertJSONConfigToMap(jsonConfig) {
+export function convertJSONConfigToMap(jsonConfig) {
     const c = new Map();
     const parsedMap = new Map(Object.entries(JSON.parse(jsonConfig)));
     // convert necessary fields to Map type
