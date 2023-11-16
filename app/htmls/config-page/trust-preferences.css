@@ -80,9 +80,20 @@ div.trust-preference-inherited-row {
     box-sizing: border-box;
 }
 
+div.trust-preference-row {
+    cursor:move;
+}
+
 div.add-trust-preference-row {
     margin-top: 20px;
     margin-bottom: 10px;
+}
+
+div.trust-preference-dragndrop,
+div.add-trust-preference-dragndrop {
+    min-width: 25px;
+    font-weight: 500;
+    text-align: center;
 }
 
 select.add-trust-preference-caset, select.add-trust-preference-level {
