@@ -3,6 +3,9 @@ import { showPopup, toggleElement } from "./misc.js";
 
 import { getParentDomain } from "../../js_lib/domain.js";
 import { loadTrustLevelSettings } from "./trust-levels.js";
+
+
+console.log(Sortable)
 // TODO: Use getParentDomain for sorting the domains..
 
 
@@ -220,6 +223,11 @@ function loadDomainPreferences(json_config, domain) {
         preference_div.appendChild(
             make_pref_row(json_config, domain, caset, level)
         );
+    });
+
+    new Sortable(preference_div, {
+        animation: 150,
+        ghostClass: 'blue-background-class'
     });
     /*Object
         .entries(json_config['legacy-trust-preference'][domain])
