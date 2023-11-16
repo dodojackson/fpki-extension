@@ -518,7 +518,7 @@ async function resetChanges(e) {
         return;
     }
 
-    const live_config = (await browser.runtime.sendMessage("requestConfig")).config;
+    const live_config = toNewConfig((await browser.runtime.sendMessage("requestConfig")).config);
     //let json_config = getJSONConfig();
 
     // Mapservers
