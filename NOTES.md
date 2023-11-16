@@ -111,7 +111,10 @@ TODO's nach Kategorie.
           passiert dann eh automatisch glaube ich aktuell. 
         - [x] Config soll als JSON exportierbar sein, also maps sind schwierig,
           aber machbar (auch local-storage im textformat übrigens)
-        - [ ] erstmal sortierung innerhalt der Domains erlauben / implementieren
+        - [x] erstmal sortierung innerhalt der Domains erlauben / implementieren
+          - klappt, auch mit import/export etc. scheinbar - **nice!**
+        - [ ] Reihenfolgen Change wird noch nicht bei inherited preferences
+          übernommen (einfach reload?)
 #### Trust Levels
 - [ ] Was passiert, wenn man ein Trust-Level löscht, das aber in Policies
   verwendet wird?

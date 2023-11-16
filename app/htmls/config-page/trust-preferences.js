@@ -122,7 +122,7 @@ function sortDomains() {
  * TODO: Das sollte bald hinfällig sein!!
  */
 function sortDomainPreferences(domain_name) {
-    // own preferences
+    /*// own preferences
     let pref_rows = document.querySelectorAll(
         `div.trust-preference-row[data-domain="${domain_name}"]`
     );
@@ -141,7 +141,7 @@ function sortDomainPreferences(domain_name) {
         `div.trust-preference-domain-preferences[data-domain="${domain_name}"]`
     );
     domain_prefs_div.innerHTML = "";
-    domain_prefs_div.appendChild(sorted_pref_rows);
+    domain_prefs_div.appendChild(sorted_pref_rows);*/
 }
 
 
@@ -227,7 +227,11 @@ function loadDomainPreferences(json_config, domain) {
 
     new Sortable(preference_div, {
         animation: 150,
-        ghostClass: 'blue-background-class'
+        ghostClass: 'blue-background-class',
+        // Changed sorting within list
+        onUpdate: (/**Event*/e) => {
+            updateDomainPreferenceSorting(e, json_config)
+        },
     });
     /*Object
         .entries(json_config['legacy-trust-preference'][domain])
@@ -243,6 +247,49 @@ function loadDomainPreferences(json_config, domain) {
     ).appendChild(
         make_pref_add_row(json_config, domain, "--select--", "--select--")
     );
+}
+
+
+/**
+ * Update domain preference map (from json_config) to represent the same
+ * ordering as manipulated via Drag and Drop on the UI.
+ */
+function updateDomainPreferenceSorting(/**Event*/e, json_config) {
+    console.log(`Moved pref ${e.item.getAttribute('data-caset')} from ${e.oldIndex} to ${e.newIndex}`);
+    const prefs = json_config['legacy-trust-preference'][e.target.getAttribute('data-domain')]
+    let prefs_entries = [...prefs.entries()]
+    let sorted_prefs_entries = []
+    // extremely sophisticated algorithm right here
+    if (e.oldIndex < e.newIndex) {
+        for (var i = 0; i <= (e.oldIndex - 1); i++) {
+            console.log("pushing between 0 and (old - 1)")
+            sorted_prefs_entries.push(prefs_entries[i]);
+        }
+        for (var i = (e.oldIndex + 1); i <= e.newIndex; i++) {
+            console.log("pushing between 0 and (old - 1)")
+            sorted_prefs_entries.push(prefs_entries[i]);
+        }
+        sorted_prefs_entries.push(prefs_entries[e.oldIndex]);
+        for (var i = (e.newIndex + 1); i < prefs_entries.length; i++) {
+            sorted_prefs_entries.push(prefs_entries[i]);
+        }
+    }
+    if (e.oldIndex > e.newIndex) {
+        for (var i = 0; i <= (e.newIndex - 1); i++) {
+            sorted_prefs_entries.push(prefs_entries[i]);
+        }
+        sorted_prefs_entries.push(prefs_entries[e.oldIndex]);
+        for (var i = e.newIndex; i <= (e.oldIndex - 1); i++) {
+            sorted_prefs_entries.push(prefs_entries[i]);
+        }
+        for (var i = (e.oldIndex + 1); i < prefs_entries.length; i++) {
+            sorted_prefs_entries.push(prefs_entries[i]);
+        }
+    }
+    console.log(sorted_prefs_entries)
+    // update map
+    json_config['legacy-trust-preference'][e.target.getAttribute('data-domain')] = new Map(sorted_prefs_entries);
+    console.log(json_config['legacy-trust-preference'][e.target.getAttribute('data-domain')])
 }
 
 
