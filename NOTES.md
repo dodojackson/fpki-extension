@@ -97,11 +97,11 @@ TODO's nach Kategorie.
   eine bestimmte Domain in Frage kommen, angibt
   - [ ] mal für `CA-Pinning` umsetzten und in Interview abfragen, wie das
     ankommt und ob das für noch mehr UseCases nice wäre.
-- [ ] `I2-499`: User zwingen sich mit der Reihenfolge/Priorisiertung von
+- [x] `I2-499`: User zwingen sich mit der Reihenfolge/Priorisiertung von
   Preferences auseinanderzusetzen, indem man die liste sortierbar (per drag and
   drop am besten) macht. (auch `I2-533` und ddazwischen)
   - [ ] Regeln, die garnicht erreicht werden können am ende der liste, könnte
-    man dann am besten ausgrauen oder so..
+    man dann am besten ausgrauen oder so.. **Future work**
   - [x] Inherited Preferences am ende darstellen und richtig sorieren
     - [x] sortierung nach parent domains drin, fehlt noch sortierung von
       innerhalb der einzelnen domains zu übernehmen 

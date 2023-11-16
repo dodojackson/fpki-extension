@@ -1,12 +1,5 @@
-import {reloadSettings} from "./config-page.js"
 import { showPopup, toggleElement } from "./misc.js";
-
 import { getParentDomain } from "../../js_lib/domain.js";
-import { loadTrustLevelSettings } from "./trust-levels.js";
-
-
-console.log(Sortable)
-// TODO: Use getParentDomain for sorting the domains..
 
 
 /**
@@ -77,7 +70,7 @@ export function updateTrustPreferences(json_config) {
             // load domain preferences into now existing divs
             loadDomainContent(json_config, domain_name);
         } else {
-            console.log("Creating new div for domain " + domain_name);
+            //console.log("Creating new div for domain " + domain_name);
             buildDomainPreferencesDiv(domain_name);
             loadDomainContent(json_config, domain_name);
         }
@@ -115,67 +108,6 @@ function sortDomains() {
 
 
 /**
- * (TODO Sort preferences by domain + ) per domain sort alphabetically
- *
- * Sorts domains own preferences
- * 
- * TODO: Das sollte bald hinfällig sein!!
- */
-function sortDomainPreferences(domain_name) {
-    /*// own preferences
-    let pref_rows = document.querySelectorAll(
-        `div.trust-preference-row[data-domain="${domain_name}"]`
-    );
-    // sort preferences by caset-name alphabetically
-    pref_rows = Array.from(pref_rows);
-    pref_rows.sort((a, b) => {
-        return (
-            a.getAttribute('data-caset')
-                .localeCompare(b.getAttribute('data-caset'))
-        );
-    });
-    const sorted_pref_rows = document.createDocumentFragment();
-    pref_rows.forEach(row => {sorted_pref_rows.appendChild(row)});
-    
-    const domain_prefs_div = document.querySelector(
-        `div.trust-preference-domain-preferences[data-domain="${domain_name}"]`
-    );
-    domain_prefs_div.innerHTML = "";
-    domain_prefs_div.appendChild(sorted_pref_rows);*/
-}
-
-
-/**
- * Sort domains inherited preferences
- */
-function sortDomainInheritedPreferences(domain_name) {
-    /*const inherited_prefs_div = document.querySelector(
-        `div.trust-preference-domain-inherited-preferences[data-domain="${domain_name}"]`
-    );
-    // own preferences
-    let pref_rows = inherited_prefs_div.querySelectorAll(
-        `div.trust-preference-inherited-row`
-    );
-    // sort preferences by caset-name alphabetically
-    pref_rows = Array.from(pref_rows);
-    pref_rows.sort((a, b) => {
-        return (
-            a.getAttribute('data-caset')
-                .localeCompare(b.getAttribute('data-caset'))
-        );
-    });
-    const sorted_pref_rows = document.createDocumentFragment();
-    pref_rows.forEach(row => {sorted_pref_rows.appendChild(row)});
-    
-    const domain_inherited_prefs_div = document.querySelector(
-        `div.trust-preference-domain-inherited-preferences[data-domain="${domain_name}"]`
-    );
-    domain_inherited_prefs_div.innerHTML = "";
-    domain_inherited_prefs_div.appendChild(sorted_pref_rows);*/
-}
-
-
-/**
  * (Re)loads the domains trust preference content-div
  */
 function loadDomainContent(json_config, domain_name) {
@@ -200,9 +132,6 @@ function loadDomainContent(json_config, domain_name) {
 
     loadDomainPreferences(json_config, domain_name);
     loadDomainInheritedPreferences(json_config, domain_name);
-
-    sortDomainPreferences(domain_name);
-    sortDomainInheritedPreferences(domain_name);
 
     loadEventListeners(json_config);
 }
@@ -287,10 +216,10 @@ function updateDomainPreferenceSorting(/**Event*/e, json_config) {
             sorted_prefs_entries.push(prefs_entries[i]);
         }
     }
-    console.log(sorted_prefs_entries)
+    //console.log(sorted_prefs_entries)
     // update map
     json_config['legacy-trust-preference'][e.target.getAttribute('data-domain')] = new Map(sorted_prefs_entries);
-    console.log(json_config['legacy-trust-preference'][e.target.getAttribute('data-domain')])
+    //console.log(json_config['legacy-trust-preference'][e.target.getAttribute('data-domain')])
 }
 
 
@@ -315,7 +244,7 @@ function loadDomainInheritedPreferences(json_config, domain) {
             prefs.forEach((_, caset_name) => {
                 //const [caset_name, _] = pref;
                 if (caset_name == caset) {
-                    console.log(`${domain_name} has pref for ${caset_name}`);
+                    //console.log(`${domain_name} has pref for ${caset_name}`);
                     has_pref = true;
                 }
             });
@@ -396,16 +325,10 @@ function loadDomainInheritedPreferences(json_config, domain) {
     sortInheritedPrefs();
     // load inherited prefs
     inherited_prefs.forEach((pref_data, domain_name) => {
-        //const [domain_name, pref_data] = elem;
-        console.log("Inherited preferences:")
-        console.log(`${domain_name}: `)
-        console.log(pref_data)
-        // label
-        /*inherited_prefs_div.appendChild((() => {
-            const label = document.createElement('p');
-            label.textContent = `Inherited from ${domain_name}:`;
-            return label;
-        })());*/
+        //console.log("Inherited preferences:")
+        //console.log(`${domain_name}: `)
+        //console.log(pref_data)
+        
         // prefs
         pref_data.forEach((level, caset) => {
             //const [caset, level] = pref;
@@ -799,7 +722,7 @@ function loadEventListeners(json_config) {
                 let info_box = document.querySelector(
                     `div.info-box[info-id="${icon.getAttribute('info-id')}"]`
                 );
-                console.log(info_box);
+                //console.log(info_box);
                 info_box.style.left = (e.pageX - 5) + "px";
                 info_box.style.top = (e.pageY -5) + "px";
                 info_box.style.display = "block";
@@ -844,7 +767,7 @@ function update_data_attr(domain, caset, level, new_caset=null, new_level=null) 
         .querySelectorAll(`[data-domain="${domain}"][data-caset="${caset}"][data-trustlevel="${level}"]`);
 
     elements.forEach(elem => {
-        console.log("Changing element...");
+        //console.log("Changing element...");
 
         if (new_caset != null) {
             elem.setAttribute('data-caset', new_caset);
