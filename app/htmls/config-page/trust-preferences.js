@@ -231,6 +231,9 @@ function loadDomainPreferences(json_config, domain) {
         // Changed sorting within list
         onUpdate: (/**Event*/e) => {
             updateDomainPreferenceSorting(e, json_config)
+            // reload all preferences, because inherited preferences might be
+            // affected
+            updateTrustPreferences(json_config)
         },
     });
     /*Object
@@ -262,11 +265,9 @@ function updateDomainPreferenceSorting(/**Event*/e, json_config) {
     // extremely sophisticated algorithm right here
     if (e.oldIndex < e.newIndex) {
         for (var i = 0; i <= (e.oldIndex - 1); i++) {
-            console.log("pushing between 0 and (old - 1)")
             sorted_prefs_entries.push(prefs_entries[i]);
         }
         for (var i = (e.oldIndex + 1); i <= e.newIndex; i++) {
-            console.log("pushing between 0 and (old - 1)")
             sorted_prefs_entries.push(prefs_entries[i]);
         }
         sorted_prefs_entries.push(prefs_entries[e.oldIndex]);
@@ -299,7 +300,7 @@ function updateDomainPreferenceSorting(/**Event*/e, json_config) {
 function loadDomainInheritedPreferences(json_config, domain) {
     const domain_prefs = json_config['legacy-trust-preference'][domain];
     let inherited_prefs = {
-        // domain: {caset: level}
+        // domain: Map(caset: level)
     }
 
     /** (local)  
@@ -311,8 +312,8 @@ function loadDomainInheritedPreferences(json_config, domain) {
         let has_pref = false;
         Object.entries(inherited_prefs).forEach(entry => {
             const [domain_name, prefs] = entry;
-            Object.entries(prefs).forEach(pref => {
-                const [caset_name, _] = pref;
+            prefs.forEach((_, caset_name) => {
+                //const [caset_name, _] = pref;
                 if (caset_name == caset) {
                     console.log(`${domain_name} has pref for ${caset_name}`);
                     has_pref = true;
@@ -339,9 +340,9 @@ function loadDomainInheritedPreferences(json_config, domain) {
             ) {
                 //console.log("Adding " + caset + " to inherited");
                 if (!inherited_prefs.hasOwnProperty(domain_name)) {
-                    inherited_prefs[domain_name] = {}
+                    inherited_prefs[domain_name] = new Map()
                 }
-                inherited_prefs[domain_name][caset] = level;
+                inherited_prefs[domain_name].set(caset, level);
             }
         });
     }
@@ -406,8 +407,8 @@ function loadDomainInheritedPreferences(json_config, domain) {
             return label;
         })());*/
         // prefs
-        Object.entries(pref_data).forEach(pref => {
-            const [caset, level] = pref;
+        pref_data.forEach((level, caset) => {
+            //const [caset, level] = pref;
 
             const pref_row = document.importNode(
                 document.getElementById(

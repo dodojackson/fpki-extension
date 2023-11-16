@@ -102,8 +102,8 @@ TODO's nach Kategorie.
   drop am besten) macht. (auch `I2-533` und ddazwischen)
   - [ ] Regeln, die garnicht erreicht werden können am ende der liste, könnte
     man dann am besten ausgrauen oder so..
-  - [ ] Inherited Preferences am ende darstellen und richtig sorieren
-    - [ ] sortierung nach parent domains drin, fehlt noch sortierung von
+  - [x] Inherited Preferences am ende darstellen und richtig sorieren
+    - [x] sortierung nach parent domains drin, fehlt noch sortierung von
       innerhalb der einzelnen domains zu übernehmen 
         - [x] dafür ggf. erstmal das config-format wieder mit richtigen maps
           benutzen, weil eine sortierung dann darin integriert für preferences
@@ -113,7 +113,7 @@ TODO's nach Kategorie.
           aber machbar (auch local-storage im textformat übrigens)
         - [x] erstmal sortierung innerhalt der Domains erlauben / implementieren
           - klappt, auch mit import/export etc. scheinbar - **nice!**
-        - [ ] Reihenfolgen Change wird noch nicht bei inherited preferences
+        - [x] Reihenfolgen Change wird noch nicht bei inherited preferences
           übernommen (einfach reload?)
 #### Trust Levels
 - [ ] Was passiert, wenn man ein Trust-Level löscht, das aber in Policies
