@@ -169,7 +169,7 @@ TODO's nach Kategorie.
 - [ ] `I2-610`: Text von Custom-CA Set leeren nach hinzufügen eines sets
 - [ ] `I2-618`: Scrolleffekt nach hinzufügen expliziter und evtl hervorheben der
   hinzugfefüten set durch dicken border kurz..
-- [ ] `I2-625`: Leere Set-Namen verbieten
+- [x] `I2-625`: Leere Set-Namen verbieten
 #### Import/Export
 - [ ] Fragen, ob settings überschrieben werden sollten, oder versucht werden
   soll, die settings automatisch zusammenzuführen (für einfachen fall, wo es

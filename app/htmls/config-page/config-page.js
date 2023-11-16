@@ -427,9 +427,18 @@ function setupCASetBuilderEventListeners(json_config) {
     let add_btn = document.querySelector('button#add-ca-set');
     if (!add_btn.hasAttribute("listener")) {
         add_btn.setAttribute("listener", "true");
-        add_btn.addEventListener("click", (e) => {
+        add_btn.addEventListener("click", async (e) => {
 
             let set_name = document.querySelector('input#ca-sets-builder-name').value.trim();
+            if (set_name == "") {
+                await misc.showPopup("Please enter a set name.", ["Ok."])
+                const y = document
+                    .querySelector('input#ca-sets-builder-name')
+                    .getBoundingClientRect().top + window.pageYOffset - 25;
+
+                window.scrollTo({top: y, behavior: 'smooth'});
+                return
+            }
             console.log(json_config['ca-sets']);
             let set_description = document.querySelector('input#ca-sets-builder-description').value.trim();
             let set_cas = [];
