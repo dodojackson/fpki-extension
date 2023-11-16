@@ -105,12 +105,13 @@ TODO's nach Kategorie.
   - [ ] Inherited Preferences am ende darstellen und richtig sorieren
     - [ ] sortierung nach parent domains drin, fehlt noch sortierung von
       innerhalb der einzelnen domains zu übernehmen 
-        - [ ] dafür ggf. erstmal das config-format wieder mit richtigen maps
+        - [x] dafür ggf. erstmal das config-format wieder mit richtigen maps
           benutzen, weil eine sortierung dann darin integriert für preferences
           gespeichert werden kann. Die kann man dann einfach übernehmen, bzw. es
-          passiert dann eh automatisch glaube ich aktuell. **go**
-        - [ ] Config soll als JSON exportierbar sein, also maps sind schwierig,
+          passiert dann eh automatisch glaube ich aktuell. 
+        - [x] Config soll als JSON exportierbar sein, also maps sind schwierig,
           aber machbar (auch local-storage im textformat übrigens)
+        - [ ] erstmal sortierung innerhalt der Domains erlauben / implementieren
 #### Trust Levels
 - [ ] Was passiert, wenn man ein Trust-Level löscht, das aber in Policies
   verwendet wird?

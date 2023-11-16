@@ -116,7 +116,7 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
     switch(request) {
         case 'requestConfig':
             console.log(`MSG RECV: ${request}`);
-            return Promise.resolve({ "config": new_format_config });
+            return Promise.resolve({ "config": config });
         case 'requestJSONConfig':
             console.log(`MSG RECV: ${request}`);
             return Promise.resolve({ "config": getJSONConfig() });

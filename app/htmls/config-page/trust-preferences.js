@@ -74,7 +74,7 @@ export function updateTrustPreferences(json_config) {
             // load domain preferences into now existing divs
             loadDomainContent(json_config, domain_name);
         } else {
-            console.log("No div for domain " + domain_name);
+            console.log("Creating new div for domain " + domain_name);
             buildDomainPreferencesDiv(domain_name);
             loadDomainContent(json_config, domain_name);
         }
@@ -279,7 +279,7 @@ function loadDomainInheritedPreferences(json_config, domain) {
             //console.log("checking " + caset + " of domain " + domain_name);
             // inherits, if not already defined
             if (
-                (!domain_prefs.hasOwnProperty(caset)) &&
+                (!domain_prefs.has(caset)) &&
                 (!hasInheritedPref(caset))
             ) {
                 //console.log("Adding " + caset + " to inherited");
@@ -341,7 +341,9 @@ function loadDomainInheritedPreferences(json_config, domain) {
     // load inherited prefs
     inherited_prefs.forEach((pref_data, domain_name) => {
         //const [domain_name, pref_data] = elem;
-        console.log(`${domain_name}: ${pref_data}`)
+        console.log("Inherited preferences:")
+        console.log(`${domain_name}: `)
+        console.log(pref_data)
         // label
         /*inherited_prefs_div.appendChild((() => {
             const label = document.createElement('p');
@@ -351,7 +353,7 @@ function loadDomainInheritedPreferences(json_config, domain) {
         // prefs
         Object.entries(pref_data).forEach(pref => {
             const [caset, level] = pref;
-            
+
             const pref_row = document.importNode(
                 document.getElementById(
                     "trust-preference-inherited-row-template"

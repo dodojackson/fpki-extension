@@ -124,7 +124,7 @@ async function resetConfig() {
  */
 async function requestConfig() {
     const response = await browser.runtime.sendMessage("requestConfig");
-    json_config = response.config;
+    json_config = toNewConfig(response.config);
 }
 
 
