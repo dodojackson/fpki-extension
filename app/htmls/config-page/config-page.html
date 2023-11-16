@@ -117,6 +117,42 @@
     </template>
 
 
+    <!-- template for editable caset-->
+    <template id="ca-sets-caset-template">
+      <div class="ca-sets-caset" data-caset="">
+        <div class="ca-sets-caset-header" data-caset="">
+          <select class="ca-sets-caset-header btn" data-caset="">
+
+          </select>
+        </div>
+
+        <div class="ca-sets-caset-content" data-caset="" hidden>
+          <h4>CA Set Settings</h4>
+          <div class="ca-sets-caset-name" data-caset="">
+            <!-- will ich das bearbeitbar machen?? dann müsste man alle
+          preferences immer ändern auch etc-->
+          </div>
+          <div class="ca-sets-caset-description" data-caset="">
+            <!-- einfach ein freitext feld machen -->
+          </div>
+
+          <h4>Edit Included CAs</h4>
+          <div class="ca-sets-caset-cas" data-caset="">
+            <!-- unterscheiden, nach included/selected und nicht selected, damit
+            der user klar hat uhd nicht darauf vertrauen muss, dass z.B. oben
+            schonalle incldueten angezeigt werden -->
+          </div>
+
+          <div class="ca-sets-caset-more">
+            <button class="ca-sets-caset-delete" data-caset="">
+              Delete CA Set.
+            </button>
+          </div>
+        </div>
+      </div>
+    </template>
+
+
     <div id="options" style="margin-bottom: 100px;">
       <h1>F<span style="font-weight: lighter;">(lexible)</span>-PKI Settings</h1>
       <p>
