@@ -81,33 +81,6 @@ export function updateTrustPreferences(json_config) {
 
 
 /**
- * Sort domain headers/containers  
- * TODO: nach domain-subdomain (tree-mäßig)
- */
-function sortDomains() {
-    let domain_divs = document.querySelectorAll(
-        `div.trust-preference-domain`
-    );
-    // sort domains by domain-name alphabetically
-    domain_divs = Array.from(domain_divs);
-    domain_divs.sort((a, b) => {
-        return (
-            a.getAttribute('data-domain')
-                .localeCompare(b.getAttribute('data-domain'))
-        );
-    });
-    const sorted_domain_divs = document.createDocumentFragment();
-    domain_divs.forEach(row => {sorted_domain_divs.appendChild(row)});
-    // refill trust preferences div
-    const preferences_div = document.querySelector(
-        `div#trust-preference-domains`
-    );
-    preferences_div.innerHTML = "";
-    preferences_div.appendChild(sorted_domain_divs);
-}
-
-
-/**
  * (Re)loads the domains trust preference content-div
  */
 function loadDomainContent(json_config, domain_name) {
@@ -134,6 +107,33 @@ function loadDomainContent(json_config, domain_name) {
     loadDomainInheritedPreferences(json_config, domain_name);
 
     loadEventListeners(json_config);
+}
+
+
+/**
+ * Sort domain headers/containers  
+ * TODO: nach domain-subdomain (tree-mäßig)
+ */
+function sortDomains() {
+    let domain_divs = document.querySelectorAll(
+        `div.trust-preference-domain`
+    );
+    // sort domains by domain-name alphabetically
+    domain_divs = Array.from(domain_divs);
+    domain_divs.sort((a, b) => {
+        return (
+            a.getAttribute('data-domain')
+                .localeCompare(b.getAttribute('data-domain'))
+        );
+    });
+    const sorted_domain_divs = document.createDocumentFragment();
+    domain_divs.forEach(row => {sorted_domain_divs.appendChild(row)});
+    // refill trust preferences div
+    const preferences_div = document.querySelector(
+        `div#trust-preference-domains`
+    );
+    preferences_div.innerHTML = "";
+    preferences_div.appendChild(sorted_domain_divs);
 }
 
 

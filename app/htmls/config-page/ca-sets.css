@@ -45,3 +45,37 @@ div.ca-sets-caset-more {
     align-items: center;
     justify-content: center;
 }
+
+button.ca-sets-caset-delete {
+    padding: 3px 10px;
+    font-size:medium ;
+    background-color: #8b0000c0;
+    cursor: pointer;
+    border-radius: 5px;
+    color: whitesmoke;
+    font-weight: bold;
+}
+
+/*
+    CAs Level
+*/
+
+div.ca-sets-caset-cas {
+    margin-top: 30px;
+}
+
+select.ca-sets-caset-cas-header {
+    width: 100%;
+    font-size:medium;
+}
+
+div.ca-sets-caset-cas-content {
+    padding: 20px;
+    margin-bottom: 10px;
+    border: 1px solid grey;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+
+    max-height: 200px;
+    overflow-y: scroll;
+}
