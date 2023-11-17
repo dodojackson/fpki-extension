@@ -329,14 +329,6 @@ function loadCASets(json_config) {
     });
     ca_selection += `</select>`;
 
-    let ca_sets_rows = "";
-    for (const [name, info] of Object.entries(json_config['ca-sets'])) {
-        let set = new CASet(name, info);
-        ca_sets_rows += set.print();
-    }
-
-    document.getElementById('ca-sets-table-body').innerHTML = ca_sets_rows;
-
     // Event Listeners
     let open_set_btns = document.querySelectorAll('tr.ca-set-html');
     open_set_btns.forEach(btn => {

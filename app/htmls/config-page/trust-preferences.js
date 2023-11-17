@@ -657,9 +657,6 @@ function loadEventListeners(json_config) {
                         elem.value,
                         trustlevel_select.value
                     );
-                    // reload all domain contents, because inherited preferences
-                    // might be affected
-                    updateTrustPreferences(json_config);
                 }
             });
         }
@@ -681,9 +678,6 @@ function loadEventListeners(json_config) {
                         caset_select.value,
                         elem.value
                     );
-                    // reload all domain contents, because inherited preferences
-                    // might be affected
-                    updateTrustPreferences(json_config);
                 }
             });
         }
@@ -743,10 +737,9 @@ function loadEventListeners(json_config) {
  */
 function addPreference(json_config, domain, caset, level) {
     json_config['legacy-trust-preference'][domain].set(caset, level);
-    // TODO: nur den entsprechenden bereich neu laden. sollte mit neuer template
-    // etc herangehensweise einfach werden
-    loadDomainContent(json_config, domain);
-    //loadUserPolicies(json_config);
+    // reload all domain contents, because inherited preferences will be
+    // affected
+    updateTrustPreferences(json_config)
 }
 
 
@@ -755,7 +748,8 @@ function addPreference(json_config, domain, caset, level) {
  */
 function delPreference(json_config, domain, caset) {
     json_config['legacy-trust-preference'][domain].delete(caset);
-    loadDomainContent(json_config, domain);
+    // update all prefs, as this will effect inherited prefs of other domains
+    updateTrustPreferences(json_config)
 }
 
 
@@ -801,4 +795,20 @@ function getUnconfiguredCASets(json_config, domain) {
     //console.log(unconfigured_casets);
 
     return unconfigured_casets;
+}
+
+
+/**
+ * Allows CA Set to be deleted. Then delete all prefereces associated to that CA
+ * Set. Triggered by ca-sets.js.
+ */
+export function delCASetPreferences(json_config, caset_name) {
+    Object.entries(json_config['legacy-trust-preference']).forEach(elem => {
+        const [domain_name, prefs] = elem;
+        prefs.forEach((_, pref_caset) => {
+            if (pref_caset == caset_name) {
+                delPreference(json_config, domain_name, caset_name)
+            }
+        })
+    })
 }

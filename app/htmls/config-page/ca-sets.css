@@ -1,7 +1,3 @@
-div#ca-sets {
-    margin-bottom: 50px;
-}
-
 .ca-sets-add-caset {
     width: 100%;
     box-sizing: border-box;
@@ -38,8 +34,13 @@ div.ca-sets-caset-content {
     border-bottom-right-radius: 10px;
 }
 
+div.ca-sets-caset-description {
+    color: dimgray;
+}
+
+
 div.ca-sets-caset-more {
-    padding-top: 30px;
+    padding-top: 10px;
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -65,17 +66,32 @@ div.ca-sets-caset-cas {
 }
 
 select.ca-sets-caset-cas-header {
-    width: 100%;
-    font-size:medium;
+    padding-right: 5px;
+    font-size: 1em;
+    font-weight: 600;
+
+    border: none;
+    background-color: whitesmoke;
+}
+
+h4.ca-sets-caset-cas-header {
+    margin-bottom: 0;
 }
 
 div.ca-sets-caset-cas-content {
-    padding: 20px;
-    margin-bottom: 10px;
-    border: 1px solid grey;
-    border-bottom-left-radius: 10px;
-    border-bottom-right-radius: 10px;
+    margin: 16px 0;
+    color: dimgray;
 
     max-height: 200px;
     overflow-y: scroll;
+
+    ul {
+        box-sizing: border-box;
+        padding-left: 20px;
+        margin-top: 0;
+    }
+}
+
+.ca-sets-caset-cas-header {
+    text-align: left;
 }

@@ -4,6 +4,7 @@
     <meta name="color-scheme" content="light dark" />
     <meta charset="UTF-8">
     <link rel="icon" id="favicon" href="../../images/F-D_dark.png" />
+    <link rel="stylesheet" href="./font-awesome.min.css">
     <link rel="stylesheet" href="./config-page.css" />
     <link rel="stylesheet" href="./trust-preferences.css" />
     <link rel="stylesheet" href="./ca-sets.css" />
@@ -128,22 +129,27 @@
         </div>
 
         <div class="ca-sets-caset-content" data-caset="" hidden>
-          <h4>CA Set Settings</h4>
+          <!--<h4>CA Set Settings</h4>-->
           <div class="ca-sets-caset-name" data-caset="">
             <!-- will ich das bearbeitbar machen?? dann müsste man alle
           preferences immer ändern auch etc-->
           </div>
+          <h4 style="margin-bottom: 0;">Description:</h4>
           <div class="ca-sets-caset-description" data-caset="">
-            <!-- einfach ein freitext feld machen -->
+            <p class="ca-sets-caset-description" data-caset=""></p>
           </div>
 
           <div class="ca-sets-caset-cas" data-caset="">
             <div class="ca-sets-caset-cas-header" data-caset="">
+              <h4 class="ca-sets-caset-cas-header" data-caset="">
+                CAs: <!--<i class="ca-sets-caset-cas-header">&#9881;</i>-->
+              </h4>
+              <!--
               <select class="ca-sets-caset-cas-header btn" data-caset="">
-                <option>Edit CAs</option>
-              </select>
+                <option>CAs <i>&#9881;</i></option>
+              </select>-->
             </div>
-            <div class="ca-sets-caset-cas-content" data-caset="" hidden>
+            <div class="ca-sets-caset-cas-content" data-caset="">
               <!-- unterscheiden, nach included/selected und nicht selected,
               damit der user klar hat uhd nicht darauf vertrauen muss, dass z.B.
               oben schonalle incldueten angezeigt werden -->
@@ -353,7 +359,7 @@
       ----------------------------------->
       <div class="settings-section" id="ca-sets-settings-section">
         <div class="settings-section-header">
-          <h2 style="display: inline-block;">CA Sets</h2>
+          <h2 style="display: inline-block; margin-bottom: 0px;">CA Sets</h2>
           <span class="info-icon-old">&#9432;</span>
           <div class="info-box-old" hidden>
             <p>
@@ -368,24 +374,30 @@
               konfigurieren.
             </p>
           </div>
+
+          <p style="margin-top: 10px;">
+            Manage <b>Sets of CAs</b> to configure <b>Trust Preferences</b> for.
+          </p>
         </div>
 
 
         <!-- NEW -->
+        <h3>Sets:</h3>
         <div id="ca-sets">
           <div id="ca-sets-casets">
 
           </div>
+          <!-- TODO: aktuell noch mit dem "Builder" hierunter...
           <div class="ca-sets-add-caset">
             <input 
               type="text" 
               placeholder="__add_caset__"
               class="ca-sets-add-caset" 
             />
-          </div>
+          </div>-->
         </div>
 
-        <!-- OLD -->
+        <!-- OLD 
         <table id="ca-sets-table">
           <thead>
               <tr>
@@ -395,14 +407,15 @@
               </tr>
           </thead>
           <tbody id="ca-sets-table-body">
-              <!-- javascript generated -->
+
           </tbody>
-        </table>
+        </table>-->
 
         <!-- 
           CA Set Builder 
         -->
-        <div id="ca-sets-builder" class="default-border" style="margin-top: 40px; background-color: rgb(231, 231, 231);">
+        <h3>Add Set:</h3>
+        <div id="ca-sets-builder" class="default-border" style="background-color: rgb(231, 231, 231);">
 
           <input type="text" placeholder="Set Name" id="ca-sets-builder-name" class="full-width"/><br>
           <input type="text" placeholder="Description" id="ca-sets-builder-description" class="full-width" style="margin-top: 0;"/><br>
