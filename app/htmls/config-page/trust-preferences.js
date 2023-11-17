@@ -67,7 +67,7 @@ export function updateTrustPreferences(json_config) {
         if (document.querySelector(
             `div.trust-preference-domain[data-domain="${domain_name}"]`
         )) {
-            // load domain preferences into now existing divs
+            // load domain preferences into existing divs (prevent collapse of divs)
             loadDomainContent(json_config, domain_name);
         } else {
             //console.log("Creating new div for domain " + domain_name);

@@ -1,4 +1,5 @@
 import * as trust_preferences from "./trust-preferences.js"
+import * as ca_sets from "./ca-sets.js"
 import * as trust_levels from "./trust-levels.js"
 import * as misc from "./misc.js"
 import { clone } from "../../js_lib/helper.js";
@@ -143,6 +144,8 @@ export async function reloadSettings() {
     // Load legacy trust preferences
     //trust_preferences.loadUserPolicies(json_config);
     trust_preferences.initTrustPreferences(json_config);
+    // Load CA Sets
+    ca_sets.initCASets(json_config);
     // Load CA Sets
     loadCASets(json_config);
     loadCASetBuilder(json_config);

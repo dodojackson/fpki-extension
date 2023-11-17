@@ -84,10 +84,10 @@ TODO's nach Kategorie.
   > das ist nicht ganz so einfach glaube ich, low prio
 - [ ] löschen von prefs vllt. auch nochmal bestätigen, aber wenn dann
   unproblematisch, indem zB die row rot hinter/überlegt ist und man dann nochmal
-  auf den gleichen button klicken muss, wo diesmal ein haken ist. oder so etwas
-- [ ] Den ganzen Info-Text kürzen und auf englisch machen 
+  auf den gleichen button klicken muss, wo diesmal ein haken ist. oder so etwas **do it!**
+- [ ] Den ganzen Info-Text kürzen und auf englisch machen **do it!**
 - [ ] Eingabefeld `Notizen` bei jeder Domain, optional, damit man sich selber 
-  erinnern kann an begründungen für bestimmte einstellungsmöglichkeiten
+  erinnern kann an begründungen für bestimmte einstellungsmöglichkeiten **future work**
 - [ ] `I2-?`: Manuelles verschieben/sortieren der Preferences möglich machen und
   dadurch die Priorität von Rules selber festlegen (First-match wie bei
   firewall)
