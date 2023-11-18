@@ -1,6 +1,20 @@
 import {firefox_trust_store_cas} from "./trust_store_cas.js"
 
 export const defaultConfig = {
+    "legacy-trust-preference": {
+        "*": [
+            {
+                "caSet": "All Trust-Store CAs",
+                "level": 2
+            }
+        ]
+    },
+    "ca-sets": {
+        "All Trust-Store CAs": firefox_trust_store_cas
+    },
+    "ca-sets-descriptions": {
+        "All Trust-Store CAs": "All CAs included in your browsers Trust-Store"
+    },
     "mapservers": [
         {
             "identity": "local-mapserver",
@@ -20,6 +34,13 @@ export const defaultConfig = {
         "High Trust": 3,
         "Perfect Trust": 4
     },
+    "trust-levels-rev": {
+        "0": "Untrusted",
+        "1": "Low Trust",
+        "2": "Standard Trust",
+        "3": "High Trust",
+        "4": "Perfect Trust"
+    },
     "cache-timeout": 3600000,
     "max-connection-setup-time": 1000,
     "proof-fetch-timeout": 10000,
@@ -28,22 +49,6 @@ export const defaultConfig = {
     "mapserver-instances-queried": 1,
     "send-log-entries-via-event": true,
     "wasm-certificate-parsing": true,
-    "ca-sets": {
-        "All Trust-Store CAs": firefox_trust_store_cas
-    },
-    "legacy-trust-preference": {
-        "*": [
-            {
-                "caSet": "All Trust-Store CAs",
-                "level": 2
-            }
-        ]
-    },
-    "legacy-trust-preference-prios": {
-        "*": [
-            "All Trust-Store CAs"
-        ]
-    },
     "policy-trust-preference": {
         "*": [
             {
@@ -63,15 +68,5 @@ export const defaultConfig = {
         "DigiCert Secure Site CN CA G3": "description: ...",
         "GlobalSign Organization Validation CA - SHA256 - G2": "description: ...",
         "DigiCert TLS Hybrid ECC SHA384 2020 CA1": "description: ..."
-    },
-    "trust-levels-rev": {
-        "0": "Untrusted",
-        "1": "Low Trust",
-        "2": "Standard Trust",
-        "3": "High Trust",
-        "4": "Perfect Trust"
-    },
-    "ca-sets-descriptions": {
-        "All Trust-Store CAs": "All CAs included in your browsers Trust-Store"
     }
 }
