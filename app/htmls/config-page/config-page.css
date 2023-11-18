@@ -238,7 +238,8 @@ div.info-box {
 }
 
 input.full-width {
-    width: calc(100% - 20px);
+    box-sizing: border-box;
+    width: 100%;
     margin: 10px 0;
     padding: 5px 10px;
 }
