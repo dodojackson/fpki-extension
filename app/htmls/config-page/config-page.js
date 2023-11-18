@@ -80,6 +80,21 @@ document.addEventListener('DOMContentLoaded', async () => {
                     misc.toggleElement(box);
                 });
             });
+
+        
+        document
+            .querySelectorAll(`i.info-icon-old`)
+            .forEach(elem => {
+                if (!elem.hasAttribute('listener')) {
+                    elem.setAttribute('listener', "true")
+                    elem.addEventListener("click", () => {
+                        const info_box = document.querySelector(
+                            `div.info-box-old[data-info-id="${elem.getAttribute('data-info-id')}"]`
+                        )
+                        misc.toggleElement(info_box)
+                    })
+                }
+            })
             
 
         console.log("TEST 1");

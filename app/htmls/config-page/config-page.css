@@ -79,6 +79,15 @@ span.info-icon-old {
     margin-left: 5px;
 }
 
+i.info-icon-old {
+    font-weight:800;
+    font-size: large;
+    font-style: normal;
+    cursor: pointer;
+    margin-left: 5px;
+    color: rgb(211, 149, 23);
+}
+
 div.info-box-old {
     border: 2px solid grey;
     border-radius: 10px;
