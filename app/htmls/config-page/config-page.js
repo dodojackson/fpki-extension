@@ -5,6 +5,7 @@ import * as misc from "./misc.js"
 import { clone } from "../../js_lib/helper.js";
 import { toOldConfig, toNewConfig, convertJSONConfigToMap} from "../../js_lib/config.js";
 
+
 /*
     This script holds a working copy of the original live config object.
     Whenever the changes are saved, the original is replaced by this copy.
@@ -31,9 +32,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
         document.getElementById('resetConfig').addEventListener('click', async () => {
             await resetConfig();
-            //console.log("asdfji")
             reloadSettings();
-            //console.log("posted message: resetConfig");
         });
         
         document.getElementById('uploadConfig').addEventListener('click', async () => {
@@ -46,7 +45,12 @@ document.addEventListener('DOMContentLoaded', async () => {
                 //setConfig(response.config);
                 console.log("RESONSE:");
                 console.log(response.config);
-                json_config = toNewConfig(response.config);  // TODO: ich kriege die config im alten format!
+                // Update json config without changing the reference
+                const new_json_config = toNewConfig(response.config); 
+                Object.entries(new_json_config).forEach(entry => {
+                    const [key, new_value] = entry
+                    json_config[key] = new_value
+                })
                 console.log(json_config);
                 location.reload(true);
             }
@@ -103,10 +107,9 @@ document.addEventListener('DOMContentLoaded', async () => {
             trust_preferences.updateTrustPreferences(json_config)
         })
             
-
-        console.log("TEST 1");
-        await requestConfig();
-        console.log("TEST 2");
+        // Initialize config
+        await initConfig();
+        // Initially load settings
         await reloadSettings();
     } catch (e) {
         console.log("config button setup: " + e);
@@ -116,6 +119,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 /**
  * Prints live config object to html as JSON string
+ * 
+ * Currently unused. Normal users dont need this
  */
 async function printConfig() {
     var configCodeElement = document.getElementById("config-code");
@@ -135,17 +140,20 @@ async function resetConfig() {
     );
     if (answer == "Yes") {
         const response = await browser.runtime.sendMessage("resetConfig");
-        json_config = toNewConfig(response.config);
+        const new_json_config = toNewConfig(response.config);
+        Object.entries(new_json_config).forEach(entry => {
+            const [key, new_value] = entry
+            json_config[key] = new_value
+        })
         console.log("CONFIG RESET.");
-        //console.log(json_config);
     }
 }
 
 
 /**
- * Request live config from background script
+ * Request live config from background script to initialize config
  */
-async function requestConfig() {
+async function initConfig() {
     const response = await browser.runtime.sendMessage("requestConfig");
     json_config = toNewConfig(response.config);
 }
@@ -299,46 +307,6 @@ class CASetBuilder {
 }
 
 
-class CASet {
-    constructor(name, info) {
-        this.name = name;
-        this.description = info['description'];
-        this.set = info['cas'];
-    }
-
-    /**
-     * Print CASet HTML as needed
-     */
-    print() {
-        let del_btn;
-        if (this.name === "All Trust-Store CAs") {
-            del_btn = `<td></td>`
-        } else {
-            del_btn = `<td class="btn">x</td>`
-        }
-        let set_html = `
-        <tr class="${this.name} ca-set-html">
-            <td class="btn" style="font-weight: 600; font-size: 16px;">${this.name}</td>
-            <td>${this.description}</td>
-            ${del_btn}
-        </tr>
-        <tr hidden >
-            <td colspan="3">
-                <div style="max-height:300px; overflow-y:scroll;">
-                ${this.set.join("<br>")}
-                </div>
-            </td>
-        </tr>`;
-
-        return set_html;
-    }
-
-    test() {
-        console.log(this.name + ": " + this.description);
-    }
-}
-
-
 /**
  * Lädt die konfigurierten CA-Sets
  */
@@ -445,7 +413,7 @@ function setupCASetBuilderEventListeners(json_config) {
     if (!add_btn.hasAttribute("listener")) {
         add_btn.setAttribute("listener", "true");
         add_btn.addEventListener("click", async (e) => {
-
+            // Dont allow empty set name
             let set_name = document.querySelector('input#ca-sets-builder-name').value.trim();
             if (set_name == "") {
                 await misc.showPopup("Please enter a set name.", ["Ok."])
@@ -456,7 +424,6 @@ function setupCASetBuilderEventListeners(json_config) {
                 window.scrollTo({top: y, behavior: 'smooth'});
                 return
             }
-            console.log(json_config['ca-sets']);
             let set_description = document.querySelector('input#ca-sets-builder-description').value.trim();
             let set_cas = [];
             set_builder.selected_cas.forEach(ca => {
@@ -545,7 +512,6 @@ async function resetChanges(e) {
     }
 
     const live_config = toNewConfig((await browser.runtime.sendMessage("requestConfig")).config);
-    //let json_config = getJSONConfig();
 
     // Mapservers
     if (e.target.classList.contains('mapservers')) {

@@ -93,31 +93,24 @@ TODO's nach Kategorie.
           - klappt, auch mit import/export etc. scheinbar - **nice!**
         - [x] Reihenfolgen Change wird noch nicht bei inherited preferences
           übernommen (einfach reload?)
+- [ ] keine ungültigen domain-eingaben zulasse. **future work**
 #### Trust Levels
-- [ ] Was passiert, wenn man ein Trust-Level löscht, das aber in Policies
-  verwendet wird?
-  > In Interviews fragen: ist blöd und nicht wirklich zu lösen, nicht löschbar,
-  > mit hinweis für den benutzer
+
 #### CA-Sets
 - [ ] Custom CAs vllt. persistent hinzufügbar machen, damit man sie dann auch
-  einfach anklicken kann
+  einfach anklicken kann **future work**
 - [ ] ca-set name verbieten, wenn er gleich einem distinguished name in dem
   trust store ist, weil diese Setnamen im hintergrund für einzelne CAs gebraucht
-  werden, die auch in den trust preferences konfigurierbar sein sollen
-- [ ] Was passiert wenn man ein CA-Set löscht, das verwendet wird?
-  - [ ] Verwendende Policies können eigentlich nicht in der Config bleiben, weil
-    es sonst probleme geben wird, wenn der Setname in der internen Logik
-    aufgelöst werden soll.
-  > ich glaube interview 2 hat gesagt, dass er erwarten würde, dass die entspr.
-  > policies einfach gelöscht werden
-  - [ ] popup, dass die policies gelöscht werden würden. bestätigung fordern
-    oder abbrechen lassen.
+  werden, die auch in den trust preferences konfigurierbar sein sollen **future work**
+
 - [ ] `select all` button für wenn man schon gefiltert hat
 - [ ] `modify set` option, wo das dann vielleich in den set builder nochmal
   reingeladen wird
+  > sets sollten im dropdown direkt bearbeitbar sein, aber das kriege ich nicht
+  > mehr hin leider **future work**
 - [ ] Suche nach bestimmten CAs erleichtern, indem man in Filtern auch Aliase
   berücksichtigt. Die müssten dann wahrscheinlich irgendwo in ner entsprechenden
-  Datei gepflegt werden.  
+  Datei gepflegt werden.  **future work**
   > Die Frage ist auch, ob man (falls ich es so mache, dass manuell hinzugefügte
   > CAs bald auch in der Liste erscheinen) den Benutzer selber aliase für seine
   > manuell hinzugefügten CAs erstellen lässt.
@@ -126,22 +119,23 @@ TODO's nach Kategorie.
   > das macht auch nur sinn, wenn manuell hinzugefügte cas hier angezeigt
   > werden, sonst muss man die beim hinzufügen einer preference angeben (gut
   > wäre auch eine option..)
-- [ ] Liste von existiereneden ca set vllt genauso machen wie die liste
+- [x] Liste von existiereneden ca set vllt genauso machen wie die liste
   existierender domains, zum ausklappen und dann stehen da die informationen,
   description und ca liste etc??
-- [ ] irgendwie ne funktion implementieren, die prüfen, welche überschneidungen
+- [x] irgendwie ne funktion implementieren, die prüfen, welche überschneidungen
   es bei einer liste von ca-sets gibt (also welche ca-sets überschneidungen mit
   welchen anderen haben)
+  > nicht mehr notwendig stand jetzt (18.11.)
   - [ ] Hinweis, dass eine preference nicht für alle cas übernommen wird immer
-    bei der preference und nicht etwa da wo die higher-prio preference ist
+    bei der preference und nicht etwa da wo die higher-prio preference ist **
 - [ ] `I2-391`: Custom-CAs wäre konsistenter, wenn man die irgendwo hinzufügen
   könnte, sodass die dann immer mit in der Liste zum filtern mit drin sind
-  - [ ] das ist auch direkt der erste sinnvolle standard-filter: "custom-cas"
-- [ ] `I2-371`: Klarer machen, in welchem Format die Custom-CAs hinzuzufügen
+  - [ ] das ist auch direkt der erste sinnvolle standard-filter: "custom-cas" **future work**
+- [x] `I2-371`: Klarer machen, in welchem Format die Custom-CAs hinzuzufügen
   sind und wenn das eingagebelf so bleibt, dass man eine pro zeile angibt
-- [ ] `I2-559`: Buttons zm aufklappen solten so aussehen, wie auch bei trust
+- [x] `I2-559`: Buttons zm aufklappen solten so aussehen, wie auch bei trust
   preferences.
-- [ ] `I2-564`: Löschen von CA-Sets. Hinweis, wenn dadurch preferences entfernt
+- [x] `I2-564`: Löschen von CA-Sets. Hinweis, wenn dadurch preferences entfernt
   werden, aber dann ist das auch ok.
   - [ ] Preferences entfernen dann auch!
 - [ ] `I2-610`: Text von Custom-CA Set leeren nach hinzufügen eines sets
@@ -280,9 +274,21 @@ Als Erinnnerung später.
 - [ ] Predefined CA Sets
   > eher weniger wichtig für mich denke ich. aber future work.  
   > in latex file übernommen
+- [x] Was passiert wenn man ein CA-Set löscht, das verwendet wird?
+  - [x] Verwendende Policies können eigentlich nicht in der Config bleiben, weil
+    es sonst probleme geben wird, wenn der Setname in der internen Logik
+    aufgelöst werden soll.
+  > ich glaube interview 2 hat gesagt, dass er erwarten würde, dass die entspr.
+  > policies einfach gelöscht werden
+  - [x] popup, dass die policies gelöscht werden würden. bestätigung fordern
+    oder abbrechen lassen.
 #### Trust Levels
 - [x] Trust Levels nach Rank sortieren
 - [x] Add trust level functionality
+- [x] Was passiert, wenn man ein Trust-Level löscht, das aber in Policies
+  verwendet wird? *in interview und in meeting besprochen*
+  > In Interviews fragen: ist blöd und nicht wirklich zu lösen, nicht löschbar,
+  > mit hinweis für den benutzer
 
 ### Design
 - [x] userpolicies domain über ganze breite und toggle einfach indem man auf die

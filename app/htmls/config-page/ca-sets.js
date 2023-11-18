@@ -28,8 +28,6 @@ export function initCASets(json_config) {
  * Only updated the casets. Doesnt reset expanded status of divs.  
  */
 export function updateCASets(json_config) {
-    console.log("Updating using config:")
-    console.log(json_config)
 
     Object.entries(json_config['ca-sets']).forEach(elem => {
         const [caset_name, _] = elem;
