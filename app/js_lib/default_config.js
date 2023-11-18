@@ -13,7 +13,7 @@ export const defaultConfig = {
         "All Trust-Store CAs": firefox_trust_store_cas
     },
     "ca-sets-descriptions": {
-        "All Trust-Store CAs": "All CAs included in your browsers Trust-Store"
+        "All Trust-Store CAs": "All CAs included in your browsers Trust-Store."
     },
     "mapservers": [
         {
