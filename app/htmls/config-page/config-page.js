@@ -20,10 +20,12 @@ let set_builder; // global ca set builder class instance
 
 document.addEventListener('DOMContentLoaded', async () => {
     try {
+        /* DEV
         document.getElementById('printConfig').addEventListener('click', async () => {
             await requestConfig();
             printConfig();
         });
+        */
         document.getElementById('downloadConfig').addEventListener('click', function() {
             port.postMessage("downloadConfig");
         });
