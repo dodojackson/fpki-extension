@@ -214,7 +214,7 @@ export async function reloadSettings() {
 
     // Event Listeners: Info-Icons
     document
-        .querySelectorAll("span.info-icon")
+        .querySelectorAll("span.info-icon,i.info-icon")
         .forEach(elem => {
             if (!elem.hasAttribute('listener')) {
                 elem.setAttribute('listener', "true");

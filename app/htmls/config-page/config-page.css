@@ -212,12 +212,14 @@ select.user-policy-dropdown {
     font-weight:600;
 }
 
-span.info-icon {
+span.info-icon,
+i.info-icon {
     color: rgb(211, 149, 23);
     font-weight: bolder;
     font-size: large;
     cursor: pointer;
     margin-left: 5px;
+    font-style: normal;
 }
 
 div.info-box {

@@ -20,7 +20,7 @@
           </select>
         </div>
         <div class="trust-preference-domain-content" data-domain="" hidden>
-          <h4>Domain Preferences</h4>
+          <h4>Domain Preferences <i class="info-icon" info-id="trust-preference-first-match-rule">&#9432;</i></h4>
           <!--<div class="trust-preference-domain-preferences-legend">
             <div class="trust-preference-domain-preferences-legend-caset">
               <span>CA Set</span>
@@ -231,6 +231,12 @@
           preferred</b> over Certificates from less trusted CAs.
         </p>
       </div>
+
+      <div class="info-box" info-id="trust-preference-first-match-rule">
+        <p>
+          The <b>first matching preference</b> will be applied <b>!</b>
+        </p>
+      </div>
       
       <hr style="margin-top: 50px; margin-bottom: 20px; margin-left: -10%; margin-right: -10%;">
 
@@ -247,48 +253,54 @@
           </p>
           <div class="info-box-old" data-info-id="trust-preferences" hidden>
             <p>
-              User Policies ermöglichen die feinere <b>Differenzierung von
-              Vertrauen</b>, das der Nutzer bestimmten CAs für bestimmte Domains
-              entgegenbringt.
+              Trust-Preferences allow you <b>specify the individual trust</b>
+              that you place in certain CAs (Certification Authorities) for
+              certain domains.
             </p>
             <p>
-              User Policies haben eine oder mehrere <span
-              class="keyword">Domains</span> als <b>Scope</b>.
+              A Trust-Preference has a <b>Scope</b> of one or many domains.
             </p>
             <p>
-              Domains können mit <b>Wildcards</b> angegeben werden, d.h. <span
-              class="code">*.example.com</span> oder <span
-              class="code">*.de</span> sind valide Angaben, um alle Subdomains
-              von example.com bzw. alle Domains mit <q>de</q> als
-              Top-Level-Domain zu selektieren
+              Domains can be specified using <b>Wildcards</b>. I.e. <span
+              class="code">*.example.com</span> or <span
+              class="code">*.de</span> are valid inputs to select all subdomains
+              of <q>example.com</q> or all domains with TLD (Top-Level-Domain)
+              <q>de</q> respectively.
             </p>
             <p>
-              Innerhalb dieses Scopes können für beliebig viele <span
-              class="keyword">CA-Sets</span> (<a
-              href="#ca-sets-settings-section">hier</a>
-              konfigurierbar) individuelle <span
-              class="keyword">Trust Level</span> gewählt werden:
+              For every <b>Domain-Scope</b> Trust-Levels can be configured for
+              as many CA-Sets (<a href="#ca-sets-settings-section">configurabe
+              here</a>) as you like.  
+
+              The <b>first matching preference</b> will be applied! (top-down)
             </p>
 
             <ul>
               <li style="margin-bottom: 5px;">
-                <b>Untrusted:</b> Zertifikate werden nicht akzeptiert
+                <b>Untrusted:</b> Certificates will be rejected.
               </li>
               <li style="margin-bottom: 5px;">
-                <b>Standard Trust:</b> Zertifikate werden akzeptiert, esseidenn
-                es existieren Zertifikate für die Domain, welche von CAs mit
-                konfiguriertem Trust-Level <span class="code">High Trust</span>
-                oder <span class="code">Perfect Trust</span> ausgestellt
-                wurden.<sup>1,2</sup>
+                <b>Low Trust:</b> Certificates will be accepted unless existing
+                certificates for the domain have been issued by a higher trusted
+                CA (i.e. with configured Trust-Level <span class="code">Standard
+                Trust</span>, <span class="code">High Trust</span> or <span
+                class="code">Perfect Trust</span>). <sup>1</sup>
+              </li>
+              <li style="margin-bottom: 5px;">
+                <b>Standard Trust (Default):</b> Certificates will be accepted
+                unless existing certificates for the domain have been issued by
+                a higher trusted CA (i.e. with configured Trust-Level <span
+                class="code">High Trust</span> or <span class="code">Perfect
+                Trust</span>). <sup>1</sup>
               </li>
               <li>
-                <b>High Trust:</b> Zertifikate werden akzeptiert, esseidenn es
-                existieren Zertifikate für die Domain, welche von CAs mit
-                konfiguriertem Trust-Level <span class="code">Perfect
-                Trust</span> ausgestellt wurden.<sup>1,2</sup>
+                <b>High Trust:</b> Certificates will be accepted unless existing
+                certificates for the domain have been issued by a higher trusted
+                CA (i.e. with configured Trust-Level <span class="code">Perfect
+                Trust</span>). <sup>1</sup>
               </li>
               <li>
-                <b>Perfect Trust:</b> Zertifikate werden akzeptiert.<sup>1</sup>
+                <b>Perfect Trust:</b> Certificates will be accepted.
               </li>
             </ul>
 
@@ -301,21 +313,18 @@
                   style="border: 2px solid black; border-radius: 10px;"
                 >
                 <figcaption style="font-size: small;">
-                  User 1 (U<sub>1</sub>) benutzt Zertifikat 1 (C<sub>1</sub>)
-                  anstelle von Zertifikat 2 (C<sub>2</sub>), weil er der
-                  Zertifizierungsstelle 1 (CA<sub>2</sub>) mehr vertraut aus
-                  Zertifizierungsstelle 2 (CA<sub>2</sub>).
+                  User 1 (U<sub>1</sub>) uses Certificate 1 (C<sub>1</sub>)
+                  instead of Certificate 2 (C<sub>2</sub>), because he trusts
+                  Certification Authority 1 (CA<sub>1</sub>) more than
+                  Certification Authority 2 (CA<sub>2</sub>) for this domain.
                 </figcaption>
               </figure>
             </div>
 
             <p style="margin-left: 25px;">
-              <sup>1</sup> Zertifikate können auch durch <a href="#">Domain
-              Policies</a> invalidiert werden.
-              <br>
-              <sup>2</sup> Existierende Zertifikate werden von <a
-              href="#">Mapservern</a> gesammelt und zur Verfügung gestellt, die
-              ähnlich wie Certificate-Transparency-Logs funktionieren.
+              <sup>1</sup> Existing certificates are requested from so-called <a
+              href="#mapservers-settings-section">Mapservers</a>, which are
+              similar to CT-(Certificate Transparency)-Logs.
             </p>
           </div>
         </div>
@@ -529,7 +538,7 @@ CN=Custom CA 2,O=Internal,L=Milan,C=IT"
 
 
         <!-- MAPSERVER SETTINGS -->
-        <div class="settings-section">
+        <div class="settings-section" id="mapservers-settings-section">
           <h2>Mapservers</h2>
           <table id="mapservers-table">
             <thead>
