@@ -224,6 +224,8 @@ function loadEventListeners(json_config) {
                         delCASetPreferences(json_config, btn.getAttribute('data-caset'))
                         delCASet(json_config, btn.getAttribute('data-caset'))
                     }
+                } else {
+                    delCASet(json_config, btn.getAttribute('data-caset'))
                 }
             });
         }
