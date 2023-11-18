@@ -113,18 +113,37 @@ button.delete {
     background-color: lightcoral;
 }
 
-button.reset-changes {
-    width: 38%;
-    margin-left: auto;
-    background-color: rgba(238, 159, 56, 0.911);
+
+button.reset-changes,
+button.save-changes {
+    padding: 3px 10px;
+    font-size:medium ;
     cursor: pointer;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+button.reset-changes {
+    margin-left: auto;
+    background-color: dimgray;
+    color: whitesmoke;
 }
 
 button.save-changes {
-    width: 38%;
     margin-left: auto;
-    background-color: lightgreen;
-    cursor: pointer;
+    background-color: green;
+    color: whitesmoke;
+}
+
+div.reset-change-div {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: fit-content;
+
+    button {
+        width: 100%;
+    }
 }
 
 .default-border {

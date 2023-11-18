@@ -188,10 +188,12 @@
           Some more info here.sad ljdf lkadf ökjaf ölkajsdf ökjadfö lkadf kjsödfl k
         </div>
       </p>-->
-      <p>
+      <div class="reset-change-div">
         <!-- TODO: Placement -->
         <button id="resetConfig" class="btn import-export">Reset Config to Default</button>
-      </p>
+        <button class="reset-changes">Reset Changes</button>
+        <button class="save-changes">Save Changes</button>
+      </div>
 
       <!------------------------------------------------------------------------
           INFO BOXEN
@@ -229,7 +231,7 @@
         </p>
       </div>
       
-      <hr style="margin-top: 50px; margin-bottom: 20px; margin-left: -10%; margin-right: -10%; color: whitesmoke; border: none;">
+      <hr style="margin-top: 50px; margin-bottom: 20px; margin-left: -10%; margin-right: -10%;">
 
 
       <!------------------------------------------------------------------------
@@ -340,13 +342,14 @@
             </div>
           </div>
 
-
-          <button class="reset-changes legacy-trust-preference">
-                  Reset Changes
-          </button>
-          <button class="save-changes legacy-trust-preference">
-                  Save Changes
-          </button>
+          <div class="reset-change-div" style="margin-left: auto; margin-top: 20px;">
+            <button class="reset-changes legacy-trust-preference">
+                    Reset Changes
+            </button>
+            <button class="save-changes legacy-trust-preference">
+                    Save Changes
+            </button>
+          </div>
         <!--</div>-->
       </div>
 
@@ -387,7 +390,7 @@
           <div id="ca-sets-casets">
 
           </div>
-          <!-- TODO: aktuell noch mit dem "Builder" hierunter...
+          <!-- TODO: aktuell noch mit dem "Builder" sets adden...
           <div class="ca-sets-add-caset">
             <input 
               type="text" 
@@ -455,8 +458,10 @@ CN=Custom CA 2,O=Internal,L=Milan,C=IT"
           </button>
         </div>
 
-        <button class="reset-changes ca-sets">Reset Changes</button>
-        <button class="save-changes ca-sets">Save Changes</button>
+        <div class="reset-change-div" style="margin-left: auto; margin-top: 20px;">
+          <button class="reset-changes ca-sets">Reset Changes</button>
+          <button class="save-changes ca-sets">Save Changes</button>
+        </div>
       </div>
 
 
@@ -548,8 +553,10 @@ CN=Custom CA 2,O=Internal,L=Milan,C=IT"
                 <!-- Mapservers will be inserted based on JSON configuration -->
             </tbody>
           </table>
-          <button class="reset-changes mapservers">Undo Changes</button>
-          <button class="save-changes mapservers">Save Changes</button>
+          <div class="reset-change-div" style="margin-left: auto; margin-top: 20px;">
+            <button class="reset-changes mapservers">Undo Changes</button>
+            <button class="save-changes mapservers">Save Changes</button>
+          </div>
         </div>
 
 
@@ -572,9 +579,10 @@ CN=Custom CA 2,O=Internal,L=Milan,C=IT"
             <!-- Javascript-->
           </tbody>
         </table>
-
-        <button class="reset-changes trust-levels">Reset Changes</button>
-        <button class="save-changes trust-levels">Save Changes</button>
+        <div class="reset-change-div" style="margin-left: auto; margin-top: 20px;">
+          <button class="reset-changes trust-levels">Reset Changes</button>
+          <button class="save-changes trust-levels">Save Changes</button>
+        </div>
       </div>
 
 
@@ -623,8 +631,10 @@ CN=Custom CA 2,O=Internal,L=Milan,C=IT"
                 </tr>
             </tbody>
           </table>
-          <button class="reset-changes other-settings">Reset Changes</button>
-          <button class="save-changes other-settings">Save Changes</button>
+          <div class="reset-change-div" style="margin-left: auto; margin-top: 20px;">
+            <button class="reset-changes other-settings">Reset Changes</button>
+            <button class="save-changes other-settings">Save Changes</button>
+          </div>
         </div>
 
       </div>
