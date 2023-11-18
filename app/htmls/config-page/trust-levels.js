@@ -1,5 +1,13 @@
 //import {showPopup } from "./misc";
 
+
+/**
+ * Event to tell main script to reload trust preferences (neccessary when
+ * deleting trust level)
+ */
+const eventTrustLevelDeleted = new Event("deletedTrustLevel")
+
+
 /**
  * Lädt die Trust Levels Tabelle
  */
@@ -94,11 +102,16 @@ function loadTrustLevelSettingsEventListeners(json_config, f_showPopup) {
             elem.setAttribute("listener", "true");
             elem.addEventListener("click", (e) => {
                 let level_name = e.target.closest('tr').children[0].innerHTML.trim();
+
                 if (checkIfTrustlevelIsUsed(json_config, level_name) === true) {
                     f_showPopup("This trust level is in use by at least one of your configured preferences. You cannot delete this level.", ['Got it.']);
                 } else {
                     delete json_config['trust-levels'][level_name];
                     loadTrustLevelSettings(json_config);
+                    // Reload trust preference settings, because they may not be
+                    // able to use the trust level anymore (still shows in old
+                    // dropdowns)
+                    document.dispatchEvent(eventTrustLevelDeleted)
                 }
             });
         }
@@ -108,7 +121,7 @@ function loadTrustLevelSettingsEventListeners(json_config, f_showPopup) {
     let add_btn = document.querySelector('td.trust-level-add');
     if (!add_btn.hasAttribute('listener')) {
         add_btn.setAttribute("listener", "true");
-        add_btn.addEventListener("click", (e) => {
+        add_btn.addEventListener("click", () => {
             let new_level_name = document.querySelector('input.trust-level-add').value.trim();
 
             json_config['trust-levels'][new_level_name] = 100;
@@ -126,9 +139,8 @@ function checkIfTrustlevelIsUsed(json_config, level) {
     let result = false;
     try {
         Object.entries(json_config['legacy-trust-preference']).forEach(elem => {
-            const [domain, preferences] = elem;
-            Object.entries(preferences).forEach(pref => {
-                const [caset, trustlevel] = pref;
+            const [_, preferences] = elem;
+            preferences.forEach((trustlevel, _) => {
                 if (trustlevel == level) {
                     console.log(trustlevel + " is " + level);
                     result = true;

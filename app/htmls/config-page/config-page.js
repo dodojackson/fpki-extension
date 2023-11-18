@@ -97,6 +97,11 @@ document.addEventListener('DOMContentLoaded', async () => {
                     })
                 }
             })
+
+        document.addEventListener('deletedTrustLevel', () => {
+            console.log("Trust-Level deleted. Reloading Trust Preferences..")
+            trust_preferences.updateTrustPreferences(json_config)
+        })
             
 
         console.log("TEST 1");

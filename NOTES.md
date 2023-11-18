@@ -9,28 +9,10 @@
 TODO's nach Kategorie.
 
 ### Generell
-- [x] Beim Laden und Speichern der Config, von/nach Format konvertieren, dass
-  von der Extension intern verwendet werden kann.  
-  > meine config muss aber auch irgendwo persistens gespeichert werden, weil
-  > sonst bleiben z.B. die description eines CA-Sets nicht erhalten.  
-  > Kann man vllt. alles irgendwie in das andere Format auch kriegen???
-  - [X] Converter geschrieben, jetzt muss das nurnoch jedes mal passieren, wenn
-    an der config was geändert und gespeichert wird.
-    1. in neuem format auch im backend speichern
-    2. jedes mal automatisch die original config updaten
-  - [x] reset Config
-  - [x] get config from background
-    - [x] config-page.js ohne config.js umbauen
-  - [x] post config to background
-  - [x] wie werden die beiden configs initialisiert?
-    - [x] scheint zu klappen, aber default muss noch angepasst werden!
-- [ ] div-class machen, wo unten ein pfeil angezeigt wird und wenn man drauf
-  klickt, expanded sich das div. für lange listen, damit die inicht immer per
-  default komplett angezeigt werden müssen
+
 
 ### Infoseite
-- [ ] Infopage verfeinern, vllt. geopolitik usecase mit einbauen
-  > das ist vor dem nächsten interview wichtig
+
 
 ### Konfigurationsseite
 - [ ] Problem: Schnittmenge zwischen zwei CA-Sets. Wie löst man das?
@@ -44,17 +26,19 @@ TODO's nach Kategorie.
   > bringt auch nichts, weil den fall, dass man ein paar cas ausschließen will
   > von einem anderen höheren trust level, wird es wohl immer irgendwie geben.  
   > oder könnte es was bringen, nicht mit einem deafult trust level zu arbeiten?  
-  - [ ] Mail an Cyrill geschrieben. Antwort steht aus.
-- [ ] Widersprechende Policies gibt es glaube ich nicht, generell sollten
+  - [x] Mail an Cyrill geschrieben. Antwort steht aus.
+  - [ ] Lösung mit First-Match Liste scheint gut. Antwort auf andere Mail steht
+    aus und Test in Interview v.a. steht auch aus
+- [x] Widersprechende Policies gibt es glaube ich nicht, generell sollten
   spezifischere Policies (example.com ist spezifischer als *.com) allgemeinere
   überschreiben. Das muss auch so sein, wenn die default policy standard trust
   für alle cas bei domain "*" ist..
-  > hängt mit punkt ein drüber zusammen.. mal schauen.
+  > hängt mit punkt ein drüber zusammen.. mal schauen.  
+  > Hat halt seine Probleme das so zu machen.. Mal gucken was First-match liste
+  > ergibt..
 - [x] User Policies nach Domain sortieren
   > alphabatisch sortiert erstmal
-- [ ] Filter für User Policies (also für domains) könnte bei vielen Policies
-  später sinnvoll sein
-  > aber erstmal nicht so wichtig. ich soll scheinbar im kleinen rahmen denken
+
 - [ ] Suchoption für Policies, wo man mit wildcards suchen kann und einem dann
   nurnoch die Policies angezeigt werden, die für diese suche angewandt werden
   (*.de --> amazon.de und google.de und * .. oder so)
@@ -64,39 +48,33 @@ TODO's nach Kategorie.
     > für die oben interessant zu wissen, wie benutzer das erwarten würden.  
     > das geht allerdings schon langsam in ne richtung wo man ne richtige
     > umfrage machen könnte zu.
-- [x] Die Policies für eine Domain könnten eigentlich direkt mit den Policies
-  der darüberliegenden Domain initialisiert werden. Das ändert nichts, aber
-  macht die Funktionsweise expliziter
-  > ja irgendwie sowas, vllt. auch ausgegraut oder so, solange man nichts dran
-  > ändert (mit hinweis von welcher domain die kommen jeweils)
-- [ ] Reset/Save Changes Buttons sollten überall funktionieren
-  - [x] ..und ein feedback (z.B. popup) geben.
-- [x] Reset config button mit popup vorher 
+
+
 #### Preferences
 - [x] Wenn eine preference geändert wird, müssen eigentlich alle domain-contents
   neu geladen werden, weil vllt erbt einer davon, dann wäre das nicht mehr
   aktuell!!
   > am geilsten wär ne datenstruktur im hintergrund und immer wenn daran was
   > geändert wird, werden automatisch die relevanten teile des DOMs geupdated
-- [ ] einzelne CAs auswählbar machen
+- [ ] einzelne CAs auswählbar machen **future work**
 - [ ] sortieren, sodass subdomains nahe ihren parents zu finden sind
-  - [ ] eine art baumstruktur wäre sonst noch eine gute idee
+  - [ ] eine art baumstruktur wäre sonst noch eine gute idee **future work**
   > das ist nicht ganz so einfach glaube ich, low prio
 - [ ] löschen von prefs vllt. auch nochmal bestätigen, aber wenn dann
   unproblematisch, indem zB die row rot hinter/überlegt ist und man dann nochmal
   auf den gleichen button klicken muss, wo diesmal ein haken ist. oder so etwas **do it!**
-- [ ] Den ganzen Info-Text kürzen und auf englisch machen **do it!**
+
 - [ ] Eingabefeld `Notizen` bei jeder Domain, optional, damit man sich selber 
   erinnern kann an begründungen für bestimmte einstellungsmöglichkeiten **future work**
-- [ ] `I2-?`: Manuelles verschieben/sortieren der Preferences möglich machen und
+- [x] `I2-?`: Manuelles verschieben/sortieren der Preferences möglich machen und
   dadurch die Priorität von Rules selber festlegen (First-match wie bei
   firewall)
-- [ ] configuration-helper" für standard use-cases, v.a. 
+- [ ] configuration-helper" für standard use-cases, v.a. **future work**
 - [ ] (Idee durch `I2-466`): Standard-Use-Cases über Actions abbilden, mit denen
   man z.B. `CA-Pinning` leichter machen kann, indem man einfach die CAs, die für
   eine bestimmte Domain in Frage kommen, angibt
   - [ ] mal für `CA-Pinning` umsetzten und in Interview abfragen, wie das
-    ankommt und ob das für noch mehr UseCases nice wäre.
+    ankommt und ob das für noch mehr UseCases nice wäre. **future work**
 - [x] `I2-499`: User zwingen sich mit der Reihenfolge/Priorisiertung von
   Preferences auseinanderzusetzen, indem man die liste sortierbar (per drag and
   drop am besten) macht. (auch `I2-533` und ddazwischen)
@@ -193,10 +171,36 @@ TODO's nach Kategorie.
 - [ ] reset/save changes sollte zum anfang der section zurückscrollen
 - [ ] user policies zu viele farben, domain einfach grau?
 
+
 ---
+
 
 ## DONE
 Als Erinnnerung später.
+
+### Generell
+- [x] Beim Laden und Speichern der Config, von/nach Format konvertieren, dass
+  von der Extension intern verwendet werden kann.  
+  > meine config muss aber auch irgendwo persistens gespeichert - [x] Reset/Save Changes Buttons sollten überall funktionieren
+  - [x] ..und ein feedback (z.B. popup) geben.
+- [x] Reset config button mit popup vorher 
+    2. jedes mal automatisch die original config updaten
+  - [x] reset Config
+  - [x] get config from background
+    - [x] config-page.js ohne config.js umbauen
+  - [x] post config to background
+  - [x] wie werden die beiden configs initialisiert?
+    - [x] scheint zu klappen, aber default muss noch angepasst werden!
+- [x] div-class machen, wo unten ein pfeil angezeigt wird und wenn man drauf
+  klickt, expanded sich das div. für lange listen, damit die inicht immer per
+  default komplett angezeigt werden müssen
+  - so ähnlich mit den ausklappenden selection elementen gemacht (z.B. für trust
+    preferences).
+
+### Info Seite
+- [x] Infopage verfeinern, vllt. geopolitik usecase mit einbauen
+  > das ist vor dem nächsten interview wichtig  
+  > Versuche es jetzt mal ohne die Info Seite..
 
 ### Konfigurationsseite
 - [x] Keine doppelten Präferenzen zulassen, also zumindest nicht zwei
@@ -235,6 +239,9 @@ Als Erinnnerung später.
 - [x] on hcnage ca set, nicht alles schließen (wie bei change trust level
   machen)
 - [x] `Trust Preferences` anstatt `User Policies`?!
+- [x] Reset/Save Changes Buttons sollten überall funktionieren
+  - [x] ..und ein feedback (z.B. popup) geben.
+- [x] Reset config button mit popup vorher  *aus Interview 2*
 #### Trust Preferences
 - [x] mal testen wie es aussieht, wenn man die domains erstmal nur nach alphabet
   sortiert
@@ -259,6 +266,16 @@ Als Erinnnerung später.
   > man nicht gerade was daran ändern will und wissen muss wo es herkommt.  
   > kann man jetzt per info icon machen
 - [x] delete domain button schmaler machen, der sticht viel zu sehr heraus.
+- [ ] Filter für User Policies (also für domains) könnte bei vielen Policies
+  später sinnvoll sein **future work**
+  > aber erstmal nicht so wichtig. ich soll scheinbar im kleinen rahmen denken
+- [x] Die Policies für eine Domain könnten eigentlich direkt mit den Policies
+  der darüberliegenden Domain initialisiert werden. Das ändert nichts, aber
+  macht die Funktionsweise expliziter
+  > ja irgendwie sowas, vllt. auch ausgegraut oder so, solange man nichts dran
+  > ändert (mit hinweis von welcher domain die kommen jeweils)
+  - [x] Umgesetzt mit den inherited preferences!
+- [x] Den ganzen Info-Text kürzen und auf englisch machen
 #### CA Sets
 - [ ] Predefined CA Sets
   > eher weniger wichtig für mich denke ich. aber future work.  
