@@ -137,8 +137,8 @@ TODO's nach Kategorie.
   preferences.
 - [x] `I2-564`: Löschen von CA-Sets. Hinweis, wenn dadurch preferences entfernt
   werden, aber dann ist das auch ok.
-  - [ ] Preferences entfernen dann auch!
-- [ ] `I2-610`: Text von Custom-CA Set leeren nach hinzufügen eines sets
+  - [x] Preferences entfernen dann auch!
+- [x] `I2-610`: Text von Custom-CA Set leeren nach hinzufügen eines sets
 - [ ] `I2-618`: Scrolleffekt nach hinzufügen expliziter und evtl hervorheben der
   hinzugfefüten set durch dicken border kurz..
 - [x] `I2-625`: Leere Set-Namen verbieten

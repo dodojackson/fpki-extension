@@ -442,6 +442,7 @@ function setupCASetBuilderEventListeners(json_config) {
             }
             document.querySelector('input#ca-sets-builder-name').value = "";
             document.querySelector('input#ca-sets-builder-description').value = "";
+            document.querySelector('textarea#ca-sets-builder-custom-cas').value = "";
             document.querySelector('#ca-sets-settings-section').scrollIntoView();
             
             reloadSettings();
