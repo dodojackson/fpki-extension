@@ -21,11 +21,11 @@ export const defaultConfig = {
             "domain": "http://localhost:8080",
             "querytype": "lfpki-http-get"
         },
-        {
+        /*{
             "identity": "ETH-mapserver-top-100k",
             "domain": "http://129.132.55.210:8080",
             "querytype": "lfpki-http-get"
-        }
+        }*/
     ],
     "trust-levels": {
         "Untrusted": 0,
