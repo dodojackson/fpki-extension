@@ -149,7 +149,7 @@ TODO's nach Kategorie.
 - [ ] `I2-265`: Möglichkeit (für Firmen etc.) Settings von Mitarbeitern über URL
   oder so miteinander zu synchonisieren. (In Firmen müssen die Settings dann 
   ja ggf. auch bei vielen nciht technik affinen menschen eingestellt werden. am 
-  besten nicht von denen selber.) 
+  besten nicht von denen selber.) **future work**
 ### Design
 - [ ] Delete Buttons rötlich
 - [ ] Color-coded Trust level
