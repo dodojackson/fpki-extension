@@ -729,6 +729,30 @@ function loadEventListeners(json_config) {
             });
         }
     });
+    /*
+        Info-Icons
+    */
+    document
+        .querySelectorAll("span.info-icon,i.info-icon")
+        .forEach(elem => {
+            if (!elem.hasAttribute('listener')) {
+                elem.setAttribute('listener', "true");
+                elem.addEventListener("click", (e) => {
+                    let info_id = e.target.getAttribute('info-id');
+                    let box = document.querySelector(`div.info-box[info-id="${info_id}"]`)
+                    console.log(box)
+                    box.style.left = (e.pageX - 5) + "px";
+                    box.style.top = (e.pageY -5) + "px";
+                    box.style.display = "block";
+                    let screen_dim = document.querySelector('html').getBoundingClientRect();
+                    box.style['max-width'] = (screen_dim.right - e.pageX - 50) + "px";
+    
+                    box.addEventListener("mouseleave", (e) => {
+                        e.target.style.display = "none";
+                    });
+                });
+            }
+        });
 }
 
 
