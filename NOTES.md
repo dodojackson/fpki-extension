@@ -50,6 +50,8 @@ TODO's nach Kategorie.
     > umfrage machen könnte zu.
 
 
+
+
 #### Preferences
 - [x] Wenn eine preference geändert wird, müssen eigentlich alle domain-contents
   neu geladen werden, weil vllt erbt einer davon, dann wäre das nicht mehr
@@ -94,6 +96,8 @@ TODO's nach Kategorie.
         - [x] Reihenfolgen Change wird noch nicht bei inherited preferences
           übernommen (einfach reload?)
 - [ ] keine ungültigen domain-eingaben zulasse. **future work**
+- [ ] Infotext anpassen vllt: "Set higher trust levels for higher trusted CAs,
+  to prefer their certificates over others"
 #### Trust Levels
 
 #### CA-Sets
