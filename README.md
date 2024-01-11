@@ -1,3 +1,5 @@
+Fork of <https://github.com/cyrill-k/fpki-firefox-extension>
+
 # fpki-browser-extension
 Firefox extension for F-PKI
 
